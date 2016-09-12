@@ -11,7 +11,7 @@ settings =
 		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
 
 		default = "landscapeRight",
-		supported = { "landscapeRight", },
+		supported = { "landscapeRight", landscapeLeft, portrait, portraitUpsideDown },
 	},
 	
 	excludeFiles =
@@ -60,9 +60,21 @@ settings =
 	--
 	android =
 	{
+		{
+        	minSdkVersion = "10",
+    	},
+
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
 		},
+
+		supportsScreens =
+        {
+            smallScreens  = true,
+            normalScreens = true,
+            largeScreens  = true,
+            xlargeScreens = false,
+        },
 	},
 }

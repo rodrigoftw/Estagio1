@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="16" height="16" tilewidth="64" tileheight="64" nextobjectid="19">
+ <tileset firstgid="1" name="DefGrass2" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/DefGrass2.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="DefGrass1" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/DefGrass1.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="DefWall1-1" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="tiles/DefWall1-1.png" trans="ff00ff" width="64" height="128"/>
+ </tileset>
+ <tileset firstgid="5" name="DefWall1-2" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="tiles/DefWall1-2.png" trans="ff00ff" width="64" height="128"/>
+  <tile id="1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <tileset firstgid="7" name="DefShadow3" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/DefShadow3.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="8" name="DefGoal" tilewidth="64" tileheight="64" tilecount="4" columns="2">
+  <image source="tiles/DefGoal.png" trans="ffffff" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="12" name="DefShadow1" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/DefShadow1.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="13" name="DefShadow2" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/DefShadow2.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="14" name="DefWall2" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="tiles/DefWall2.png" trans="ffffff" width="64" height="128"/>
+ </tileset>
+ <layer name="World" width="16" height="16">
+  <data encoding="csv">
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,5,5,5,5,5,5,5,5,5,5,5,2,2,2,
+2,2,5,6,6,6,6,6,5,6,6,6,5,2,2,2,
+2,2,5,2,2,2,2,2,5,1,2,2,5,2,2,15,
+2,2,5,2,2,1,2,1,5,1,2,2,5,2,2,2,
+2,2,5,2,2,2,2,2,5,2,2,2,5,2,2,2,
+2,2,5,2,2,3,3,5,5,2,2,2,5,2,2,2,
+2,2,3,5,5,5,6,6,6,2,2,2,5,2,2,2,
+2,2,4,6,6,5,2,2,2,2,2,2,5,2,2,2,
+2,2,2,2,2,5,2,2,2,2,2,2,5,2,2,2,
+2,2,2,2,2,5,5,5,5,5,5,5,5,2,2,2,
+2,2,2,2,2,4,6,6,6,6,6,6,6,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+</data>
+ </layer>
+ <layer name="Shadows" width="16" height="16" opacity="0.45">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,0,
+0,13,0,0,0,0,0,0,0,0,0,0,0,7,0,0,
+0,13,0,0,0,0,0,0,0,0,0,0,0,13,0,0,
+0,13,0,13,13,13,13,13,0,13,13,13,0,13,0,0,
+0,13,0,13,0,0,0,0,0,13,0,0,0,13,0,0,
+0,13,0,13,0,0,0,0,0,13,0,11,0,13,0,0,
+0,13,0,13,0,0,0,0,0,13,0,0,0,13,0,0,
+0,13,0,0,0,0,0,0,0,13,0,0,0,13,0,0,
+0,13,0,0,0,0,13,13,13,13,0,0,0,13,0,0,
+0,13,12,13,13,0,13,0,0,0,0,0,0,13,0,0,
+0,13,0,0,0,0,0,0,0,0,0,0,0,13,0,0,
+0,13,0,0,0,0,0,0,0,0,0,0,0,13,0,0,
+0,0,0,0,0,12,13,13,13,13,13,13,13,13,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+12,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="Objects" width="16" height="16">
+  <data encoding="csv">
+14,15,15,15,15,15,15,15,15,15,15,15,15,15,15,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,8,9,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,10,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,14,14,14,0,0,0,0,0,0,0,0,0,0,0,14,
+15,15,15,15,14,14,14,14,14,14,14,14,14,14,14,14,
+0,0,0,0,15,15,15,15,15,15,15,15,15,15,15,15
+</data>
+ </layer>
+ <objectgroup name="Collisions">
+  <object id="6" x="128" y="128" width="64" height="448"/>
+  <object id="7" x="192" y="128" width="640" height="64"/>
+  <object id="8" x="768" y="192" width="64" height="576"/>
+  <object id="9" x="320" y="704" width="448" height="64"/>
+  <object id="10" x="320" y="576" width="64" height="128"/>
+  <object id="11" x="192" y="512" width="192" height="64"/>
+  <object id="12" x="320" y="448" width="256" height="64"/>
+  <object id="13" x="512" y="192" width="64" height="256"/>
+  <object id="14" x="0" y="0" width="64" height="832"/>
+  <object id="15" x="0" y="832" width="256" height="128"/>
+  <object id="16" x="256" y="896" width="768" height="160"/>
+  <object id="17" x="960" y="0" width="64" height="896"/>
+  <object id="18" x="64" y="0" width="960" height="64"/>
+ </objectgroup>
+ <layer name="Undestructable Walls" width="16" height="16">
+  <data encoding="csv">
+14,15,15,15,15,15,15,15,15,15,15,15,15,15,15,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,14,14,14,0,0,0,0,0,0,0,0,0,0,0,14,
+15,15,15,15,14,14,14,14,14,14,14,14,14,14,14,14,
+0,0,0,0,15,15,15,15,15,15,15,15,15,15,15,15
+</data>
+ </layer>
+ <layer name="Destructable Walls" width="16" height="16">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,5,5,5,5,5,5,5,5,5,5,5,0,0,0,
+0,0,5,6,6,6,6,6,5,6,6,6,5,0,0,0,
+0,0,5,0,0,0,0,0,5,0,0,0,5,0,0,0,
+0,0,5,0,0,0,0,0,5,0,0,0,5,0,0,0,
+0,0,5,0,0,0,0,0,5,0,0,0,5,0,0,0,
+0,0,5,0,0,5,5,5,5,0,0,0,5,0,0,0,
+0,0,3,5,5,5,6,6,6,0,0,0,5,0,0,0,
+0,0,4,6,6,5,0,0,0,0,0,0,5,0,0,0,
+0,0,0,0,0,5,0,0,0,0,0,0,5,0,0,0,
+0,0,0,0,0,3,5,5,5,5,5,5,5,0,0,0,
+0,0,0,0,0,4,6,6,6,6,6,6,6,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

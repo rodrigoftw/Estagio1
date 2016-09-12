@@ -11,17 +11,27 @@ local scene = composer.newScene()
 local widget = require "widget"
 
 --------------------------------------------
+local centerX = display.contentCenterX
+local centerY = display.contentCenterY
 
--- forward declarations and other locals
-local playBtn
+local screenW = display.contentWidth
+local screenH = display.contentHeight
+
+local posX = display.contentWidth/2
+local posY = display.contentHeight/2
 
 -- 'onRelease' event listener for playBtn
-local function onPlayBtnRelease()
-	
+local function onPlayBtnRelease(e)
+	local eventName = e.phase
+	local targetName = e.target.id
 	-- go to level1.lua scene
-	composer.gotoScene( "level1", "fade", 500 )
-	
-	return true	-- indicates successful touch
+	if eventName == "began" then
+		if targetName == "play" then
+			composer.gotoScene( "game", "fade", 500 )
+		elseif	targetName == "opcoes" then
+			composer.gotoScene( "opcoes", "fade", 500 )
+		end
+    end
 end
 
 function scene:create( event )
@@ -33,33 +43,56 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	local background = display.newImageRect( "background.jpg", display.actualContentWidth, display.actualContentHeight )
-	background.anchorX = 0
-	background.anchorY = 0
-	background.x = 0 + display.screenOriginX 
-	background.y = 0 + display.screenOriginY
-	
 	-- create/position logo/title image on upper-half of the screen
-	local titleLogo = display.newImageRect( "logo.png", 264, 42 )
-	titleLogo.x = display.contentCenterX
-	titleLogo.y = 100
-	
-	-- create a widget button (which will loads level1.lua on release)
-	playBtn = widget.newButton{
-		label="Play Now",
-		labelColor = { default={255}, over={128} },
-		default="button.png",
-		over="button-over.png",
-		width=154, height=40,
-		onRelease = onPlayBtnRelease	-- event listener function
-	}
-	playBtn.x = display.contentCenterX
-	playBtn.y = display.contentHeight - 125
-	
-	-- all display objects must be inserted into group
-	sceneGroup:insert( background )
-	sceneGroup:insert( titleLogo )
-	sceneGroup:insert( playBtn )
+	-- local musicMenu = audio.loadSound("audios/Lines of Code.mp3")
+	-- audio.play(musicMenu)
+
+	-- local displayText = display.newText( "Relic Hunter", centerX, 70, "_imagem/Achafexp.ttf", 60 )
+
+	-- create buttons
+	local bg = display.newImage("bg2.png")
+	bg.x = posX
+	bg.y = posY
+	-- bg.anchorX = 0
+	-- bg.anchorY = 0
+	--Play
+	local btnPlay = widget.newButton(
+	    {
+	        id = "play",
+	        width = 90,
+	        height = 50,
+	        defaultFile = "_imagem/espaco.png",
+	        overFile = "_imagem/espaco.png",
+	        label = "play",
+	        font = "_imagem/Achafexp.ttf",
+	        fontSize = 30,
+	        onEvent = onPlayBtnRelease
+	    }
+	)
+	local btnOpicoes = widget.newButton(
+	    {
+	        id = "opicoes",
+	        width = 90,
+	        height = 50,
+	        defaultFile = "_imagem/espaco.png",
+	        overFile = "_imagem/espaco.png",
+	        label = "creditos",
+	        font = "_imagem/Achafexp.ttf",
+	        fontSize = 30,
+	        onEvent = onPlayBtnRelease
+	    }
+	)
+	btnPlay.x = centerX
+	btnPlay.y = 140
+
+	btnOpicoes.x = centerX
+	btnOpicoes.y = 200
+
+	sceneGroup:insert(background)
+	sceneGroup:insert(btnPlay)
+	sceneGroup:insert(btnOpicoes)
+	sceneGroup:insert(displayText)
+
 end
 
 function scene:show( event )
@@ -73,7 +106,7 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-	end	
+	end
 end
 
 function scene:hide( event )
@@ -97,11 +130,6 @@ function scene:destroy( event )
 	-- 
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
-	
-	if playBtn then
-		playBtn:removeSelf()	-- widgets must be manually removed
-		playBtn = nil
-	end
 end
 
 ---------------------------------------------------------------------------------
