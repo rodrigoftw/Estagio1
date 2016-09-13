@@ -117,6 +117,7 @@ function scene:create( event )
 	local mapX, mapY
 
 	map.layer["Shadows"].alpha = 0.45
+	map.layer[""]
 
  	 
 	-- Criação do controle analógico
