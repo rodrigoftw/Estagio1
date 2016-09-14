@@ -24,12 +24,12 @@ local RIGHT_REF = 1
 local CENTER_REF = 0.5
 
 -- set the background image
-local background = display.newImage( "bg1200800.png", _W, _H )
+local background = display.newImage( "images/bg1200800.png", _W, _H )
 background:scale(0.5, 0.5)
 background.x = centerX
 background.y = centerY - 40
 
-local background2 = display.newImage( "bg1200800.png", _W, _H )
+local background2 = display.newImage( "images/bg1200800.png", _W, _H )
 background2:scale(0.5, 0.5)
 background2.x = background.width - 360
 background2.y = centerY - 40
@@ -44,7 +44,7 @@ local n = 0
 
 	bulletCollisionFilter = { categoryBits = 4, maskBits = 5 }
 	n = n + 1
-	rlbullet[n] = display.newImage( "bullet.png", (_W + 20), 200 )
+	rlbullet[n] = display.newImage( "images/bullet.png", (_W + 20), 200 )
 	rlbullet[n].height = 20
 	rlbullet[n].width = 20
 	rlbullet[n].x = _W + 50
@@ -68,7 +68,7 @@ local n = 0
 	--rlbullet[n].angularDamping = 0
 	--rlbullet[n].angularVelocity = 0
 
-	udbullet[n] = display.newImage( "bullet.png" )
+	udbullet[n] = display.newImage( "images/bullet.png" )
 	udbullet[n].height = 20
 	udbullet[n].width = 20
 	udbullet[n].x = centerX + 50
@@ -136,7 +136,7 @@ timer.performWithDelay( 1000, start )
 
 groundCollisionFilter = { categoryBits = 2, maskBits = 3 }
 
-local ground = display.newImageRect("ground.png", 580, 32)
+local ground = display.newImageRect("images/ground.png", 580, 32)
 ground.width = 580
 ground.x = centerX
 ground.y = centerY + 145
@@ -144,7 +144,7 @@ physics.addBody(ground, "static", {density=0, bounce=0.1, friction=.2, filter = 
 ground.type = "ground"
 ground.collision = onCollision
 
-local ground2 = display.newImageRect("ground.png", 580, 32)
+local ground2 = display.newImageRect("images/ground.png", 580, 32)
 ground2.width = 580
 ground2.x = ground.width + 240
 ground2.y = centerY + 145
@@ -193,7 +193,7 @@ local sheetInfo = require("spritesheet")
 
 -- init the image sheet
 
-local spritesheet = graphics.newImageSheet( "spritesheet.png", sheetInfo:getSheet() )
+local spritesheet = graphics.newImageSheet( "images/spritesheet.png", sheetInfo:getSheet() )
 
 local sequenceData = {
 	-- set up anmiation
@@ -260,11 +260,11 @@ local function onTouch(event)
 		jump_completed = true
 	end
 	
-	if(event.y < (mario.y + 30)) then
-		if(event.x < mario.x) then
+	-- if(event.y < (mario.y + 30)) then
+	-- 	if(event.x < mario.x) then
 			
-		end
-	end
+	-- 	end
+	-- end
 	
 	if(event.phase == "ended" and jump_completed == false)then
 			jump_completed = true

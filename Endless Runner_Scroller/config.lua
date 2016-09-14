@@ -6,7 +6,7 @@ application =
 		width = 320,
 		height = 480, 
 		scale = "letterBox",
-		fps = 30,
+		fps = 30, -- 60 fps para uma experiência INSANA e cheia de bugs :P
 		
 		--[[
 		imageSuffix =
