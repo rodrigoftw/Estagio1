@@ -1,17 +1,18 @@
 --
 -- For more information on build.settings see the Corona SDK Build Guide at:
--- https://docs.coronalabs.com/guide/distribution/buildSettings
+-- http://docs.coronalabs.com/guide/distribution/buildSettings/index.html
 --
 
 settings =
 {
+	
 	orientation =
 	{
 		-- Supported values for orientation:
 		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
 
 		default = "landscapeRight",
-		supported = { "landscapeRight", landscapeLeft, portrait, portraitUpsideDown },
+		supported = { "landscapeRight" }
 	},
 	
 	excludeFiles =
@@ -36,7 +37,6 @@ settings =
 			{
 				"Icon.png",
 				"Icon@2x.png",
-				"Icon-167.png",
 				"Icon-60.png",
 				"Icon-60@2x.png",
 				"Icon-60@3x.png",
@@ -52,7 +52,20 @@ settings =
 				"Icon-Small-50.png",
 				"Icon-Small-50@2x.png",
 			},
-		},
+
+			--[[
+			-- iOS app URL schemes:
+			CFBundleURLTypes =
+			{
+				{
+					CFBundleURLSchemes =
+					{
+						"fbXXXXXXXXX",  -- replace XXXXXXXXX with your Facebook appId
+					}
+				}
+			}
+			--]]
+		}
 	},
 	
 	--
@@ -60,21 +73,9 @@ settings =
 	--
 	android =
 	{
-		{
-        	minSdkVersion = "10",
-    	},
-
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
 		},
-
-		supportsScreens =
-        {
-            smallScreens  = true,
-            normalScreens = true,
-            largeScreens  = true,
-            xlargeScreens = false,
-        },
 	},
 }

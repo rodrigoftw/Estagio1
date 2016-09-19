@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="11" height="7" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="DefGrass1" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="DefGrass1.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="DefGrass2" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="DefGrass2.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="DefWall1" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="DefWall1.png" trans="ffffff" width="64" height="128"/>
+ </tileset>
+ <tileset firstgid="5" name="DefWall1-1" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="DefWall1-1.png" trans="ffffff" width="64" height="128"/>
+ </tileset>
+ <tileset firstgid="7" name="DefGoal" tilewidth="64" tileheight="64" tilecount="4" columns="2">
+  <image source="DefGoal.png" trans="ffffff" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="11" name="DefShadow1" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="DefShadow1.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="12" name="DefShadow2" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="DefShadow2.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="13" name="DefShadow3" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="DefShadow3.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="14" name="square-outline-64" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="tiles/square-outline-64.png" trans="003039" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="15" name="DefWall2" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="tiles/DefWall2.png" trans="003039" width="64" height="128"/>
+ </tileset>
+ <tileset firstgid="17" name="DefWall3" tilewidth="64" tileheight="64" tilecount="2" columns="1">
+  <image source="tiles/DefWall3.png" trans="003039" width="64" height="128"/>
+ </tileset>
+ <layer name="regions" width="11" height="7">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,
+1,1,2,1,2,1,2,1,2,1,1,
+1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="input_DestructableWalls" width="11" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,3,0,4,0,0,0,17,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,5,0,6,0,0,0,18,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="input_UndestructableWalls" width="11" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,15,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,16,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="output_Collision" width="11" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,14,0,14,0,14,0,14,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,14,0,14,0,14,0,14,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

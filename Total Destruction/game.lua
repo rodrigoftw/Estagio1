@@ -4,61 +4,36 @@
 --
 -----------------------------------------------------------------------------------------
 
-local composer = require( "composer" )
-local scene = composer.newScene()
-
--- include libraries
-local StickLib = require("lib_analog_stick")
-local physics = require ("physics")
-physics.start() 
---physics.pause();
-physics.setGravity( 0, 0 )
---physics.setDrawMode("hybrid")
 local dusk = require("Dusk.Dusk")
---------------------------------------------
+local composer = require("composer")
+local scene = composer.newScene()
+local StickLib = require("libs.lib_analog_stick")
+local Player = require("player")
+local physics = require("physics")
+local widget = require ("widget")
+physics.start() 
+physics.setGravity( 0, 0 )
+-- physics.setDrawMode("hybrid")
 
-local screenW = display.contentWidth
-local screenH = display.contentHeight
+local centerX = display.contentCenterX
+local centerY = display.contentCenterY
+local _W = display.contentWidth
+local _H = display.contentHeight
 
+local TOP_REF = 0
+local BOTTOM_REF = 1
+local LEFT_REF = 0
+local RIGHT_REF = 1
+local CENTER_REF = 0.5
+
+-- local screenW = display.contentWidth
+-- local screenH = display.contentHeight
 local posX = display.contentWidth/2
 local posY = display.contentHeight/2
 
--- function onCollision(event)
---     if ( event.phase == "began" ) then               
---     	-- Check if body still exists before removing!
---     	if (event.target.myName == "dardo" and event.other.myName == "player") then
---         	fireTrapsGroup:remove(event.target)
---             event.target = nil             
---             display.remove(detector)
---             Runtime:removeEventListener("enterFrame",update)
---             timer.cancel(timerImpact)
---             --limparButtons()
---             playerMorrer()
---         elseif (event.target.myName == "dardo" and event.other.myName == "linha") then
---           	fireTrapsGroup:remove(event.target)
---             event.target = nil
---         elseif(event.target.actived == true and event.other.myName =="player") then
---         	event.target.actived = false
---         	event.target:setSequence("block_desativado")
---         	coletedRelics = coletedRelics + 1
---         	print(coletedRelics)
---         elseif(event.target.myName == "gold" and event.other.myName =="player") then
---         	event.target.actived = false
---         	coletedRelics = coletedRelics + 1
---         	local alert = native.showAlert("Parabéns", "Suba as Escadas e vá para próximo nivel", {"Ok", "Cancelar"})
---         	print(coletedRelics)
---         end
---     end
--- end
 
 
-
-
--- local hero
-local localGroup = display.newGroup() -- remember this for farther down in the code
-	motionx = 0; -- Variable used to move character along x axis
-	motiony = 0; -- Variable used to move character along y axis
-	speed = 2; -- Set Walking Speed
+--------------------------------------------
 
 function scene:create( event )
 
@@ -69,9 +44,13 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 
+	-- Mapa
 	local currMap = "Teste1.json"
+	map = dusk.buildMap("maps/"..currMap)
 
-	local map = dusk.buildMap("maps/" .. currMap)
+	-- local songMenu = audio.loadStream("sound/songs/Beat_Your_Competition.mp3", -1)
+	-- audio.play(songMenu)
+	-- audio.setVolume( 0.005 )
 
 	--------------------------------------------------------------------------------
 	-- Set Map
@@ -84,7 +63,7 @@ function scene:create( event )
 		currMap = mapName
 		map.setViewpoint(mapX, mapY)
 		map.snapCamera()
-		map.setTrackingLevel(0.3)
+		-- map.setTrackingLevel(0.3)
 		map:addEventListener("touch", mapTouch)
 		Runtime:addEventListener("enterFrame", map.updateView)
 	end
@@ -110,375 +89,235 @@ function scene:create( event )
 		end
 	end
 
-	map:scale( 0.5, 0.5 )
-	map.updateView()
-	-- map.setTrackingLevel(0.3) -- "Fluidity" of the camera movement; numbers closer to 0 mean more fluidly and slowly (but 0 itself will disable the camera!)
+	local x = 1
+	-- Function to handle button events
+	local function handleButtonEvent( event )
+	    if ( "ended" == event.phase ) then			
+	    	if (x%2 == 0) then
+		        physics.setDrawMode("hybrid")
+				x = x + 1
+			elseif (x%2 ~= 0) then
+				physics.setDrawMode("normal")
+				x = x + 1
+			end
+	    end
+	end
 
-	local mapX, mapY
-
-	map.layer["Shadows"].alpha = 0.45
-	map.layer[""]
-
- 	 
-	-- Criação do controle analógico
-	MyStick = StickLib.NewStick( 
+	-- Create the widget
+	local button1 = widget.newButton(
 	    {
-	        x             = screenW*.15,
-	        y             = screenH*.85,
-	        thumbSize     = 16,
-	        borderSize    = 32, 
-	        snapBackSpeed = .2, 
-	        R             = 25,
-	        G             = 255,
-	        B             = 255
+	        left = _W*0.75,
+	        top = _H*0.85,
+	        id = "collisionButton",
+	        label = "Ver Colisão",
+			labelColor = { default = { 1, 1, 1 }, over = { 0, 0, 0, 0.5 } },
+	        onEvent = handleButtonEvent
 	    }
 	)
 
-	-- Declarar e configurar o spritesheet e a sequência de animações
-	spriteOptions = {	
-		height = 64, 
-		width = 64, 
-		numFrames = 273, 
-		sheetContentWidth = 832, 
-		sheetContentHeight = 1344 
-	}
-
-	mySheet = graphics.newImageSheet("rectSmall.png", spriteOptions) 
-	sequenceData = {
-		{name = "forward", frames={105,106,107,108,109,110,111,112}, time = 500, loopCount = 1},
-		{name = "left", frames={118,119,120,121,122,123,124,125,126}, time = 500, loopCount = 1},
-		{name = "back", frames= {131,132,133,134,135,136,137,138,139}, time = 500, loopCount = 1},
-		{name = "right", frames={144,145,146,147,148,149,150,151,152}, time = 500, loopCount = 1},
-		
-		
-		{name = "attackForward", frames={157,158,159,160,161,162,157}, time = 400, loopCount = 1},
-		{name = "attackLeft", frames={170,171,172,173,174,175,170}, time = 400, loopCount = 1},
-		{name = "attackBack", frames={183,184,185,186,187,188,183}, time = 400, loopCount = 1},
-		{name = "attackRight", frames={196,197,198,199,200,201,196}, time = 400, loopCount = 1},
-
-
-		{name = "atkForward", frames={205,206,207,208,209,210,211}, time = 400, loopCount = 1},
-		{name = "atkRight", frames={219,220,221,222,223,224,225}, time = 400, loopCount = 1},
-		{name = "atkBack", frames={230,231,232,233,234,235,236}, time = 400, loopCount = 1},
-		{name = "atkLeft", frames={248,249,250,251,252,253,254}, time = 400, loopCount = 1},
-
-		{name = "death", frames={261,262,263,264,265,266}, time = 500, loopCount = 1}
-	}
-
-	-- Mostrar o novo sprite nas coordenadas passadas
-	hero = display.newSprite(mySheet, sequenceData)
-	hero:setSequence("forward")
-	hero.x = posX - 110
-	hero.y = posY + 15
-	hero:scale(0.7, 0.7)
-
-	-- Mover o personagem
-    MyStick:move(hero, 2.5, false) -- se a opção for true o objeto se move com o joystick
-
-    -- -- SHOW STICK INFO
-    -- Text.text = "ANGLE = "..MyStick:getAngle().."   DIST = "..math.ceil(MyStick:getDistance()).."   PERCENT = "..math.ceil(MyStick:getPercent()*100).."%"
-	
-	-- print("MyStick:getAngle = "..MyStick:getAngle())
-	-- print("MyStick:getDistance = "..MyStick:getDistance())
-	-- print("MyStick:getPercent = "..MyStick:getPercent()*100)
-	-- print("POSICAO X / Y  " ..hero.x,hero.y)
-	
-	angle = MyStick:getAngle() 
-	moving = MyStick:getMoving()
-
-	-- Determinar qual animação mostrar baseada na direção do controle analógico
-
-	-- TODO: Aumentar a quantidade das direções
-
-	if(angle <= 45 or angle > 315) then
-		seq = "forward"
-	elseif(angle <= 135 and angle > 45) then
-		seq = "right"
-	elseif(angle <= 225 and angle > 135) then 
-		seq = "back" 
-	elseif(angle <= 315 and angle > 225) then 
-		seq = "left" 
-	end
-	
-	-- Mudar a sequência apenas se outra sequência não estiver rodando ainda
-	if(not (seq == hero.sequence) and moving) then
-		hero:setSequence(seq)
+	local function restartLevel( event )
+    -- When you tap the "I Win" button, reset the "nextlevel" scene, then goto it.
+    -- Using a button to go to the nextlevel screen isn't realistic, but however you determine to 
+    -- when the level was successfully beaten, the code below shows you how to call the gameover scene.
+	    if event.phase == "ended" then
+	        composer.removeScene("game")
+	        composer.gotoScene("game", { time= 1000, effect = "crossFade" })
+	    end
+	    return true
 	end
 
-	if( seq == "forward" ) and (not moving) then
-			hero:setSequence("attackForward")
-		elseif(seq == "back" ) and (not moving) then
-			hero:setSequence("attackBackward")
-		elseif(seq == "right" ) and (not moving) then
-			hero:setSequence("attackRight")
-		elseif(seq == "left" ) and (not moving) then
-			hero:setSequence("attackLeft")
+	local restart = widget.newButton(
+		{
+			id = "restartButton",
+			label = "Restart",
+			labelColor = { default = { 1, 1, 1 }, over = { 0, 0, 0, 0.5 } },
+		    left = _W*0.5,
+	        top = _H*0.85,
+			onEvent = restartLevel
+		}
+	)
+	-- sceneGroup:insert(restart)
+
+	function onCollision(event)
+    	if event.phase == "began" then
+			if event.target.type == "player" and event.other.type == "wall" then
+				-- Como fazer o player se encostar contra a parece e nada acontecer?
+			elseif event.target.type == "player" and event.other.type == "finishline" then
+				timer.cancel(Timer)
+				-- composer.gotoScene( "results" )
+			elseif event.target.type == "player" and event.other.type == "bomb" then
+				hero:removeSelf()
+				hero = nil
+			end
+		end
+		return true
 	end
 
-	-- Se o controle analógico estiver se movendo, animar o sprite
-	if(moving) then 
-		hero:play()
+	-- numberBombs = 2
+
+	-- local function spawnBombs()
+	--    for i = 1, numberBombs do
+	--     	local bomb = display.newImageRect( "maps/DefBomb.png", 16, 12 )
+	--     	bomb.alpha = 0
+	--       	bomb.x = hero.x
+	-- 		bomb.y = hero.y
+	-- 		bomb.type = "bomb"
+	-- 		physics.addBody( bomb, "static", { density=1.5, friction=5, bounce=0.5 } )
+	-- 		bomb.alpha = 1
+	--       	transition.to( bomb, {x=event.x, y=event.y, time = 2000, transition=easing.outExpo, onComplete=clearBombs });
+
+	--     	-- Adding touch event
+	--     	bomb:addEventListener( "touch", onTouch );
+	--    end
+	-- end
+
+	-- timer.performWithDelay( 2000, spawnBombs, 0 )  -- fire every 10 seconds
+
+	-- local function clearBombs( bomb )
+	-- 	display.remove( bomb );
+	-- 	bomb = nil
+	-- end
+	
+	map:scale( 0.5, 0.5 )
+	-- map.updateView()
+	-- map.setTrackingLevel(0.3) -- "Fluidity" of the camera movement; numbers closer to 0 mean more fluidly and slowly (but 0 itself will disable the camera!)
+
+
+	map.layer["Shadows"].alpha = 0.45
+	
+	map.layer["Objects"].type = finishline
+	local finish = display.newRect(888,624,12,48)
+	finish.type = "finishline"
+	finish.alpha = 0
+	physics.addBody(finish,"static",{isSensor = true})
+	map.layer["Objects"]:insert(finish)
+	finish:addEventListener("collision", finish)
+	map.layer["DestructableWalls"].collision = onCollision
+	map.layer["DestructableWalls"].type = wall
+	
+	WallCollisionFilter = { categoryBits = 2, maskBits = 5 }
+
+	local block = display.newRect(352,416,32,32)
+	block.type = "wall"
+	block.bodyType = static
+	-- physics.addBody(block,"static",{filter = WallCollisionFilter, isSensor = true})
+	map.layer["Collision"]:insert(block)
+	block:addEventListener("collision", block)
+	map.layer["DestructableCeilings"].collision = onCollision
+	map.layer["DestructableCeilings"].type = wall
+	block.isSleepingAllowed = false
+	block.isBodyActive=true
+
+	local block2 = display.newRect(736,608,32,32)
+	block2.type = "wall"
+	block2.bodyType = static
+	-- physics.addBody(block2,"static",{isSensor = true})
+	map.layer["Collision"]:insert(block2)
+	block2:addEventListener("collision", block2)
+
+	map.layer["Collision"]:insert(hero)
+	map.layer["Collision"].alpha = 0
+	-- map.layer["Hero"]:insert(hero)
+	map.setCameraFocus(hero)
+
+	-----------Timer-----------
+	-- Contar o tempo em segundos
+	local secondsPassed = 00 * 00-- * 00  -- Exemplo: 2 minutos * 30 segundos
+ 
+	local clockText = display.newText("00:00", ((display.contentCenterX*2) - (display.contentCenterX*0.05)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
+	clockText:setFillColor( 1, 1, 1 )
+	
+	-- Dar um update no timer a cada segundo passado
+	local function updateTime()
+		-- Incrementar o número de segundos
+		secondsPassed = secondsPassed + 1
+	
+		-- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
+		local seconds = secondsPassed % 60
+		local minutes = math.floor( secondsPassed / 60 )
+		-- local hours   = math.floor( minutes / 60 )
+
+		-- Transformar o resultado em uma string usando string.format
+		timeDisplay = string.format( "%02d:%02d", minutes, seconds )
+		clockText.text = timeDisplay
+		clockText.alpha = 1
+
+		map.setDamping(1)
 		map.setCameraFocus(hero)
 		map.updateView()
 	end
-	
-	-- timer.performWithDelay(2000, function()
-	-- --MyStick:delete()
-	-- end, 1)
-	-- Runtime:addEventListener( "enterFrame", main )
 
+	-- local reloadMap = timer.performWithDelay( 1, map.updateView(), seconds )
 	
-	-- local bg = display.newImage("background.png")
-	-- bg.x = posX
-	-- bg.y = posY
+	-- Rodar timer
+	local Timer = timer.performWithDelay( 1, updateTime, secondsPassed )
 
-	-- local function onTouch(event)
-	-- 	if (event.phase == "began" ) then
-	-- 		-- Mover o personagem ao segurar a tela
-	-- 		-- map:addEventListener("touch", mapTouch)
-	-- 	end
-	-- 	if(event.phase == "ended") then
-	-- 		if( seq == hero.sequence ) and (event.y < hero.y) and (not moving) then
-	-- 			hero:setSequence("atkForward")
-	-- 		elseif(seq == hero.sequence ) and (event.y > hero.y) and (not moving) then
-	-- 			hero:setSequence("atkBack")
-	-- 		elseif(seq == hero.sequence ) and (event.x > hero.x) and (not moving) then
-	-- 			hero:setSequence("atkRight")
-	-- 		elseif(seq == hero.sequence ) and (event.x < hero.x) and (not moving) then
-	-- 			hero:setSequence("atkLeft")
-	-- 		end
-	-- 	end
-	-- end
-	-- Runtime:addEventListener( "touch", onTouch )
+	if minutes == 1 and timeDisplay == ("01:00") then
+		timer.cancel(Timer)
+		function blink()
+		if(clockText.alpha < 1) then
+			transition.to( clockText, {time=50, alpha=1})
+		else 
+			transition.to( clockText, {time=50, alpha=0})
+		end
+		-- if(scoreText.alpha < 1) then
+		-- 	transition.to( scoreText, {time=100, alpha=1})
+		-- else 
+		-- 	transition.to( scoreText, {time=100, alpha=0})
+		-- end
+		-- if(scoreTxt.alpha < 1) then
+		-- 	transition.to( scoreTxt, {time=100, alpha=1})
+		-- else 
+		-- 	transition.to( scoreTxt, {time=100, alpha=0})
+		-- end
+	end
+	local blinkTimer = timer.performWithDelay( 300, blink, 0 )
+	end
 
-	
-	local bomb = display.newImageRect( "DefBomb.png", 31, 23 )
-	bomb.x = hero.x
-	bomb.y = hero.y
-	physics.addBody( bomb, "dynamic", { density=1.5, friction=5, bounce=0.3 } )
-	bomb:scale( 0.5, 0.5 )
-	bomb.alpha = 0
-	
+	local centerX, centerY = map.getViewpoint()
+	local top = centerY - display.contentCenterY
+	local bottom = centerY + display.contentCenterY
+	local left = centerX - display.contentCenterX
+	local right = centerX + display.contentCenterX
 
+	map.layer["Hero"]:insert(hero)
+	map.setCameraBounds({
+		xMin = display.contentCenterX,
+		yMin = display.contentCenterY,
+		xMax = map.data.width / 1.48,
+		yMax = map.data.height - display.contentCenterY
+		-- Use map.data.width because that's the "real" width of the map - 
+		-- map.width changes when culling kicks inyMax = map.data.height - display.contentCenterY -- Same here
+	})
+ 
+
+	-- local bomb = display.newImageRect( "maps/DefBomb.png", 16, 12 )
+	-- bomb.x = hero.x
+	-- bomb.y = hero.y
+	-- bomb.type = "bomb"
+	-- physics.addBody( bomb, "static", { density=1.5, friction=5, bounce=0.5 } )
+	-- -- bomb:scale( 0.5, 0.5 )
+	-- bomb.alpha = 0
 	
 	local function onTouch(event)
 		if(event.phase == "began") then
-			bomb.alpha = 1
+			-- bomb.alpha = 1
 		elseif(event.phase == "ended") then
-			transition.to( bomb, {x=event.x, y=event.y, time = 2500, transition=easing.outExpo})
+			-- transition.to( bomb, {x=event.x, y=event.y, time = 2000, transition=easing.outExpo})
 		end
 	end
 	Runtime:addEventListener( "touch", onTouch )
-	
 
-	-- localGroup:insert(bg)
-	sceneGroup:insert(localGroup)
-	localGroup:insert(map)
-	localGroup:insert(bomb)
-	localGroup:insert(hero)
+	-- function reloadPosition()
+	-- 	bomb.x = hero.x
+	-- 	bomb.y = hero.y
+	-- end
+	-- positionTimer = timer.performWithDelay(100, reloadPosition, -1)
 
-	-- -- Linha de colissões
-	-- local linha1 = display.newRect(1252,954,10,50)
-	-- linha1.myName = "linha"
-	-- physics.addBody(linha1,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha1)
-
-	-- local linha2 = display.newRect(1244,1150,10,50)
-	-- linha2.myName = "linha"
-	-- physics.addBody(linha2,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha2)
-
-	-- local linha3 = display.newRect(1726,1888,50,10)
-	-- linha3.myName = "linha"
-	-- physics.addBody(linha3,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha3)
-
-	-- local linha4 = display.newRect(1304,1884,50,10)
-	-- linha4.myName = "linha"
-	-- physics.addBody(linha4,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha4)
-
-	-- local linha5 = display.newRect(30,1708,10,50)
-	-- linha5.myName = "linha"
-	-- physics.addBody(linha5,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha5)
-
-	-- local linha6 = display.newRect(32,1340,10,50)
-	-- linha6.myName = "linha"
-	-- physics.addBody(linha6,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha6)
-
-	-- local linha7 = display.newRect(1728,450,50,10)
-	-- linha7.myName = "linha"
-	-- physics.addBody(linha7,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha7)
-
-	-- local linha8 = display.newRect(220,400,50,10)
-	-- linha8.myName = "linha"
-	-- physics.addBody(linha8,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha8)
-
-	-- local linha9 = display.newRect(704,766,50,10)
-	-- linha9.myName = "linha"
-	-- physics.addBody(linha9,"static",{isSensor = true})
-	-- map.layer["colisao"]:insert(linha9)
-
-	--Player
-	-- 	player = display.newSprite(playerSheet,playerSequenceData)
-	-- 	player:setSequence("idleRigth")
-	-- 	playerGroup:insert( player )
-	-- 	physics.addBody( playerGroup,"dinamic",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	playerGroup.isFixedRotation = true
-	-- 	playerGroup.x = 0	
-	-- 	playerGroup.y = 925
-	-- 	playerGroup.myName = "player"
-	-- 	map.layer["player"]:insert(playerGroup)
-
-	-- 	coletedRelics = 0
-		
-	-- 	relic = {}
-		
-	-- 	relic[1] = display.newSprite(rosaSheet,rosaSequenceData)
-	-- 	relic[1].x,relic[1].y = 98,164
-	-- 	physics.addBody(relic[1],"static",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	relic[1].actived = true
-	-- 	relic[1]:setSequence("block_ativado")
-
-	-- 	relic[2] = display.newSprite(azulSheet,azulSequenceData)
-	-- 	relic[2].x,relic[2].y = 1787,1757
-	-- 	physics.addBody(relic[2],"static",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	relic[2].actived = true
-	-- 	relic[2]:setSequence("block_ativado")
-		
-	-- 	relic[3] = display.newSprite(amareloSheet,amareloSequenceData)
-	-- 	relic[3].x,relic[3].y = 161,1761
-	-- 	physics.addBody(relic[3],"static",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	relic[3].actived = true
-	-- 	relic[3]:setSequence("block_ativado")
-		
-	-- 	relic[4] = display.newSprite(verdeSheet,verdeSequenceData)
-	-- 	relic[4].x,relic[4].y = 1789,289
-	-- 	physics.addBody(relic[4],"static",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	relic[4].actived = true
-	-- 	relic[4]:setSequence("block_ativado")
-		
-	-- 	relic[5] = display.newSprite(verdeSheet,verdeSequenceData)
-	-- 	relic[5].x,relic[5].y = 1789,289
-	-- 	physics.addBody(relic[4],"static",{density=3.0, friction=0.5, bounce=0.3})
-	-- 	relic[5].actived = true
-	-- 	relic[5].myName = "gold"
-	-- 	relic[5]:setSequence("block_ativado")
-		
-	-- 	local i = 1
-	-- 	for i=1,#relic do
-	-- 		relic[i]:addEventListener("collision",onCollision)
-	-- 		map.layer["relics"]:insert(relic[i])
-	-- 	end
-
-	--  	local sensor1 = display.newImageRect("crate.png",30,30)
-	--  	sensor1.x = 1330
-	--  	sensor1.y = 800
-	-- 	physics.addBody(sensor1,"static",{isSensor = true})
-	-- 	sensor1.actived = false
-	-- 	sensor1.myName = "sensor"
-	-- 	sensor1:addEventListener("collision", start1)
-	-- 	map.layer[1]:insert(sensor1)
-
-	--  	local sensor2 = display.newImageRect("crate.png",30,30)
-	--  	sensor2.x = 1330
-	--  	sensor2.y = 1010
-	-- 	physics.addBody(sensor2,"static",{isSensor = true})
-	-- 	sensor2.actived = false
-	-- 	sensor2.myName = "sensor"
-	-- 	sensor2:addEventListener("collision", start2)
-	-- 	map.layer[1]:insert(sensor2)
-	 
-	--  	local sensor3 = display.newImageRect("crate.png",30,30)
-	--  	sensor3.x = 1615
-	--  	sensor3.y = 1813
-	-- 	physics.addBody(sensor3,"static",{isSensor = true})
-	-- 	sensor3.actived = false
-	-- 	sensor3.myName = "sensor"
-	-- 	sensor3:addEventListener("collision", start3)
-	-- 	map.layer[1]:insert(sensor3)
-	 
-	--  	local sensor4 = display.newImageRect("crate.png",30,30)
-	--  	sensor4.x = 1220
-	--  	sensor4.y = 1753
-	-- 	physics.addBody(sensor4,"static",{isSensor = true})
-	-- 	sensor4.actived = false
-	-- 	sensor4.myName = "sensor"
-	-- 	sensor4:addEventListener("collision", start4)
-	-- 	map.layer[1]:insert(sensor4)
-	 
-
-	-- 	local sensor5 = display.newImageRect("crate.png",30,30)
-	--  	sensor5.x = 280
-	--  	sensor5.y = 1580
-	-- 	physics.addBody(sensor5,"static",{isSensor = true})
-	-- 	sensor5.actived = false
-	-- 	sensor5.myName = "sensor"
-	-- 	sensor5:addEventListener("collision", start5)
-	-- 	map.layer[1]:insert(sensor5)
-	 
-	 		
-	-- 	local sensor6 = display.newImageRect("crate.png",30,30)
-	--  	sensor6.x = 197
-	--  	sensor6.y = 1344
-	-- 	physics.addBody(sensor6,"static",{isSensor = true})
-	-- 	sensor6.actived = false
-	-- 	sensor6.myName = "sensor"
-	-- 	sensor6:addEventListener("collision", start6)
-	-- 	map.layer[1]:insert(sensor6)
-	 
-
-	-- 	local sensor7 = display.newImageRect("crate.png",30,30)
-	--  	sensor7.x = 1627
-	--  	sensor7.y = 344
-	-- 	physics.addBody(sensor7,"static",{isSensor = true})
-	-- 	sensor7.actived = false
-	-- 	sensor7.myName = "sensor"
-	-- 	sensor7:addEventListener("collision", start7)
-	-- 	map.layer[1]:insert(sensor7)
-
-
-	-- 	local sensor8 = display.newImageRect("crate.png",30,30)
-	--  	sensor8.x = 324
-	--  	sensor8.y = 368
-	-- 	physics.addBody(sensor8,"static",{isSensor = true})
-	-- 	sensor8.actived = false
-	-- 	sensor8.myName = "sensor"
-	-- 	sensor8:addEventListener("collision", start8)
-	-- 	map.layer[1]:insert(sensor8)
-
-	-- 	local sensor9 = display.newImageRect("crate.png",30,30)
-	--  	sensor9.x = 881
-	--  	sensor9.y = 692
-	-- 	physics.addBody(sensor9,"static",{isSensor = true})
-	-- 	sensor9.actived = false
-	-- 	sensor9.myName = "sensor"
-	-- 	sensor9:addEventListener("collision", start9)
-	-- 	map.layer[1]:insert(sensor9)
-		
-
-	--  	local chegada = display.newImage("_imagem/escada.png")
-	--  	chegada.x = map.data.width/2 + 230
-	--  	chegada.y = map.data.height/2 - 150
-	--  	physics.addBody(chegada,"static",{isSensor = true})
-	--     chegada:addEventListener("collision", chegadaGame)
-
-	    	
-		   
-	--  	detector =display.newImageRect("_imagem/detector.png",40,40)
-	--  	detector.x,detector.y = 50,260 
-	--  	detector.actived = false
-	--  	detector:addEventListener("touch",radar)
-
-	-- criaButtons()
-
-	--  sceneGroup:insert(chegada)
+	sceneGroup:insert(map)
+	-- sceneGroup:insert(bomb)
+ 	
 end
-
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
@@ -510,6 +349,7 @@ function scene:hide( event )
 		--physics.stop()
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
+		audio.stop(songMenu)
 		map.destroy()
 		--composer.removeScene( "game" )
 	end	
