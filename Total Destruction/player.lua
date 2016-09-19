@@ -96,6 +96,7 @@ sequenceData = {
 playerCollisionFilter = { categoryBits = 1, maskBits = 6 }
 -- Display the new sprite at the coordinates passed
 hero = display.newSprite(mySheet, sequenceData) --ImageRect("player/hero.png", 32, 32)
+-- hero.bodyType = "static"
 physics.addBody( hero, "static", {filter = playerCollisionFilter})
 hero:setSequence( "forward" )
 hero.type = "player"

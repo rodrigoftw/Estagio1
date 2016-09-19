@@ -48,6 +48,8 @@ function scene:create( event )
 	local currMap = "Teste1.json"
 	map = dusk.buildMap("maps/"..currMap)
 
+	dusk.setPreference("virtualObjectsVisible", true)
+
 	-- local songMenu = audio.loadStream("sound/songs/Beat_Your_Competition.mp3", -1)
 	-- audio.play(songMenu)
 	-- audio.setVolume( 0.005 )
@@ -90,14 +92,15 @@ function scene:create( event )
 	end
 
 	local x = 1
+	physics.setDrawMode("normal")
 	-- Function to handle button events
 	local function handleButtonEvent( event )
 	    if ( "ended" == event.phase ) then			
 	    	if (x%2 == 0) then
-		        physics.setDrawMode("hybrid")
+				physics.setDrawMode("normal")
 				x = x + 1
 			elseif (x%2 ~= 0) then
-				physics.setDrawMode("normal")
+		        physics.setDrawMode("hybrid")
 				x = x + 1
 			end
 	    end
@@ -109,43 +112,56 @@ function scene:create( event )
 	        left = _W*0.75,
 	        top = _H*0.85,
 	        id = "collisionButton",
-	        label = "Ver Colisão",
-			labelColor = { default = { 1, 1, 1 }, over = { 0, 0, 0, 0.5 } },
+	        label = "Ver Colisões",
+			labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
 	        onEvent = handleButtonEvent
 	    }
 	)
 
-	local function restartLevel( event )
-    -- When you tap the "I Win" button, reset the "nextlevel" scene, then goto it.
-    -- Using a button to go to the nextlevel screen isn't realistic, but however you determine to 
-    -- when the level was successfully beaten, the code below shows you how to call the gameover scene.
-	    if event.phase == "ended" then
-	        composer.removeScene("game")
-	        composer.gotoScene("game", { time= 1000, effect = "crossFade" })
-	    end
-	    return true
-	end
+	-- local function restartLevel( event )
+ --    -- When you tap the "I Win" button, reset the "nextlevel" scene, then goto it.
+ --    -- Using a button to go to the nextlevel screen isn't realistic, but however you determine to 
+ --    -- when the level was successfully beaten, the code below shows you how to call the gameover scene.
+	--     if event.phase == "ended" then
+	--         -- composer.removeScene("game")
+	--         -- composer.gotoScene("game", { time= 500, effect = "crossFade" })
+	--         native.requestExit()
+	--     end
+	--     return true
+	-- end
 
-	local restart = widget.newButton(
-		{
-			id = "restartButton",
-			label = "Restart",
-			labelColor = { default = { 1, 1, 1 }, over = { 0, 0, 0, 0.5 } },
-		    left = _W*0.5,
-	        top = _H*0.85,
-			onEvent = restartLevel
-		}
-	)
-	-- sceneGroup:insert(restart)
+	-- local restart = widget.newButton(
+	-- 	{
+	-- 		id = "restartButton",
+	-- 		label = "Sair",
+	-- 		labelColor = { default = { 1, 1, 1 }, over = { 0, 0, 0, 0.5 } },
+	-- 	    left = _W*0.5,
+	--         top = _H*0.85,
+	-- 		onEvent = restartLevel
+	-- 	}
+	-- )
+
+	-- local function QuitButtonHit(event)
+	-- 	native.requestExit()
+	-- 	return true
+	-- end
+
+	-- local quitbutton = display.newImageRect("quitbutton.png", 174, 42 )
+	-- quitbutton.x = display.contentWidth * 0.5
+	-- quitbutton.y = 280
+	-- quitbutton.gotoScene = "quit"
+	-- restart:addEventListener("tap", QuitButtonHit)
 
 	function onCollision(event)
     	if event.phase == "began" then
 			if event.target.type == "player" and event.other.type == "wall" then
-				-- Como fazer o player se encostar contra a parece e nada acontecer?
-			elseif event.target.type == "player" and event.other.type == "finishline" then
+				-- Como fazer o player se encostar contra a parece e não atravessá-la?
+			elseif event.target.type == "player" and event.other.type == "object" then
+				-- O player toca a bandeira e a fase acaba.
 				timer.cancel(Timer)
 				-- composer.gotoScene( "results" )
 			elseif event.target.type == "player" and event.other.type == "bomb" then
+				-- O player morre por uma explosão.
 				hero:removeSelf()
 				hero = nil
 			end
@@ -184,41 +200,46 @@ function scene:create( event )
 
 
 	map.layer["Shadows"].alpha = 0.45
-	
-	map.layer["Objects"].type = finishline
-	local finish = display.newRect(888,624,12,48)
-	finish.type = "finishline"
-	finish.alpha = 0
-	physics.addBody(finish,"static",{isSensor = true})
-	map.layer["Objects"]:insert(finish)
-	finish:addEventListener("collision", finish)
-	map.layer["DestructableWalls"].collision = onCollision
+	map.layer["Hero"].type = player
 	map.layer["DestructableWalls"].type = wall
 	
-	WallCollisionFilter = { categoryBits = 2, maskBits = 5 }
+	-- map.layer["Objects"].type = finishline
+	-- local finish = display.newRect(888,624,12,48)
+	-- finish.type = "finishline"
+	-- finish.alpha = 0
+	-- physics.addBody(finish,"static",{isSensor = true})
+	-- map.layer["Objects"]:insert(finish)
+	-- finish:addEventListener("collision", finish)
+	-- map.layer["DestructableWalls"].collision = onCollision
+	-- map.layer["DestructableWalls"].type = wall
+	
+	
+	-- wallCollisionFilter = { categoryBits = 2, maskBits = 5 }
 
-	local block = display.newRect(352,416,32,32)
-	block.type = "wall"
-	block.bodyType = static
-	-- physics.addBody(block,"static",{filter = WallCollisionFilter, isSensor = true})
-	map.layer["Collision"]:insert(block)
-	block:addEventListener("collision", block)
-	map.layer["DestructableCeilings"].collision = onCollision
-	map.layer["DestructableCeilings"].type = wall
-	block.isSleepingAllowed = false
-	block.isBodyActive=true
+	-- local block = display.newRect(352,416,32,32)
+	-- block.type = "wall"
+	-- block.bodyType = "static"
+	-- -- physics.addBody(block,"static",{filter = wallCollisionFilter, isSensor = true})
+	-- map.layer["Collision"]:insert(block)
+	-- block:addEventListener("collision", block)
+	-- map.layer["DestructableCeilings"].collision = onCollision
+	-- map.layer["DestructableCeilings"].type = wall
+	-- block.isSleepingAllowed = false
+	-- block.isBodyActive=true
 
-	local block2 = display.newRect(736,608,32,32)
-	block2.type = "wall"
-	block2.bodyType = static
-	-- physics.addBody(block2,"static",{isSensor = true})
-	map.layer["Collision"]:insert(block2)
-	block2:addEventListener("collision", block2)
+	-- local block2 = display.newRect(736,608,32,32)
+	-- block2.type = "wall"
+	-- block2.bodyType = "static"
+	-- physics.addBody(block2,"static",{filter = wallCollisionFilter, isSensor = true})
+	-- map.layer["Collision"]:insert(block2)
+	-- block2:addEventListener("collision", block2)
+	-- block2.isSleepingAllowed = false
+	-- block2.isBodyActive=true
 
-	map.layer["Collision"]:insert(hero)
+	-- map.layer["Collision"]:insert(hero)
 	map.layer["Collision"].alpha = 0
 	-- map.layer["Hero"]:insert(hero)
-	map.setCameraFocus(hero)
+	-- map.setCameraFocus(hero)
 
 	-----------Timer-----------
 	-- Contar o tempo em segundos
