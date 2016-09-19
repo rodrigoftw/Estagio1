@@ -11,6 +11,7 @@ local StickLib = require("libs.lib_analog_stick")
 local Player = require("player")
 local physics = require("physics")
 local widget = require ("widget")
+system.activate( "multitouch" )
 physics.start() 
 physics.setGravity( 0, 0 )
 -- physics.setDrawMode("hybrid")
@@ -202,6 +203,21 @@ function scene:create( event )
 	map.layer["Shadows"].alpha = 0.45
 	map.layer["Hero"].type = player
 	map.layer["DestructableWalls"].type = wall
+
+	-- local block = display.newRect(352,416,64,64)
+	-- block.type = "wall"
+	-- physics.addBody(block, "static", {isSensor = true})
+	-- map.layer["DestructableWalls"]:insert(block)
+	-- map.layer["DestructableCeilings"]:insert(block)
+
+	local tile = map.layer["DestructableWalls"].tileByPixels(352, 416)
+
+	for tile in map.layer["DestructableWalls"].tilesInRange(0, 0, _W, _H) do
+		tile.type = "wall"
+		physics.addBody(tile, "static", {isSensor = true})
+		map.layer["DestructableWalls"]:insert(tile)
+		map.layer["DestructableCeilings"]:insert(tile)
+	end
 	
 	-- map.layer["Objects"].type = finishline
 	-- local finish = display.newRect(888,624,12,48)
