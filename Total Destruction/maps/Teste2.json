@@ -231,6 +231,14 @@
         }],
  "nextobjectid":19,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "physics:enabled":"true"
+    },
+ "propertytypes":
+    {
+     "physics:enabled":"string"
+    },
  "renderorder":"left-up",
  "tileheight":64,
  "tilesets":[
