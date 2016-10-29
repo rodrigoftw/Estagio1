@@ -1,7 +1,9 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local physics = require( "physics" )
+local dusk = require("Dusk.Dusk")
 local widget = require( "widget" )
+local json = require( "json" )
 local utility = require( "utility" )
 local ads = require( "ads" )
 
@@ -19,6 +21,12 @@ local RIGHT_REF = 1
 local CENTER_REF = 0.5
 
 physics.start()
+physics.setGravity( 0, 9.8 )
+
+display.setDefault("minTextureFilter", "nearest")
+display.setDefault("magTextureFilter", "nearest")
+
+wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
 local myData = require( "mydata" )
 
@@ -143,6 +151,57 @@ function scene:create( event )
     -- end
     -- Runtime:addEventListener( "enterFrame", moveg )
 
+    -- -- Mapa
+    -- local currMap = "menu.json" --"level2.json" --"level3.json"
+    -- map = dusk.buildMap("maps/"..currMap)
+
+    -- -- dusk.setPreference("virtualObjectsVisible", true)
+    -- dusk.setPreference("enableTileCulling", false)
+    -- dusk.setPreference("scaleCameraBoundsToScreen", true)
+    -- dusk.setPreference("enableCamera", true)
+    -- dusk.setPreference("detectMapPath", true)
+
+    -- --------------------------------------------------------------------------------
+    -- -- Set Map
+    -- --------------------------------------------------------------------------------
+    -- local function setMap(mapName)
+    --     mapX, mapY = map.getViewpoint()
+    --     Runtime:removeEventListener("enterFrame", map.updateView)
+    --     map.destroy()
+    --     map = dusk.buildMap("maps/" .. mapName)
+    --     currMap = mapName
+    --     map.setViewpoint(mapX, mapY)
+    --     map.snapCamera()
+    --     map.setTrackingLevel(0.3)
+    --     map:addEventListener("touch", mapTouch)
+    --     Runtime:addEventListener("enterFrame", map.updateView)
+    -- end
+
+    -- playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
+
+    -- local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
+    -- player.bodyType = "dynamic"
+    -- player.bounce = 0
+    -- player.friction = 10
+    -- player.collision = onCollision
+    -- player.isFixedRotation = true
+
+    -- local centerX, centerY = map.getViewpoint()
+    -- local top = centerY - display.contentCenterY
+    -- local bottom = centerY + display.contentCenterY
+    -- local left = centerX - display.contentCenterX
+    -- local right = centerX + display.contentCenterX
+
+    -- map.setCameraBounds({
+    --     xMin = display.contentCenterX,
+    --     yMin = display.contentCenterY,
+    --     xMax = map.data.width + display.contentCenterX,
+    --     yMax = map.data.height - display.contentCenterY
+    --     -- Use map.data.width because that's the "real" width of the map - 
+    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    -- })
+
+    -- local tile = map.layer["Clouds"].tile(x, y)
 
 
     local title = display.newText("Stay Alive!", 100, 32, native.systemFontBold, 56 )
@@ -232,6 +291,7 @@ function scene:hide( event )
     local sceneGroup = self.view
     
     if event.phase == "will" then
+        physics.stop()
     end
 
 end

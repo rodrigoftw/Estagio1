@@ -107,17 +107,38 @@ function scene:create( event )
     --
     local thisLevel = myData.settings.currentLevel
 
+    -- if (thisLevel == 1) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level1" )
+    -- elseif (thisLevel == 2) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level2" )
+    -- elseif (thisLevel == 3) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level3" )
+    -- elseif (thisLevel == 4) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level4" )
+    -- elseif (thisLevel == 5) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level5" )
+    -- elseif (thisLevel == 6) then
+    --     composer.removeScene( "game", false )
+    --     composer.gotoScene( "level6" )
+    -- end
+
     --
     -- create your objects here
     --
 
     -- Mapa
-    local currMap = "Level1_32.json"
+    local currMap = "level3.json" --"level2.json" --"level3.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
-    -- dusk.setPreference("enableTileCulling", false)
+    dusk.setPreference("enableTileCulling", false)
     dusk.setPreference("scaleCameraBoundsToScreen", true)
+    dusk.setPreference("enableCamera", true)
     dusk.setPreference("detectMapPath", true)
 
     --------------------------------------------------------------------------------
@@ -160,11 +181,10 @@ function scene:create( event )
     -- Runtime:addEventListener( "touch", mapTouch )
 
     playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
-    -- player collides with (2, 4 and 8) only
     -- player = display.newSprite( spritesheet, sequenceData )
     -- player.type = "player"
 
-    local player = map.layer["Player"].tile(11, 7)
+    local player = map.layer["Player"].tile(2, 4)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
     player.bodyType = "dynamic"
     player.bounce = 0
     player.friction = 10
@@ -211,17 +231,17 @@ function scene:create( event )
 
     -- player:addEventListener("collision", on_hit)
 
-    local leftButton = display.newImageRect( "images/ui/LeftButton.png", 45, 45 )
+    local leftButton = display.newImageRect( "images/ui/LeftButton.png", 55, 55 )
     leftButton.x = 25
-    leftButton.y = _H - 17
+    leftButton.y = _H - 27
 
-    local rightButton = display.newImageRect( "images/ui/RightButton.png", 45, 45 )
-    rightButton.x = 70
-    rightButton.y = _H - 17
+    local rightButton = display.newImageRect( "images/ui/RightButton.png", 55, 55 )
+    rightButton.x = 80
+    rightButton.y = _H - 27
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButton.png", 45, 45 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButton.png", 55, 55 )
     jumpButton.x = _W - 25
-    jumpButton.y = _H - 20
+    jumpButton.y = _H - 25
 
     local jump_completed = true
 
@@ -283,8 +303,10 @@ function scene:create( event )
     -- Create the widget
     local collisionButton = widget.newButton(
         {
-            left = 180,
+            left = centerX - 80,
             top = 0,
+            width = 90,
+            height = 35,
             id = "collisionButton",
             label = "Ver Colisões",
             labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
@@ -293,22 +315,58 @@ function scene:create( event )
     )
 
     -- Function to quit game
-    local function handleQuitButtonEvent( event )
+    local function handleMenuButtonEvent( event )
         -- if ( "began" == event.phase ) then
         --     audio.play(pressedButton)
         if ( "ended" == event.phase ) then
+            -- composer.removeScene( "menu", false )
+            -- composer.removeScene( "game", false )
+            -- composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
             native.requestExit()
         end
     end
 
-    local quitButton = widget.newButton(
+    local menuButton = widget.newButton(
          {
-            left = 180,
-            top = 47,
-            id = "quitButton",
-            label = "Sair",
+            left = centerX + 10,
+            top = 0,
+            width = 60,
+            height = 35,
+            id = "menuButton",
+            label = "Menu",
             labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
-            onEvent = handleQuitButtonEvent
+            onEvent = handleMenuButtonEvent
+        }
+    )
+
+    local y = 1
+    -- Function to toggle debug options on/off
+    local function handleToggleButtonEvent( event )
+        -- if ( "began" == event.phase ) then
+        --     audio.play(pressedButton)
+         if ( "ended" == event.phase ) then          
+            if (y%2 == 0) then
+                collisionButton.alpha = 1
+                menuButton.alpha = 1
+                y = y + 1
+            elseif (y%2 ~= 0) then
+                collisionButton.alpha = 0
+                menuButton.alpha = 0
+                y = y + 1
+            end
+        end
+    end
+
+    local toggleButton = widget.newButton(
+         {
+            left = centerX - 40,
+            top = _H - 35,
+            width = 60,
+            height = 35,
+            id = "toggleButton",
+            label = "On/Off",
+            labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
+            onEvent = handleToggleButtonEvent
         }
     )
 
@@ -321,7 +379,7 @@ function scene:create( event )
     map.setCameraBounds({
         xMin = display.contentCenterX,
         yMin = display.contentCenterY,
-        xMax = map.data.width - display.contentCenterX,
+        xMax = map.data.width + display.contentCenterX,
         yMax = map.data.height - display.contentCenterY
         -- Use map.data.width because that's the "real" width of the map - 
         -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
@@ -331,7 +389,7 @@ function scene:create( event )
     -- Contar o tempo em segundos
     local secondsPassed = 00 * 00-- * 00  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("00:00", ((display.contentCenterX*2) - (display.contentCenterX*0.1)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
+    local clockText = display.newText("00:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -350,7 +408,7 @@ function scene:create( event )
         clockText.alpha = 1
 
         map.setDamping(0.3)
-        map.setCameraFocus(player)
+        -- map.setCameraFocus(player)
         map.updateView()
     end
 

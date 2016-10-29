@@ -7,8 +7,7 @@ local myData = require( "mydata" )
 
 local params
 
-local function handleButtonEvent( event )
-
+local function handleCancelButtonEvent( event )
     if ( "ended" == event.phase ) then
         composer.removeScene( "menu", false )
         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
@@ -16,7 +15,6 @@ local function handleButtonEvent( event )
 end
 
 local function handleLevelSelect( event )
-
     if ( "ended" == event.phase ) then
         -- set the current level to the ID of the selected level
         myData.settings.currentLevel = event.target.id
@@ -36,19 +34,17 @@ function scene:create( event )
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
     --
-    local background = display.newRect( 0, 0, 570, 360)
+    local background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
     sceneGroup:insert(background)
 
-    local selectLevelText = display.newText("Select a level", 125, 32, native.systemFontBold, 32)
+    local selectLevelText = display.newText("Selecione um level", 125, 32, native.systemFontBold, 32)
     selectLevelText:setFillColor( 0 )
-    selectLevelText.x = display.contentCenterX
+    selectLevelText.x = display.contentCenterX + 10
     selectLevelText.y = 50
     sceneGroup:insert(selectLevelText)
 
-    --local x = 90
-    --local y = 115
     local x = 0
     local y = 0
     local buttons = {}
@@ -58,14 +54,14 @@ function scene:create( event )
     local cnt = 1
     for i = 1, myData.maxLevels do
         buttonGroups[i] = display.newGroup()
-        buttonBackgrounds[i] = display.newRoundedRect( x, y, 42, 32, 8 )
-        buttonBackgrounds[i]:setFillColor( 1, 0, 1, 0.333 )
-        buttonBackgrounds[i]:setStrokeColor( 1, 0, 1, 0.667 )
+        buttonBackgrounds[i] = display.newRect( x, y, 42, 32, 8 )--Rounded
+        buttonBackgrounds[i]:setFillColor(0, 0, 0, 0.5)--1, 0, 1, 0.333 )
+        buttonBackgrounds[i]:setStrokeColor(0, 0, 0, 0.667)--1, 0, 1, 0.667 )
         buttonBackgrounds[i].strokeWidth = 1
         buttonGroups[i]:insert(buttonBackgrounds[i])
         buttonGroups[i].id = i
         if myData.settings.unlockedLevels == nil then
-            myData.settings.unlockedLevels = 10
+            myData.settings.unlockedLevels = 1
         end
         
         if i <= myData.settings.unlockedLevels then
@@ -90,18 +86,18 @@ function scene:create( event )
     end
     sceneGroup:insert(levelSelectGroup)
     levelSelectGroup.x = display.contentCenterX - 100
-    levelSelectGroup.y = 120
+    levelSelectGroup.y = 110
 
-    local doneButton = widget.newButton({
-        id = "button1",
-        label = "Done",
+    local backButton = widget.newButton({
+        id = "backButton",
+        label = "Voltar",
         width = 100,
         height = 32,
-        onEvent = handleButtonEvent
+        onEvent = handleCancelButtonEvent
     })
-    doneButton.x = display.contentCenterX
-    doneButton.y = display.contentHeight - 40
-    sceneGroup:insert( doneButton )
+    backButton.x = display.contentCenterX
+    backButton.y = display.contentHeight - 25
+    sceneGroup:insert( backButton )
 end
 
 function scene:show( event )

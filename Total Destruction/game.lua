@@ -46,7 +46,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 	-- Mapa
-	local currMap = "Teste1.json"
+	local currMap = "Teste2.json"
 	map = dusk.buildMap("maps/"..currMap)
 
 	dusk.setPreference("virtualObjectsVisible", true)
