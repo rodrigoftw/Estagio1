@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- level1.lua
+-- level4.lua
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Map
     -------------------------------------------------------------------------------
-    local currMap = "level1.json"
+    local currMap = "level4.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
@@ -188,7 +188,6 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
-            audio.play( jumpSound )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5
@@ -367,8 +366,6 @@ function scene:destroy( event )
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
-
-    audio.dispose( audioHandle )
 end
 
 -------------------------------------------------------------------------------
