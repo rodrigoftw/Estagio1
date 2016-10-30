@@ -62,6 +62,13 @@ end
 
 --
 -- Load your global sounds here
+
+-------------------------------------------------------------------------------
+-- Sounds
+-------------------------------------------------------------------------------
+
+jumpSound = audio.loadSound( "audio/sound/Jump.wav" )
+
 -- Load scene specific sounds in the scene
 --
 -- myData.splatSound = audio.load("audio/splat.wav")

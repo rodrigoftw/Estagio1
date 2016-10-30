@@ -17,9 +17,17 @@ end
 local function handleLevelSelect( event )
     if ( "ended" == event.phase ) then
         -- set the current level to the ID of the selected level
-        myData.settings.currentLevel = event.target.id
-        composer.removeScene( "game", false )
-        composer.gotoScene( "game", { effect = "crossFade", time = 333 } )
+        --myData.settings.currentLevel = event.target.id
+
+        local levNumber = tonumber(event.target.id)
+
+        local scene = ".levels.level"..levNumber
+ 
+        composer.removeScene( scene, false )
+        composer.gotoScene( scene, { effect="crossFade", time=333 } )
+
+        -- composer.removeScene( "game", false )
+        -- composer.gotoScene( "game", { effect = "crossFade", time = 333 } )
     end
 end
 --
@@ -29,7 +37,6 @@ function scene:create( event )
     local sceneGroup = self.view
 
     params = event.params
-        
     --
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.

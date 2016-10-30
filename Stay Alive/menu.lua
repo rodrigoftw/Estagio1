@@ -14,14 +14,14 @@ local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
 
-local TOP_REF = 0
-local BOTTOM_REF = 1
-local LEFT_REF = 0
-local RIGHT_REF = 1
-local CENTER_REF = 0.5
+-- local TOP_REF = 0
+-- local BOTTOM_REF = 1
+-- local LEFT_REF = 0
+-- local RIGHT_REF = 1
+-- local CENTER_REF = 0.5
 
-physics.start()
-physics.setGravity( 0, 9.8 )
+-- physics.start()
+-- physics.setGravity( 0, 9.8 )
 
 display.setDefault("minTextureFilter", "nearest")
 display.setDefault("magTextureFilter", "nearest")
@@ -29,42 +29,6 @@ display.setDefault("magTextureFilter", "nearest")
 wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
 local myData = require( "mydata" )
-
-local function handlePlayButtonEvent( event )
-    if ( "ended" == event.phase ) then
-        composer.removeScene( "levelselect", false )
-        composer.gotoScene("levelselect", { effect = "crossFade", time = 333 })
-    end
-end
-
-local function handleHelpButtonEvent( event )
-    if ( "ended" == event.phase ) then
-        composer.gotoScene("help", { effect = "crossFade", time = 333, isModal = true })
-    end
-end
-
-local function handleCreditsButtonEvent( event )
-
-    if ( "ended" == event.phase ) then
-        composer.gotoScene("gamecredits", { effect = "crossFade", time = 333 })
-    end
-end
-
-local function handleSettingsButtonEvent( event )
-
-    if ( "ended" == event.phase ) then
-        composer.gotoScene("gamesettings", { effect = "crossFade", time = 333 })
-    end
-end
-
-local function handleQuitButtonEvent( event )
-
-    if ( "began" == event.phase ) then
-        -- audio.play(pressedButton)
-    elseif ( "ended" == event.phase ) then
-        native.requestExit()
-    end
-end
 
 --
 -- Start the composer event handlers
@@ -202,6 +166,42 @@ function scene:create( event )
     -- })
 
     -- local tile = map.layer["Clouds"].tile(x, y)
+
+    local function handlePlayButtonEvent( event )
+        if ( "ended" == event.phase ) then
+            composer.removeScene( "levelselect", false )
+            composer.gotoScene("levelselect", { effect = "crossFade", time = 333 })
+        end
+    end
+
+    local function handleHelpButtonEvent( event )
+        if ( "ended" == event.phase ) then
+            composer.gotoScene("help", { effect = "crossFade", time = 333, isModal = true })
+        end
+    end
+
+    local function handleCreditsButtonEvent( event )
+
+        if ( "ended" == event.phase ) then
+            composer.gotoScene("gamecredits", { effect = "crossFade", time = 333 })
+        end
+    end
+
+    local function handleSettingsButtonEvent( event )
+
+        if ( "ended" == event.phase ) then
+            composer.gotoScene("gamesettings", { effect = "crossFade", time = 333 })
+        end
+    end
+
+    local function handleQuitButtonEvent( event )
+
+        if ( "began" == event.phase ) then
+            -- audio.play(pressedButton)
+        elseif ( "ended" == event.phase ) then
+            native.requestExit()
+        end
+    end
 
 
     local title = display.newText("Stay Alive!", 100, 32, native.systemFontBold, 56 )
