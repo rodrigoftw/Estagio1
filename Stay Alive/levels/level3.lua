@@ -140,20 +140,20 @@ function scene:create( event )
     -- Movement Buttons
     -------------------------------------------------------------------------------
 
-    local leftButton = display.newImageRect( "images/ui/LeftButton.png", 55, 55 )
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
     leftButton.alpha = 0.5
-    leftButton.x = 25
+    leftButton.x = 27
     leftButton.y = _H - 27
 
-    local rightButton = display.newImageRect( "images/ui/RightButton.png", 55, 55 )
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
     rightButton.alpha = 0.5
-    rightButton.x = 80
+    rightButton.x = 70
     rightButton.y = _H - 27
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButton.png", 55, 55 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
     jumpButton.alpha = 0.5
-    jumpButton.x = _W - 25
-    jumpButton.y = _H - 25
+    jumpButton.x = _W - 27
+    jumpButton.y = _H - 27
 
     -------------------------------------------------------------------------------
     -- Movement Functions
@@ -188,6 +188,7 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
+            audio.play( jumpSound )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5
