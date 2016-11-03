@@ -55,7 +55,7 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Map
     -------------------------------------------------------------------------------
-    local currMap = "level5.json"
+    local currMap = "level5_grass.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
@@ -207,6 +207,54 @@ function scene:create( event )
     end
 
     player:addEventListener("collision", on_hit)
+
+    -------------------------------------------------------------------------------
+    -- Keyboard Buttons
+    -------------------------------------------------------------------------------
+
+    -- Keyboard input configuration
+    local keyUp = "up"
+    local keyLeft = "left"
+    local keyRight = "right"
+
+    -- Called when a key event has been received
+    local function onKeyEvent( event )
+        local keyName = event.keyName
+        local phase = event.phase
+
+        -- Handle movement keys events; update movement logic variables
+        -- if ( "left" == phase ) then
+        -- if (event.phase == "began" and jump_completed == false) then
+            if ( keyUp == keyName ) then
+                audio.play( jumpSound )
+                player:setLinearVelocity(0, -200)
+            end
+            jump_completed = true
+        -- elseif (event.phase == "ended") then
+            -- jump_completed = true
+        -- end
+        if ( keyLeft == keyName ) then
+            player:setLinearVelocity(-100, 0)
+        end
+        if ( keyRight == keyName ) then
+            player:setLinearVelocity(100, 0)
+        end
+
+        -- end
+        -- if ( "right" == phase ) then
+        --     if ( keyRight == keyName ) then
+        --         player:setLinearVelocity(100, 0)
+        --     end
+        -- end
+        -- if ( "up" == phase ) then
+        --     if ( keyUp == keyName ) then
+        --         player:setLinearVelocity(0, -200)
+        --     end
+        -- end
+
+        return false
+    end
+    Runtime:addEventListener( "key", onKeyEvent )
 
     -------------------------------------------------------------------------------
     -- Debug Buttons and Functions
@@ -367,6 +415,9 @@ function scene:destroy( event )
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
+
+    map.destroy()
+    
 end
 
 -------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ display.setStatusBar( display.HiddenStatusBar )
 math.randomseed( os.time() )
 
 if device.isAndroid then
-	widget.setTheme( "widget_theme_android_holo_light" )
+	-- widget.setTheme( "widget_theme_android_holo_light" )
     store = require("plugin.google.iap.v3")
 end
 
@@ -26,7 +26,7 @@ if myData.settings == nil then
 	myData.settings.musicOn = true
     myData.settings.isPaid = false
 	myData.settings.currentLevel = 1
-	myData.settings.unlockedLevels = 20
+	myData.settings.unlockedLevels = 9
     myData.settings.bestScore = 0
 	myData.settings.levels = {}
 	utility.saveTable(myData.settings, "settings.json")
@@ -67,7 +67,14 @@ end
 -- Sounds
 -------------------------------------------------------------------------------
 
-jumpSound = audio.loadSound( "audio/sound/Jump.wav" )
+buttonToggle = audio.loadSound( "audio/sound/player/ButtonToggle.wav" )
+buttonToggle2 = audio.loadSound( "audio/sound/player/ButtonToggle2.wav" )
+gravitySound2 = audio.loadSound( "audio/sound/player/Gravity2.wav" )
+gravitySound = audio.loadSound( "audio/sound/player/Gravity.wav" )
+deathSound2 = audio.loadSound( "audio/sound/player/Death2.wav" )
+deathSound = audio.loadSound( "audio/sound/player/Death.wav" )
+jumpSound = audio.loadSound( "audio/sound/player/Jump.wav" )
+winSound = audio.loadSound( "audio/sound/player/Win.wav" )
 
 -- Load scene specific sounds in the scene
 --

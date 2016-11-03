@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- level2.lua
+-- level6.lua
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Map
     -------------------------------------------------------------------------------
-    local currMap = "level2_grass.json"
+    local currMap = "level7_grass.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
@@ -129,7 +129,7 @@ function scene:create( event )
     -- Player
     -------------------------------------------------------------------------------
 
-    local player = map.layer["Player"].tile(2, 9)
+    local player = map.layer["Player"].tile(2, 2)
     player.bodyType = "dynamic"
     player.bounce = 0
     player.friction = 10

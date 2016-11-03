@@ -48,35 +48,35 @@ function scene:create( event )
     -- sceneGroup:insert( background )
 
     -- set the background image
-    background = display.newImage( "images/background/07.png", _W, _H )
-    background:scale(0.5, 0.5)
-    background.x = centerX + 132
-    background.y = centerY - 15
-    sceneGroup:insert( background )
+    -- background = display.newImage( "images/background/07.png", _W, _H )
+    -- background:scale(0.5, 0.5)
+    -- background.x = centerX + 132
+    -- background.y = centerY - 15
+    -- sceneGroup:insert( background )
 
-    background2 = display.newImage( "images/background/07.png", _W, _H )
-    background2:scale(0.5, 0.5)
-    background2.x = (background.width/2) + centerX + 132
-    background2.y = centerY - 15
-    sceneGroup:insert( background2 )
+    -- background2 = display.newImage( "images/background/07.png", _W, _H )
+    -- background2:scale(0.5, 0.5)
+    -- background2.x = (background.width/2) + centerX + 132
+    -- background2.y = centerY - 15
+    -- sceneGroup:insert( background2 )
 
-    speed = 1
+    -- speed = 1
 
-    function movebg()
-      background.x = background.x - speed
-      background2.x = background2.x - speed
-        -- if(background.x == -360)then 
-        --     background.x = 840 - speed
-        -- elseif(background2.x == -360)then 
-        --     background2.x = 840 - speed
-        -- end
-        if (background.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
-            background:translate(display.contentWidth + display.contentWidth + 300, 0)
-        elseif (background2.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
-            background2:translate(display.contentWidth + display.contentWidth + 300, 0)
-        end
-    end
-    Runtime:addEventListener( "enterFrame", movebg )
+    -- function movebg()
+    --   background.x = background.x - speed
+    --   background2.x = background2.x - speed
+    --     -- if(background.x == -360)then 
+    --     --     background.x = 840 - speed
+    --     -- elseif(background2.x == -360)then 
+    --     --     background2.x = 840 - speed
+    --     -- end
+    --     if (background.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
+    --         background:translate(display.contentWidth + display.contentWidth + 300, 0)
+    --     elseif (background2.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
+    --         background2:translate(display.contentWidth + display.contentWidth + 300, 0)
+    --     end
+    -- end
+    -- Runtime:addEventListener( "enterFrame", movebg )
 
     -- local ground = display.newImageRect("images/background/ground.png", 580, 32)
     -- ground.width = 580
@@ -115,90 +115,126 @@ function scene:create( event )
     -- end
     -- Runtime:addEventListener( "enterFrame", moveg )
 
-    -- -- Mapa
-    -- local currMap = "menu.json" --"level2.json" --"level3.json"
-    -- map = dusk.buildMap("maps/"..currMap)
+    --------------------------------------------------------------------------------
+    -- Mapa
+    --------------------------------------------------------------------------------
 
-    -- -- dusk.setPreference("virtualObjectsVisible", true)
-    -- dusk.setPreference("enableTileCulling", false)
-    -- dusk.setPreference("scaleCameraBoundsToScreen", true)
-    -- dusk.setPreference("enableCamera", true)
-    -- dusk.setPreference("detectMapPath", true)
+    local currMap = "menu_grass.json"
+    map = dusk.buildMap("maps/"..currMap)
+    map:toBack()
 
-    -- --------------------------------------------------------------------------------
-    -- -- Set Map
-    -- --------------------------------------------------------------------------------
-    -- local function setMap(mapName)
-    --     mapX, mapY = map.getViewpoint()
-    --     Runtime:removeEventListener("enterFrame", map.updateView)
-    --     map.destroy()
-    --     map = dusk.buildMap("maps/" .. mapName)
-    --     currMap = mapName
-    --     map.setViewpoint(mapX, mapY)
-    --     map.snapCamera()
-    --     map.setTrackingLevel(0.3)
-    --     map:addEventListener("touch", mapTouch)
-    --     Runtime:addEventListener("enterFrame", map.updateView)
-    -- end
+    -- dusk.setPreference("virtualObjectsVisible", true)
+    dusk.setPreference("enableTileCulling", false)
+    dusk.setPreference("scaleCameraBoundsToScreen", true)
+    dusk.setPreference("enableCamera", true)
+    dusk.setPreference("detectMapPath", true)
 
-    -- playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
+    --------------------------------------------------------------------------------
+    -- Set Map
+    --------------------------------------------------------------------------------
+    local function setMap(mapName)
+        mapX, mapY = map.getViewpoint()
+        Runtime:removeEventListener("enterFrame", map.updateView)
+        map.destroy()
+        map = dusk.buildMap("maps/" .. mapName)
+        currMap = mapName
+        map.setViewpoint(mapX, mapY)
+        map.snapCamera()
+        map.setTrackingLevel(0.3)
+        map:addEventListener("touch", mapTouch)
+        Runtime:addEventListener("enterFrame", map.updateView)
+    end
 
-    -- local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
-    -- player.bodyType = "dynamic"
-    -- player.bounce = 0
-    -- player.friction = 10
-    -- player.collision = onCollision
-    -- player.isFixedRotation = true
+    playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
 
-    -- local centerX, centerY = map.getViewpoint()
-    -- local top = centerY - display.contentCenterY
-    -- local bottom = centerY + display.contentCenterY
-    -- local left = centerX - display.contentCenterX
-    -- local right = centerX + display.contentCenterX
+    local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
+    player.bodyType = "dynamic"
+    player.bounce = 0
+    player.friction = 10
+    player.collision = onCollision
+    player.isFixedRotation = true
 
-    -- map.setCameraBounds({
-    --     xMin = display.contentCenterX,
-    --     yMin = display.contentCenterY,
-    --     xMax = map.data.width + display.contentCenterX,
-    --     yMax = map.data.height - display.contentCenterY
-    --     -- Use map.data.width because that's the "real" width of the map - 
-    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
-    -- })
+    local centerX, centerY = map.getViewpoint()
+    local top = centerY - display.contentCenterY
+    local bottom = centerY + display.contentCenterY
+    local left = centerX - display.contentCenterX
+    local right = centerX + display.contentCenterX
 
-    -- local tile = map.layer["Clouds"].tile(x, y)
+    map.setCameraBounds({
+        xMin = display.contentCenterX,
+        yMin = display.contentCenterY,
+        xMax = map.data.width - display.contentCenterX,
+        yMax = map.data.height - display.contentCenterY
+        -- Use map.data.width because that's the "real" width of the map - 
+        -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    })
+
+    local tile = {
+        map.layer["Clouds"].tile(3, 3),
+        map.layer["Clouds"].tile(3, 4),
+        map.layer["Clouds"].tile(4, 3),
+        map.layer["Clouds"].tile(3, 4),
+        map.layer["Clouds"].tile(5, 4),
+
+        map.layer["Clouds"].tile(8, 6),
+        map.layer["Clouds"].tile(8, 7),
+
+        map.layer["Clouds"].tile(10, 2),
+        map.layer["Clouds"].tile(11, 2),
+        map.layer["Clouds"].tile(10, 3),
+        map.layer["Clouds"].tile(11, 3),
+        map.layer["Clouds"].tile(12, 3),
+
+        map.layer["Clouds"].tile(16, 3),
+        map.layer["Clouds"].tile(17, 3)
+    } 
+    
+    for tile in map.layer["Clouds"].tilesInRect(centerX, centerY, left, bottom) do
+        if (tile.x > display.contentCenterX) then
+            tile.x = tile.x -1
+        elseif (tile.x < display.contentCenterX / 2 ) then
+            tile.x = xMax
+        end
+    end
 
     local function handlePlayButtonEvent( event )
-        if ( "ended" == event.phase ) then
+        if ( event.phase == "began" ) then
+            audio.play(buttonToggle)
+        elseif ( event.phase =="ended" ) then
+            map.destroy()
             composer.removeScene( "levelselect", false )
             composer.gotoScene("levelselect", { effect = "crossFade", time = 333 })
         end
     end
 
     local function handleHelpButtonEvent( event )
-        if ( "ended" == event.phase ) then
+        if ( event.phase == "began" ) then
+            audio.play(buttonToggle)
+        elseif ( event.phase =="ended" ) then
             composer.gotoScene("help", { effect = "crossFade", time = 333, isModal = true })
         end
     end
 
     local function handleCreditsButtonEvent( event )
-
-        if ( "ended" == event.phase ) then
+        if ( event.phase == "began" ) then
+            audio.play(buttonToggle)
+        elseif ( event.phase =="ended" ) then
             composer.gotoScene("gamecredits", { effect = "crossFade", time = 333 })
         end
     end
 
     local function handleSettingsButtonEvent( event )
-
-        if ( "ended" == event.phase ) then
+        if ( event.phase == "began" ) then
+            audio.play(buttonToggle)
+        elseif ( event.phase =="ended" ) then
             composer.gotoScene("gamesettings", { effect = "crossFade", time = 333 })
         end
     end
 
     local function handleQuitButtonEvent( event )
-
-        if ( "began" == event.phase ) then
-            -- audio.play(pressedButton)
-        elseif ( "ended" == event.phase ) then
+        if ( event.phase == "began" ) then
+            audio.play(buttonToggle)
+        elseif ( event.phase =="ended" ) then
             native.requestExit()
         end
     end
@@ -208,65 +244,101 @@ function scene:create( event )
     title.x = display.contentCenterX
     title.y = 80
     title:setFillColor( 0 )
+    title:toFront()
     sceneGroup:insert( title )
 
     -- Create the widget
     local playButton = widget.newButton({
         id = "button1",
         label = "Jogar",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handlePlayButtonEvent
     })
     playButton.x = display.contentCenterX - 80
     playButton.y = display.contentCenterY + 40
+    playButton:toFront()
     sceneGroup:insert( playButton )
 
     -- Create the widget
     local settingsButton = widget.newButton({
         id = "button2",
         label = "Opções",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleSettingsButtonEvent
     })
     settingsButton.x = display.contentCenterX + 80
     settingsButton.y = display.contentCenterY + 40
+    settingsButton:toFront()
     sceneGroup:insert( settingsButton )
 
     -- Create the widget
     local helpButton = widget.newButton({
         id = "button3",
         label = "Ajuda",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleHelpButtonEvent
     })
     helpButton.x = display.contentCenterX - 170
     helpButton.y = display.contentCenterY + 110
+    helpButton:toFront()
     sceneGroup:insert( helpButton )
 
     -- Create the widget
     local creditsButton = widget.newButton({
         id = "button4",
         label = "Créditos",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleCreditsButtonEvent
     })
     creditsButton.x = display.contentCenterX + 170
     creditsButton.y = display.contentCenterY + 110
+    creditsButton:toFront()
     sceneGroup:insert( creditsButton )
 
     local quitButton = widget.newButton({
         id = "button5",
         label = "Sair",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleQuitButtonEvent
     })
     quitButton.x = display.contentCenterX
     quitButton.y = display.contentCenterY + 110
+    quitButton:toFront()
     sceneGroup:insert( quitButton )
 
 end
@@ -277,10 +349,10 @@ function scene:show( event )
     params = event.params
     utility.print_r(event)
 
-    if params then
-        print(params.someKey)
-        print(params.someOtherKey)
-    end
+    -- if params then
+    --     print(params.someKey)
+    --     print(params.someOtherKey)
+    -- end
 
     if event.phase == "did" then
         composer.removeScene( "game" ) 
@@ -291,6 +363,7 @@ function scene:hide( event )
     local sceneGroup = self.view
     
     if event.phase == "will" then
+        physics.start()
         physics.stop()
     end
 

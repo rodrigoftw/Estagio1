@@ -55,7 +55,7 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Map
     -------------------------------------------------------------------------------
-    local currMap = "level1.json"
+    local currMap = "level1_grass.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
@@ -134,7 +134,7 @@ function scene:create( event )
     player.bounce = 0
     player.friction = 10
     player.collision = onCollision
-    player.isFixedRotation = true
+    player.isFixedRotation = false --true
 
     -------------------------------------------------------------------------------
     -- Movement Buttons
@@ -209,6 +209,57 @@ function scene:create( event )
     player:addEventListener("collision", on_hit)
 
     -------------------------------------------------------------------------------
+    -- Keyboard Buttons
+    -------------------------------------------------------------------------------
+
+    -- Keyboard input configuration
+    local keyUp = "up"
+    local keyLeft = "left"
+    local keyRight = "right"
+
+    -- Called when a key event has been received
+    local function onKeyEvent( event )
+        local keyName = event.keyName
+        local phase = event.phase
+
+        -- local vx,vy = player:getLinearVelocity()
+        -- player:setLinearVelocity( vx,0 )
+
+        vx = 0
+        vy = -200
+
+        if ( keyUp == keyName ) then
+            audio.play( jumpSound )
+            player:setLinearVelocity(vx, vy)
+        end
+        jump_completed = true
+        vy = 0
+        if ( keyLeft == keyName ) then
+            vx = -100
+            player:setLinearVelocity(vx, vy)
+        end
+        if ( keyRight == keyName ) then
+            vx = 100
+            player:setLinearVelocity(vx, vy)
+        end
+
+        -- end
+        -- if ( "right" == phase ) then
+        --     if ( keyRight == keyName ) then
+        --         player:setLinearVelocity(100, 0)
+        --     end
+        -- end
+        -- if ( "up" == phase ) then
+        --     if ( keyUp == keyName ) then
+        --         player:setLinearVelocity(0, -200)
+        --     end
+        -- end
+
+        return false
+    end
+    Runtime:addEventListener( "key", onKeyEvent )
+
+    -------------------------------------------------------------------------------
     -- Debug Buttons and Functions
     -------------------------------------------------------------------------------
 
@@ -229,52 +280,71 @@ function scene:create( event )
 
     local collisionButton = widget.newButton(
         {
-            left = centerX - 80,
+            left = centerX - 95,
             top = 0,
-            width = 90,
+            -- width = 90,
             height = 35,
             id = "collisionButton",
             label = "Ver Colisões",
-            labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
+            --labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
+            labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+            width = 100,
+            -- height = 32,
+            emboss = false,
+            shape = "roundedRect",
+            cornerRadius = 2,
+            fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+            strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
             onEvent = handlePhysicsButtonEvent
         }
     )
 
-    -- -- Function to quit game
-    -- local function handleQuitButtonEvent( event )
-    --     -- if ( "began" == event.phase ) then
-    --     --     audio.play(pressedButton)
-    --     if ( "ended" == event.phase ) then
-    --         native.requestExit()
-    --     end
-    -- end
+    -- Function to quit game
+    local function handleMenuButtonEvent( event )
+        if ( event.phase == "began" ) then
+            timer.cancel(Timer)
+            audio.play(buttonToggle)
+        elseif ( event.phase == "ended" ) then
+            map:destroy()
+            composer.removeScene( "menu", false )
+            composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
+            composer.removeScene( "level1", false )
+        end
+    end
 
-    -- local quitButton = widget.newButton(
-    --      {
-    --         left = centerX + 10,
-    --         top = 0,
-    --         width = 60,
-    --         height = 35,
-    --         id = "quitButton",
-    --         label = "Sair",
-    --         labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
-    --         onEvent = handleQuitButtonEvent
-    --     }
-    -- )
+    local menuButton = widget.newButton(
+         {
+            left = centerX + 10,
+            top = 0,
+            width = 60,
+            height = 35,
+            id = "menuButton",
+            label = "Menu",
+            labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+            -- width = 100,
+            -- height = 32,
+            emboss = false,
+            shape = "roundedRect",
+            cornerRadius = 2,
+            fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+            strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+            onEvent = handleMenuButtonEvent
+        }
+    )
 
     local y = 1
     -- Function to toggle debug options on/off
     local function handleToggleButtonEvent( event )
-        -- if ( "began" == event.phase ) then
-        --     audio.play(pressedButton)
-         if ( "ended" == event.phase ) then          
+        if ( "began" == event.phase ) then
+            audio.play(buttonToggle)
+        elseif ( "ended" == event.phase ) then          
             if (y%2 == 0) then
                 collisionButton.alpha = 1
-                -- quitButton.alpha = 1
+                menuButton.alpha = 1
                 y = y + 1
             elseif (y%2 ~= 0) then
                 collisionButton.alpha = 0
-                -- quitButton.alpha = 0
+                menuButton.alpha = 0
                 y = y + 1
             end
         end
@@ -288,7 +358,14 @@ function scene:create( event )
             height = 35,
             id = "toggleButton",
             label = "On/Off",
-            labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
+            labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+            -- width = 100,
+            -- height = 32,
+            emboss = false,
+            shape = "roundedRect",
+            cornerRadius = 2,
+            fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+            strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
             onEvent = handleToggleButtonEvent
         }
     )
@@ -324,6 +401,50 @@ function scene:create( event )
     
     -- Rodar timer
     local Timer = timer.performWithDelay( 1, updateTime, secondsPassed )
+
+    -- -------------------------------------------------------------------------------
+    -- -- Collisions
+    -- -------------------------------------------------------------------------------
+
+    -- function onCollision(self, event)
+    --     if event.phase == "began" then
+    --         if event.target.type == "player" and event.other.type == "end" then
+    --             print("Fim da fase")
+    --             audio.play(buttonToggle)
+                
+    --         -- elseif event.target.type == "player" and event.other.type == "spike" then
+    --         --     timer.cancel(Timer)
+    --         --     audio.play(deathsound)
+    --         --     audio.stop(deathsound)
+    --         --     function blink()
+    --         --         if(clockText.alpha < 1) then
+    --         --             transition.to( clockText, {time=50, alpha=1})
+    --         --         else
+    --         --             transition.to( clockText, {time=50, alpha=0})
+    --         --         end
+    --         --     end
+    --         --     local tmr = timer.performWithDelay( 300, blink, 0 )
+    --         --     player:removeSelf()
+    --         --     player = nil
+    --         --     print("oh no")
+    --         end
+    --     elseif ( event.phase == "ended" ) then
+    --         if ( event.target.type == "player" and event.other.type == "end" ) then
+    --             -- Options table for the overlay scene "endofphase.lua"
+    --             local options = {
+    --                 isModal = true,
+    --                 effect = "fade",
+    --                 time = 333,
+    --                 params = {
+    --                     sampleVar = "my sample variable"
+    --                 }
+    --             }
+
+    --             composer.showOverlay( "endofphase", options )
+    --         end
+    --     end
+    --     return true
+    -- end
 
 end
 
@@ -368,7 +489,9 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
-    audio.dispose( audioHandle )
+    map.destroy()
+
+    --audio.dispose( audioHandle )
 end
 
 -------------------------------------------------------------------------------

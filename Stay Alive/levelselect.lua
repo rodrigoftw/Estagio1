@@ -8,20 +8,24 @@ local myData = require( "mydata" )
 local params
 
 local function handleCancelButtonEvent( event )
-    if ( "ended" == event.phase ) then
+    if ( event.phase == "began" ) then
+        audio.play(buttonToggle)
+    elseif ( "ended" == event.phase ) then
         composer.removeScene( "menu", false )
         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
     end
 end
 
 local function handleLevelSelect( event )
-    if ( "ended" == event.phase ) then
+    if ( event.phase == "began" ) then
+        audio.play(buttonToggle)
+    elseif ( "ended" == event.phase ) then
         -- set the current level to the ID of the selected level
         --myData.settings.currentLevel = event.target.id
 
         local levNumber = tonumber(event.target.id)
 
-        local scene = ".levels.level"..levNumber
+        local scene = "levels.level"..levNumber
  
         composer.removeScene( scene, false )
         composer.gotoScene( scene, { effect="crossFade", time=333 } )
@@ -41,10 +45,10 @@ function scene:create( event )
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
     --
-    local background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
-    background.x = display.contentCenterX
-    background.y = display.contentCenterY
-    sceneGroup:insert(background)
+    -- local background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
+    -- background.x = display.contentCenterX
+    -- background.y = display.contentCenterY
+    -- sceneGroup:insert(background)
 
     local selectLevelText = display.newText("Selecione um level", 125, 32, native.systemFontBold, 32)
     selectLevelText:setFillColor( 0 )
@@ -62,8 +66,8 @@ function scene:create( event )
     for i = 1, myData.maxLevels do
         buttonGroups[i] = display.newGroup()
         buttonBackgrounds[i] = display.newRect( x, y, 42, 32, 8 )--Rounded
-        buttonBackgrounds[i]:setFillColor(0, 0, 0, 0.5)--1, 0, 1, 0.333 )
-        buttonBackgrounds[i]:setStrokeColor(0, 0, 0, 0.667)--1, 0, 1, 0.667 )
+        buttonBackgrounds[i]:setFillColor(72/255,183/255,177/255,0.5)--0, 0, 0, 0.5)--1, 0, 1, 0.333 )
+        buttonBackgrounds[i]:setStrokeColor(72/255,183/255,177/255,0.5)--0, 0, 0, 0.667)--1, 0, 1, 0.667 )
         buttonBackgrounds[i].strokeWidth = 1
         buttonGroups[i]:insert(buttonBackgrounds[i])
         buttonGroups[i].id = i
@@ -98,12 +102,18 @@ function scene:create( event )
     local backButton = widget.newButton({
         id = "backButton",
         label = "Voltar",
+        labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
+        emboss = false,
+        shape = "roundedRect",
+        cornerRadius = 2,
+        fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+        strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleCancelButtonEvent
     })
     backButton.x = display.contentCenterX
-    backButton.y = display.contentHeight - 25
+    backButton.y = display.contentCenterY + 110
     sceneGroup:insert( backButton )
 end
 
