@@ -1,7 +1,7 @@
 					1	2	4	8	16	32	64	128	256	512	Total
 Player				_____________________________________________
 	categoryBits	x										1
-	maskBits			x									2
+	maskBits			x		x							10
 Floors				_____________________________________________
 	categoryBits		x									2
 	maskBits		x										1
@@ -10,4 +10,7 @@ Walls				_____________________________________________
 	maskBits		x										1
 Borders				_____________________________________________
 	categoryBits			x								4
+	maskBits		x										1
+Ending				_____________________________________________
+	categoryBits				x							8
 	maskBits		x										1
