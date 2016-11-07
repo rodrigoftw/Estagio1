@@ -36,9 +36,10 @@ local CENTER_REF = 0.5
 -------------------------------------------------------------------------------
 -- Collision Filters
 -------------------------------------------------------------------------------
-playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
+playerCollisionFilter = { categoryBits = 1, maskBits = 10 }
 wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 borderCollisionFilter = { categoryBits = 4, maskBits = 1 }
+endingCollisionFilter = { categoryBits = 8, maskBits = 1  }
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -135,7 +136,6 @@ function scene:create( event )
     player.bounce = 0
     player.friction = 10
     player.type = "player"
-    player.myName = "player"
     player.collision = onCollision
     player.isFixedRotation = false --true
     -- player:addEventListener( "collision", onCollision )
@@ -149,7 +149,6 @@ function scene:create( event )
     start.bounce = 0
     start.alpha = 0.75
     start.type = "start"
-    start.myName = "start"
     start.collision = onCollision
     start.isFixedRotation = true
 
@@ -162,10 +161,10 @@ function scene:create( event )
     ending.bounce = 0
     ending.alpha = 0.75
     ending.type = "end"
-    ending.myName = "ending"
-    ending.isSensor = "false"
+    -- ending.isSensor = "false"
     ending.collision = onCollision
     ending.isFixedRotation = true
+    -- ending:addEventListener( "collision", onCollision )
 
     -------------------------------------------------------------------------------
     -- Screen Borders
@@ -205,13 +204,30 @@ function scene:create( event )
     -- Collisions
     -------------------------------------------------------------------------------
 
-    function onCollision(self, event)
+    function onCollision(event)
+
+        print(event.phase)
+        print(self.type)
+        print(event.other.type)
+        for k,v in pairs(event) do
+            print(k,v)
+        end
+        print("____________________________")
+        for k,v in pairs(event.target) do
+            print(k,v)
+        end
+        print("____________________________")
+        for k,v in pairs(event.other) do
+            print(k,v)
+        end
+
         if ( event.phase == "began" ) then
-            if ( event.target.type == "player" ) and (event.other.type == "end" ) then
+            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
                 -- print( self.type .. ": collision began with " .. event.other.type )
-                print("Fim da fase")
                 audio.play( winSound, {channel = 10} )
-                timer.cancel(Timer)
+                print("Fim da fase")
+                composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
+                -- timer.cancel(Timer)
             end
                 
             -- elseif event.target.type == "player" and event.other.type == "spike" then
@@ -245,10 +261,11 @@ function scene:create( event )
             --         composer.showOverlay( "endofphase", options )
             --     end
         elseif ( event.phase == "ended" ) then
-            composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
         end
         return true
     end
+
+    ending:addEventListener("collision", onCollision)
 
     -------------------------------------------------------------------------------
     -- Movement Buttons
@@ -566,7 +583,7 @@ function scene:show( event )
         physics.setGravity( 0, 9.8 )
         audio.play( levels1_10, { channel = 2, loops = -1 } )
         map.updateView()
-        
+
         -- local myListener = function( event )
         --     print( "Map Updated." )
         -- end
