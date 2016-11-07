@@ -38,6 +38,7 @@ local CENTER_REF = 0.5
 -------------------------------------------------------------------------------
 playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
 wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
+borderCollisionFilter = { categoryBits = 4, maskBits = 1 }
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -137,23 +138,70 @@ function scene:create( event )
     player.isFixedRotation = true
 
     -------------------------------------------------------------------------------
+    -- Screen Borders
+    -------------------------------------------------------------------------------
+
+    local borders = display.newGroup()
+
+    local borderdown = display.newImageRect("images/ui/borderdown.png", 548, 10 )
+    borderdown.x = centerX
+    borderdown.y = (_H+37)
+    physics.addBody(borderdown, "static", { filter = borderCollisionFilter })
+    borderdown.type = "border"
+    borderdown:toBack()
+    borderdown.isSensor = false
+
+    borders:insert( borderdown )
+
+    -------------------------------------------------------------------------------
+    -- Collisions
+    -------------------------------------------------------------------------------
+
+    function onCollision(event)
+        if ( event.phase == "began" ) then
+            if ( event.target.type == "player" ) and (event.other.type == "border" ) then
+                print( event.target.type .. ": collision began with " .. event.other.type )
+                print("E Morreu")
+                audio.play(deathSound, {channel = 9} )
+                composer.gotoScene( "levelselect", { effect = "crossFade", time = 333 } )
+            end
+        end
+        return true
+    end
+
+    -------------------------------------------------------------------------------
     -- Movement Buttons
     -------------------------------------------------------------------------------
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- leftButton.alpha = 0.5
+    -- leftButton.x = 27
+    -- leftButton.y = _H - 27
+
+    -- local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    -- rightButton.alpha = 0.5
+    -- rightButton.x = 70
+    -- rightButton.y = _H - 27
+
+    -- local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    -- jumpButton.alpha = 0.5
+    -- jumpButton.x = _W - 27
+    -- jumpButton.y = _H - 27
+
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
-    leftButton.x = 27
-    leftButton.y = _H - 27
+    leftButton.x = 35
+    leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
-    rightButton.x = 70
-    rightButton.y = _H - 27
+    rightButton.x = 98
+    rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
-    jumpButton.x = _W - 27
-    jumpButton.y = _H - 27
+    jumpButton.x = _W - 35
+    jumpButton.y = _H - 35
 
     -------------------------------------------------------------------------------
     -- Movement Functions
@@ -188,7 +236,7 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
-            audio.play( jumpSound )
+            audio.play( jumpSound, {channel = 8} )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5

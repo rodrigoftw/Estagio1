@@ -140,20 +140,35 @@ function scene:create( event )
     -- Movement Buttons
     -------------------------------------------------------------------------------
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- leftButton.alpha = 0.5
+    -- leftButton.x = 27
+    -- leftButton.y = _H - 27
+
+    -- local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    -- rightButton.alpha = 0.5
+    -- rightButton.x = 70
+    -- rightButton.y = _H - 27
+
+    -- local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    -- jumpButton.alpha = 0.5
+    -- jumpButton.x = _W - 27
+    -- jumpButton.y = _H - 27
+
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
-    leftButton.x = 27
-    leftButton.y = _H - 27
+    leftButton.x = 35
+    leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
-    rightButton.x = 70
-    rightButton.y = _H - 27
+    rightButton.x = 98
+    rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
-    jumpButton.x = _W - 27
-    jumpButton.y = _H - 27
+    jumpButton.x = _W - 35
+    jumpButton.y = _H - 35
 
     -------------------------------------------------------------------------------
     -- Movement Functions
@@ -188,7 +203,7 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
-            audio.play( jumpSound )
+            audio.play( jumpSound, {channel = 8} )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5

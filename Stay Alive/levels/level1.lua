@@ -22,10 +22,10 @@ system.activate( "multitouch" )
 -- Local Screen Variables
 -------------------------------------------------------------------------------
 
-local centerX = display.contentCenterX
-local centerY = display.contentCenterY
-local _W = display.contentWidth
-local _H = display.contentHeight
+-- local centerX = display.contentCenterX
+-- local centerY = display.contentCenterY
+-- local _W = display.contentWidth
+-- local _H = display.contentHeight
 
 local TOP_REF = 0
 local BOTTOM_REF = 1
@@ -38,6 +38,7 @@ local CENTER_REF = 0.5
 -------------------------------------------------------------------------------
 playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
 wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
+borderCollisionFilter = { categoryBits = 4, maskBits = 1 }
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -133,27 +134,155 @@ function scene:create( event )
     player.bodyType = "dynamic"
     player.bounce = 0
     player.friction = 10
+    player.type = "player"
+    player.myName = "player"
     player.collision = onCollision
     player.isFixedRotation = false --true
+    -- player:addEventListener( "collision", onCollision )
+
+    -------------------------------------------------------------------------------
+    -- Start
+    -------------------------------------------------------------------------------
+
+    local start = map.layer["Start"].tile(2, 7)
+    start.bodyType = "static"
+    start.bounce = 0
+    start.alpha = 0.75
+    start.type = "start"
+    start.myName = "start"
+    start.collision = onCollision
+    start.isFixedRotation = true
+
+    -------------------------------------------------------------------------------
+    -- End
+    -------------------------------------------------------------------------------
+
+    local ending = map.layer["End"].tile(17, 7)
+    ending.bodyType = "static"
+    ending.bounce = 0
+    ending.alpha = 0.75
+    ending.type = "end"
+    ending.myName = "ending"
+    ending.isSensor = "false"
+    ending.collision = onCollision
+    ending.isFixedRotation = true
+
+    -------------------------------------------------------------------------------
+    -- Screen Borders
+    -------------------------------------------------------------------------------
+
+    local borders = display.newGroup()
+        
+    local borderup = display.newImageRect("images/ui/borderup.png", 548, 10 )
+    borderup.x = centerX
+    borderup.y = (_H / _H) - 6
+    physics.addBody(borderup, "static", { filter = borderCollisionFilter })
+    borderup.type = "border"
+    borderup:toBack()
+    borderup.isSensor = false
+
+    local borderleft = display.newImageRect("images/ui/borderleft.png", 10, 321 )
+    borderleft.x = (_W / _W) - 6
+    borderleft.y = centerY
+    physics.addBody(borderleft, "static", { filter = borderCollisionFilter })
+    borderleft.type = "border"
+    borderleft:toBack()
+    borderleft.isSensor = false
+        
+    local borderright = display.newImageRect("images/ui/borderright.png", 10, 321 )
+    borderright.x = _W + 12
+    borderright.y = centerY
+    physics.addBody(borderright, "static", { filter = borderCollisionFilter })
+    borderright.type = "border"
+    borderright:toBack()
+    borderright.isSensor = false
+
+    borders:insert( borderup )
+    borders:insert( borderleft )
+    borders:insert( borderright )
+
+    -------------------------------------------------------------------------------
+    -- Collisions
+    -------------------------------------------------------------------------------
+
+    function onCollision(self, event)
+        if ( event.phase == "began" ) then
+            if ( event.target.type == "player" ) and (event.other.type == "end" ) then
+                -- print( self.type .. ": collision began with " .. event.other.type )
+                print("Fim da fase")
+                audio.play( winSound, {channel = 10} )
+                timer.cancel(Timer)
+            end
+                
+            -- elseif event.target.type == "player" and event.other.type == "spike" then
+            --     timer.cancel(Timer)
+            --     audio.play(deathsound)
+            --     audio.stop(deathsound)
+            --     function blink()
+            --         if(clockText.alpha < 1) then
+            --             transition.to( clockText, {time=50, alpha=1})
+            --         else
+            --             transition.to( clockText, {time=50, alpha=0})
+            --         end
+            --     end
+            --     local tmr = timer.performWithDelay( 300, blink, 0 )
+            --     player:removeSelf()
+            --     player = nil
+            --     print("oh no")
+            -- end
+            -- elseif ( event.phase == "ended" ) then
+            --     if ( event.target.type == "player" and event.other.type == "end" ) then
+            --         -- Options table for the overlay scene "endofphase.lua"
+            --         local options = {
+            --             isModal = true,
+            --             effect = "fade",
+            --             time = 333,
+            --             params = {
+            --                 sampleVar = "my sample variable"
+            --             }
+            --         }
+
+            --         composer.showOverlay( "endofphase", options )
+            --     end
+        elseif ( event.phase == "ended" ) then
+            composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
+        end
+        return true
+    end
 
     -------------------------------------------------------------------------------
     -- Movement Buttons
     -------------------------------------------------------------------------------
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- leftButton.alpha = 0.5
+    -- leftButton.x = 27
+    -- leftButton.y = _H - 27
+
+    -- local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    -- rightButton.alpha = 0.5
+    -- rightButton.x = 70
+    -- rightButton.y = _H - 27
+
+    -- local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    -- jumpButton.alpha = 0.5
+    -- jumpButton.x = _W - 27
+    -- jumpButton.y = _H - 27
+
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
-    leftButton.x = 27
-    leftButton.y = _H - 27
+    leftButton.x = 35
+    leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
-    rightButton.x = 70
-    rightButton.y = _H - 27
+    rightButton.x = 98
+    rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
-    jumpButton.x = _W - 27
-    jumpButton.y = _H - 27
+    jumpButton.x = _W - 35
+    jumpButton.y = _H - 35
 
     -------------------------------------------------------------------------------
     -- Movement Functions
@@ -188,7 +317,7 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
-            audio.play( jumpSound )
+            audio.play( jumpSound, { channel = 11 } )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5
@@ -229,19 +358,25 @@ function scene:create( event )
         vy = -200
 
         if ( keyUp == keyName ) then
-            audio.play( jumpSound )
+            audio.play( jumpSound, { channel = 11} )
             player:setLinearVelocity(vx, vy)
+            jumpButton.alpha = 1
         end
+        jumpButton.alpha = 0.5
         jump_completed = true
         vy = 0
         if ( keyLeft == keyName ) then
             vx = -100
             player:setLinearVelocity(vx, vy)
+            leftButton.alpha = 1
         end
+        leftButton.alpha = 0.5
         if ( keyRight == keyName ) then
             vx = 100
             player:setLinearVelocity(vx, vy)
+            rightButton.alpha = 1
         end
+        rightButton.alpha = 0.5
 
         -- end
         -- if ( "right" == phase ) then
@@ -267,7 +402,9 @@ function scene:create( event )
     physics.setDrawMode("normal")
     -- Function to handle button events
     local function handlePhysicsButtonEvent( event )
-        if ( "ended" == event.phase ) then          
+        if (event.phase == "began") then
+            audio.play(buttonToggle, { channel = 7 } )
+        elseif ( event.phase == "ended") then          
             if (x%2 == 0) then
                 physics.setDrawMode("normal")
                 x = x + 1
@@ -303,7 +440,7 @@ function scene:create( event )
     local function handleMenuButtonEvent( event )
         if ( event.phase == "began" ) then
             timer.cancel(Timer)
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase == "ended" ) then
             map:destroy()
             composer.removeScene( "menu", false )
@@ -336,8 +473,8 @@ function scene:create( event )
     -- Function to toggle debug options on/off
     local function handleToggleButtonEvent( event )
         if ( "began" == event.phase ) then
-            audio.play(buttonToggle)
-        elseif ( "ended" == event.phase ) then          
+            audio.play(buttonToggle, { channel = 7 } )
+        elseif ( "ended" == event.phase ) then
             if (y%2 == 0) then
                 collisionButton.alpha = 1
                 menuButton.alpha = 1
@@ -374,78 +511,43 @@ function scene:create( event )
     -- Timer
     -------------------------------------------------------------------------------
     -- Contar o tempo em segundos
-    local secondsPassed = 00 * 00-- * 00  -- Exemplo: 2 minutos * 30 segundos
+    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("00:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
+    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
     local function updateTime()
         -- Incrementar o número de segundos
-        secondsPassed = secondsPassed + 1
+        secondsLeft = secondsLeft - 1
     
         -- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
-        local seconds = secondsPassed % 60
-        local minutes = math.floor( secondsPassed / 60 )
-        local hours   = math.floor( minutes / 60 )
+        local minutes = math.floor( secondsLeft / 60 )
+        local seconds = secondsLeft % 60
 
         -- Transformar o resultado em uma string usando string.format
-        timeDisplay = string.format( "%02d:%02d", minutes, seconds )
+        timeDisplay = string.format( "%02d:%02d", minutes, seconds)
         clockText.text = timeDisplay
         clockText.alpha = 1
 
         map.setDamping(0.3)
         map.setCameraFocus(player)
-        map.updateView()
+        -- map.updateView()
     end
     
     -- Rodar timer
-    local Timer = timer.performWithDelay( 1, updateTime, secondsPassed )
-
-    -- -------------------------------------------------------------------------------
-    -- -- Collisions
-    -- -------------------------------------------------------------------------------
-
-    -- function onCollision(self, event)
-    --     if event.phase == "began" then
-    --         if event.target.type == "player" and event.other.type == "end" then
-    --             print("Fim da fase")
-    --             audio.play(buttonToggle)
-                
-    --         -- elseif event.target.type == "player" and event.other.type == "spike" then
-    --         --     timer.cancel(Timer)
-    --         --     audio.play(deathsound)
-    --         --     audio.stop(deathsound)
-    --         --     function blink()
-    --         --         if(clockText.alpha < 1) then
-    --         --             transition.to( clockText, {time=50, alpha=1})
-    --         --         else
-    --         --             transition.to( clockText, {time=50, alpha=0})
-    --         --         end
-    --         --     end
-    --         --     local tmr = timer.performWithDelay( 300, blink, 0 )
-    --         --     player:removeSelf()
-    --         --     player = nil
-    --         --     print("oh no")
-    --         end
-    --     elseif ( event.phase == "ended" ) then
-    --         if ( event.target.type == "player" and event.other.type == "end" ) then
-    --             -- Options table for the overlay scene "endofphase.lua"
-    --             local options = {
-    --                 isModal = true,
-    --                 effect = "fade",
-    --                 time = 333,
-    --                 params = {
-    --                     sampleVar = "my sample variable"
-    --                 }
-    --             }
-
-    --             composer.showOverlay( "endofphase", options )
-    --         end
-    --     end
-    --     return true
-    -- end
-
+    local Timer = timer.performWithDelay( 1, updateTime, secondsLeft )
+    
+    if (Timer == 0) then
+        function blink()
+            if(clockText.alpha < 1) then
+                transition.to( clockText, {time=50, alpha=1})
+            else
+                transition.to( clockText, {time=50, alpha=0})
+            end
+        end
+        local tmr = timer.performWithDelay( 300, blink, 0 )
+    end
 end
 
 function scene:show( event )
@@ -462,7 +564,13 @@ function scene:show( event )
 
         physics.start()
         physics.setGravity( 0, 9.8 )
-
+        audio.play( levels1_10, { channel = 2, loops = -1 } )
+        map.updateView()
+        
+        -- local myListener = function( event )
+        --     print( "Map Updated." )
+        -- end
+        -- Runtime:addEventListener( "enterFrame", myListener )
     end 
 end
 
@@ -470,11 +578,13 @@ function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    if event.phase == "will" then
+    if phase == "will" then
         -- Called when the scene is on screen and is about to move off screen
         --
         -- INSERT code here to pause the scene
         -- e.g. stop timers, stop animation, unload sounds, etc.)
+        audio.stop( 1 )
+        audio.dispose( 1 )
     elseif phase == "did" then
         -- Called when the scene is now off screen
     end 
@@ -490,6 +600,8 @@ function scene:destroy( event )
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
     map.destroy()
+    audio.stop( 2 )
+    audio.dispose( 2 )
 
     --audio.dispose( audioHandle )
 end

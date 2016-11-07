@@ -7,33 +7,17 @@ local myData = require( "mydata" )
 
 local params
 
-local function handleCancelButtonEvent( event )
+local function handleBackButtonEvent( event )
     if ( event.phase == "began" ) then
         audio.play(buttonToggle)
-    elseif ( "ended" == event.phase ) then
+    elseif ( event.phase == "ended" ) then
         composer.removeScene( "menu", false )
         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
     end
 end
 
-local function handleLevelSelect( event )
-    if ( event.phase == "began" ) then
-        audio.play(buttonToggle)
-    elseif ( "ended" == event.phase ) then
-        -- set the current level to the ID of the selected level
-        --myData.settings.currentLevel = event.target.id
+    
 
-        local levNumber = tonumber(event.target.id)
-
-        local scene = "levels.level"..levNumber
- 
-        composer.removeScene( scene, false )
-        composer.gotoScene( scene, { effect="crossFade", time=333 } )
-
-        -- composer.removeScene( "game", false )
-        -- composer.gotoScene( "game", { effect = "crossFade", time = 333 } )
-    end
-end
 --
 -- Start the composer event handlers
 --
@@ -74,6 +58,65 @@ function scene:create( event )
         if myData.settings.unlockedLevels == nil then
             myData.settings.unlockedLevels = 1
         end
+
+        local function handleLevelSelect( event )
+            if ( event.phase == "began" ) then
+                audio.play(buttonToggle, { channel = 7 } )
+                buttonBackgrounds[i]:setFillColor(255/255,127/255,39/255,0.5)
+            elseif ( event.phase =="moved" ) then
+                buttonBackgrounds[i]:setFillColor(72/255,183/255,177/255,0.5)
+            elseif ( event.phase == "ended" ) then
+                audio.fadeOut( { channel=1, time=1500 } )
+                -- audio.stop( 1 )
+                -- audio.dispose( 1 )
+                -- set the current level to the ID of the selected level
+                myData.settings.currentLevel = event.target.id
+
+                local levNumber = tonumber(event.target.id)
+
+                -- if (levNumber == 1) then
+                --     audio.stop(titleMusic)
+                --     audio.play(levels1_10)
+                -- elseif (levNumber == 11) then
+                --     audio.stop(levels1_10)
+                --     audio.play(levels11_20)
+                -- elseif (levNumber == 21) then
+                --     audio.stop(levels11_20)
+                --     audio.play(levels21_29)
+                -- elseif (levNumber == 30) then
+                --     audio.stop(levels21_29)
+                --     audio.play(level30)
+                -- end
+
+                -- audio.stop(titleMusic)
+                -- for levNumber = 1, 10 do
+                --     audio.play(levels1_10)
+                -- end
+
+                -- audio.stop(levels1_10)
+                -- for levNumber = 11, 20 do
+                --     audio.play(levels11_20)
+                -- end
+
+                -- audio.stop(levels11_20)
+                -- for levNumber = 21, 29 do
+                --     audio.play(levels21_29)
+                -- end
+
+                -- if (levNumber == 30) then
+                --     audio.stop(levels21_29)
+                --     audio.play(level30)
+                -- end
+
+                local scene = "levels.level"..levNumber
+         
+                composer.removeScene( scene, false )
+                composer.gotoScene( scene, { effect="crossFade", time=333 } )
+
+                -- composer.removeScene( "game", false )
+                -- composer.gotoScene( "game", { effect = "crossFade", time = 333 } )
+            end
+        end
         
         if i <= myData.settings.unlockedLevels then
             buttonGroups[i].alpha = 1.0
@@ -110,7 +153,7 @@ function scene:create( event )
         cornerRadius = 2,
         fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
-        onEvent = handleCancelButtonEvent
+        onEvent = handleBackButtonEvent
     })
     backButton.x = display.contentCenterX
     backButton.y = display.contentCenterY + 110
@@ -119,23 +162,42 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
-
+    phase = event.phase
     params = event.params
 
-    if event.phase == "did" then
+    if phase == "will" then
+        -- Called when the scene is off screen and is about to move on screen
+    elseif phase == "did" then
+        -- Called when the scene is now on screen
+        -- 
+        -- INSERT code here to make the scene come alive
+        -- e.g. start timers, begin animation, play audio, etc
     end
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
-    
-    if event.phase == "will" then
-    end
+    local phase = event.phase
 
+    if phase == "will" then
+        -- Called when the scene is on screen and is about to move off screen
+        --
+        -- INSERT code here to pause the scene
+        -- e.g. stop timers, stop animation, unload sounds, etc.)
+    elseif phase == "did" then
+        -- Called when the scene is now off screen
+    end
 end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+
+    -- Called prior to the removal of scene's "view" (sceneGroup)
+    -- 
+    -- INSERT code here to cleanup the scene
+    -- e.g. remove display objects, remove touch listeners, save state, etc
+
+
     
 end
 

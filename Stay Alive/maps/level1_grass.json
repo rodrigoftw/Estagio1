@@ -69,17 +69,19 @@
          "opacity":0.25,
          "properties":
             {
+             "myName":"ending",
              "physics:enabled":"true",
-             "physics:isSensor":"true",
+             "physics:isSensor":"false",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"static",
              "tiles:isFixedRotation":"true",
-             "tiles:isSensor":"true",
+             "tiles:isSensor":"false",
              "type":"end"
             },
          "propertytypes":
             {
+             "myName":"string",
              "physics:enabled":"string",
              "physics:isSensor":"string",
              "tiles.collision":"string",
@@ -102,6 +104,7 @@
          "opacity":1,
          "properties":
             {
+             "myName":"player",
              "physics:enabled":"true",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
@@ -111,6 +114,7 @@
             },
          "propertytypes":
             {
+             "myName":"string",
              "physics:enabled":"string",
              "tiles.collision":"string",
              "tiles:addEventListener( \"collision\" )":"string",

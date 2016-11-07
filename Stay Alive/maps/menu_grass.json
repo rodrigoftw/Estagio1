@@ -107,6 +107,18 @@
          "height":10,
          "name":"Clouds",
          "opacity":1,
+         "properties":
+            {
+             "physics:enabled":"true",
+             "tiles:bodyType":"static",
+             "tiles:isFixedRotation":"true"
+            },
+         "propertytypes":
+            {
+             "physics:enabled":"string",
+             "tiles:bodyType":"string",
+             "tiles:isFixedRotation":"string"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":18,

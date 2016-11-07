@@ -49,6 +49,10 @@ settings =
             publisherId = "com.coronalabs",
             supportedPlatforms = { iphone=true, ["iphone-sim"]=true },
         },
+        ['plugin.cc'] = 
+        {
+            publisherId = 'com.roaminggamer'
+        },
     },
     iphone =
     {

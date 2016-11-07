@@ -38,6 +38,7 @@ local CENTER_REF = 0.5
 -------------------------------------------------------------------------------
 playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
 wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
+borderCollisionFilter = { categoryBits = 4, maskBits = 1 }
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -137,23 +138,72 @@ function scene:create( event )
     player.isFixedRotation = true
 
     -------------------------------------------------------------------------------
+    -- Screen Borders
+    -------------------------------------------------------------------------------
+
+    local borders = display.newGroup()
+        
+    local borderup = display.newImageRect("images/ui/borderup.png", 548, 10 )
+    borderup.x = centerX
+    borderup.y = (_H / _H) - 6
+    physics.addBody(borderup, "static", { filter = borderCollisionFilter })
+    borderup.type = "border"
+    borderup:toBack()
+    borderup.isSensor = false
+
+    local borderleft = display.newImageRect("images/ui/borderleft.png", 10, 321 )
+    borderleft.x = (_W / _W) - 6
+    borderleft.y = centerY
+    physics.addBody(borderleft, "static", { filter = borderCollisionFilter })
+    borderleft.type = "border"
+    borderleft:toBack()
+    borderleft.isSensor = false
+        
+    local borderright = display.newImageRect("images/ui/borderright.png", 10, 321 )
+    borderright.x = _W + 12
+    borderright.y = centerY
+    physics.addBody(borderright, "static", { filter = borderCollisionFilter })
+    borderright.type = "border"
+    borderright:toBack()
+    borderright.isSensor = false
+
+    borders:insert( borderup )
+    borders:insert( borderleft )
+    borders:insert( borderright )
+
+    -------------------------------------------------------------------------------
     -- Movement Buttons
     -------------------------------------------------------------------------------
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    -- leftButton.alpha = 0.5
+    -- leftButton.x = 27
+    -- leftButton.y = _H - 27
+
+    -- local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    -- rightButton.alpha = 0.5
+    -- rightButton.x = 70
+    -- rightButton.y = _H - 27
+
+    -- local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    -- jumpButton.alpha = 0.5
+    -- jumpButton.x = _W - 27
+    -- jumpButton.y = _H - 27
+
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
-    leftButton.x = 27
-    leftButton.y = _H - 27
+    leftButton.x = 35
+    leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
-    rightButton.x = 70
-    rightButton.y = _H - 27
+    rightButton.x = 98
+    rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
-    jumpButton.x = _W - 27
-    jumpButton.y = _H - 27
+    jumpButton.x = _W - 35
+    jumpButton.y = _H - 35
 
     -------------------------------------------------------------------------------
     -- Movement Functions

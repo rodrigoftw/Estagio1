@@ -9,8 +9,8 @@ local params
 local function handleButtonEvent( event )
 
     if ( event.phase == "began" ) then
-        audio.play(buttonToggle)
-    elseif ( "ended" == event.phase ) then
+        audio.play(buttonToggle, { channel = 7 } )
+    elseif ( event.phase == "ended" ) then
         composer.gotoScene("menu", { effect = "crossFade", time = 333 })
     end
 end
@@ -50,7 +50,7 @@ function scene:create( event )
     -- http://www.freesfx.co.uk
     -- http://www.freesound.org
 
-    local doneButton = widget.newButton({
+    local backButton = widget.newButton({
         id = "button1",
         label = "Voltar",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
@@ -63,9 +63,9 @@ function scene:create( event )
         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleButtonEvent
     })
-    doneButton.x = display.contentCenterX
-    doneButton.y = display.contentCenterY + 110
-    sceneGroup:insert( doneButton )
+    backButton.x = display.contentCenterX
+    backButton.y = display.contentCenterY + 110
+    sceneGroup:insert( backButton )
 
 end
 

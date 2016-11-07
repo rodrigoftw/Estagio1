@@ -9,11 +9,6 @@ local ads = require( "ads" )
 
 local params
 
-local centerX = display.contentCenterX
-local centerY = display.contentCenterY
-local _W = display.contentWidth
-local _H = display.contentHeight
-
 -- local TOP_REF = 0
 -- local BOTTOM_REF = 1
 -- local LEFT_REF = 0
@@ -25,8 +20,6 @@ local _H = display.contentHeight
 
 display.setDefault("minTextureFilter", "nearest")
 display.setDefault("magTextureFilter", "nearest")
-
-wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
 local myData = require( "mydata" )
 
@@ -146,6 +139,7 @@ function scene:create( event )
     end
 
     playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
+    wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
     local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
     player.bodyType = "dynamic"
@@ -169,39 +163,49 @@ function scene:create( event )
         -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
     })
 
-    local tile = {
-        map.layer["Clouds"].tile(3, 3),
-        map.layer["Clouds"].tile(3, 4),
-        map.layer["Clouds"].tile(4, 3),
-        map.layer["Clouds"].tile(3, 4),
-        map.layer["Clouds"].tile(5, 4),
+    -- local tile = {
+    --     map.layer["Clouds"].tile(3, 3),
+    --     map.layer["Clouds"].tile(3, 4),
+    --     map.layer["Clouds"].tile(4, 3),
+    --     map.layer["Clouds"].tile(3, 4),
+    --     map.layer["Clouds"].tile(5, 4),
 
-        map.layer["Clouds"].tile(8, 6),
-        map.layer["Clouds"].tile(8, 7),
+    --     map.layer["Clouds"].tile(8, 6),
+    --     map.layer["Clouds"].tile(8, 7),
 
-        map.layer["Clouds"].tile(10, 2),
-        map.layer["Clouds"].tile(11, 2),
-        map.layer["Clouds"].tile(10, 3),
-        map.layer["Clouds"].tile(11, 3),
-        map.layer["Clouds"].tile(12, 3),
+    --     map.layer["Clouds"].tile(10, 2),
+    --     map.layer["Clouds"].tile(11, 2),
+    --     map.layer["Clouds"].tile(10, 3),
+    --     map.layer["Clouds"].tile(11, 3),
+    --     map.layer["Clouds"].tile(12, 3),
 
-        map.layer["Clouds"].tile(16, 3),
-        map.layer["Clouds"].tile(17, 3)
-    } 
+    --     map.layer["Clouds"].tile(16, 3),
+    --     map.layer["Clouds"].tile(17, 3)
+    -- } 
     
-    for tile in map.layer["Clouds"].tilesInRect(centerX, centerY, left, bottom) do
-        if (tile.x > display.contentCenterX) then
-            tile.x = tile.x -1
-        elseif (tile.x < display.contentCenterX / 2 ) then
-            tile.x = xMax
-        end
+    -- for tile in map.layer["Clouds"].tilesInRect(centerX, centerY, left, bottom) do
+    --     if (tile.x > display.contentCenterX) then
+    --         tile.x = tile.x -1
+    --     elseif (tile.x < display.contentCenterX / 2 ) then
+    --         tile.x = xMax
+    --     end
+    -- end
+
+    local layer
+    layer = map.layer["Clouds"]
+    for layer in map.tileLayers() do
+        -- if (layer.x > 0) then
+            layer.x = layer.x -1
+        -- elseif (layer.x < _W / 2) then
+        --     layer.x = _W + centerX
+        -- end
     end
 
     local function handlePlayButtonEvent( event )
         if ( event.phase == "began" ) then
             audio.play(buttonToggle)
         elseif ( event.phase =="ended" ) then
-            map.destroy()
+            --map.destroy()
             composer.removeScene( "levelselect", false )
             composer.gotoScene("levelselect", { effect = "crossFade", time = 333 })
         end
@@ -348,6 +352,7 @@ function scene:show( event )
 
     params = event.params
     utility.print_r(event)
+    audio.play( titleMusic, { channel = 1, loops = -1 } )
 
     -- if params then
     --     print(params.someKey)
@@ -355,23 +360,28 @@ function scene:show( event )
     -- end
 
     if event.phase == "did" then
-        composer.removeScene( "game" ) 
+        -- composer.removeScene( "game" )
+        -- audio.stop( 2 )
+        -- audio.dispose( 2 )
     end
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
     
-    if event.phase == "will" then
+    if (event.phase == "will") then
         physics.start()
         physics.stop()
+        -- audio.stop( 2 )
+        -- audio.dispose( 2 )
     end
 
 end
 
 function scene:destroy( event )
     local sceneGroup = self.view
-    
+    -- audio.stop( 2 )
+    -- audio.dispose( 2 )
 end
 
 ---------------------------------------------------------------------------------
