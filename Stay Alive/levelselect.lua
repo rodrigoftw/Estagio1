@@ -15,9 +15,6 @@ local function handleBackButtonEvent( event )
         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
     end
 end
-
-    
-
 --
 -- Start the composer event handlers
 --
