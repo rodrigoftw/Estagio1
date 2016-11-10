@@ -21,7 +21,7 @@ function scene:create( event )
     -- INSERT code here to initialize the scene
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc
 
-    local background = display.newRect( 0, 0, _H/2, _W/2)
+    local background = display.newRect( centerX, centerY, 260, 250 )
     background:setFillColor( 0 )
 end
 
@@ -36,6 +36,51 @@ function scene:show( event )
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc
+
+        local menuButton = display.newRect( centerX - 72, centerY + 72, 56, 56 )
+        menuButton.alpha = 0.5
+
+        function toMenu(event)
+            if (event.phase == "began") then
+                audio.play(buttonToggle, { channel = 7 } )
+                audio.stop( 2 )
+                audio.dispose( 2 )
+            elseif (event.phase == "ended") then
+                map.destroy()
+                composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
+            end
+        end
+        menuButton:addEventListener("touch", toMenu)
+
+        local restartButton = display.newRect( centerX, centerY + 72, 56, 56 )
+        restartButton.alpha = 0.5
+
+        function restartLevel(event)
+            if (event.phase == "began") then
+                audio.play(buttonToggle, { channel = 7 } )
+                audio.stop( 2 )
+                audio.dispose( 2 )
+            elseif (event.phase == "ended") then
+                composer.gotoScene( "reload_game", { effect = "crossFade", time = 333 } )
+            end
+        end
+        restartButton:addEventListener("touch", restartLevel)
+
+        local nextButton = display.newRect( centerX + 72, centerY + 72, 56, 56 )
+        nextButton.alpha = 0.5
+
+        function nextLevel(event)
+            if (event.phase == "began") then
+                audio.play(buttonToggle, { channel = 7 } )
+                audio.stop( 2 )
+                audio.dispose( 2 )
+            elseif (event.phase == "ended") then
+                map.destroy()
+                composer.gotoScene( "levels.level2", { effect = "crossFade", time = 333 } )
+            end
+        end
+        nextButton:addEventListener("touch", nextLevel)
+
     end 
 end
 
