@@ -71,24 +71,20 @@
             {
              "myName":"ending",
              "physics:enabled":"true",
-             "physics:isSensor":"false",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"static",
              "tiles:isFixedRotation":"true",
-             "tiles:isSensor":"false",
              "type":"end"
             },
          "propertytypes":
             {
              "myName":"string",
              "physics:enabled":"string",
-             "physics:isSensor":"string",
              "tiles.collision":"string",
              "tiles:addEventListener( \"collision\" )":"string",
              "tiles:bodyType":"string",
              "tiles:isFixedRotation":"string",
-             "tiles:isSensor":"string",
              "type":"string"
             },
          "type":"tilelayer",

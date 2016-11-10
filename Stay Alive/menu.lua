@@ -163,43 +163,53 @@ function scene:create( event )
         -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
     })
 
-    -- local tile = {
-    --     map.layer["Clouds"].tile(3, 3),
-    --     map.layer["Clouds"].tile(3, 4),
-    --     map.layer["Clouds"].tile(4, 3),
-    --     map.layer["Clouds"].tile(3, 4),
-    --     map.layer["Clouds"].tile(5, 4),
+    local tile = {
+        map.layer["Clouds"].tile(3, 3),
+        map.layer["Clouds"].tile(3, 4),
+        map.layer["Clouds"].tile(4, 3),
+        map.layer["Clouds"].tile(3, 4),
+        map.layer["Clouds"].tile(5, 4),
 
-    --     map.layer["Clouds"].tile(8, 6),
-    --     map.layer["Clouds"].tile(8, 7),
+        map.layer["Clouds"].tile(8, 6),
+        map.layer["Clouds"].tile(8, 7),
 
-    --     map.layer["Clouds"].tile(10, 2),
-    --     map.layer["Clouds"].tile(11, 2),
-    --     map.layer["Clouds"].tile(10, 3),
-    --     map.layer["Clouds"].tile(11, 3),
-    --     map.layer["Clouds"].tile(12, 3),
+        map.layer["Clouds"].tile(10, 2),
+        map.layer["Clouds"].tile(11, 2),
+        map.layer["Clouds"].tile(10, 3),
+        map.layer["Clouds"].tile(11, 3),
+        map.layer["Clouds"].tile(12, 3),
 
-    --     map.layer["Clouds"].tile(16, 3),
-    --     map.layer["Clouds"].tile(17, 3)
-    -- } 
-    
-    -- for tile in map.layer["Clouds"].tilesInRect(centerX, centerY, left, bottom) do
-    --     if (tile.x > display.contentCenterX) then
-    --         tile.x = tile.x -1
-    --     elseif (tile.x < display.contentCenterX / 2 ) then
-    --         tile.x = xMax
+        map.layer["Clouds"].tile(16, 3),
+        map.layer["Clouds"].tile(17, 3)
+    } 
+
+    map.layer["Player"].xParallax = 1
+    map.layer["End"].xParallax = 1
+    map.layer["Start"].xParallax = 1
+    map.layer["Walls"].xParallax = 1
+    map.layer["Floors"].xParallax = 1
+    map.layer["Background"].xParallax = 1
+
+    -- speed = 0.5
+
+    -- function moveClouds()
+    --     for tile in map.layer["Clouds"].tilesInRect(0, 0, _W, _H) do
+    --         -- tile.x = tile.x - speed
+    --         tile.xParallax = 2
+    --         -- repeat--081120167015806
+    --         -- until tile.x < -20
+            
+    --             -- tile:translate(_W + 20, 0)
+    --             -- tile.x = _W + 20
+    --             -- tile.x = tile.x -1
+    --             -- tile.x:translate(display.contentWidth + display.contentWidth, 0)
+            
+    --         if (tile.x < -20) then
+    --             tile.x = _W + 20
+    --         end
     --     end
     -- end
-
-    local layer
-    layer = map.layer["Clouds"]
-    for layer in map.tileLayers() do
-        -- if (layer.x > 0) then
-            layer.x = layer.x -1
-        -- elseif (layer.x < _W / 2) then
-        --     layer.x = _W + centerX
-        -- end
-    end
+    -- Runtime:addEventListener( "enterFrame", moveClouds )
 
     local function handlePlayButtonEvent( event )
         if ( event.phase == "began" ) then

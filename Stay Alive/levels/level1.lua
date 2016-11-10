@@ -132,12 +132,16 @@ function scene:create( event )
     -------------------------------------------------------------------------------
 
     local player = map.layer["Player"].tile(2, 7)
+    -- local player = newImageRect("maps/Tiles/player_16.png", 16, 16)
+    -- player.x = _W / 0.9
+    -- player.y = _H / 0.8
     player.bodyType = "dynamic"
     player.bounce = 0
     player.friction = 10
     player.type = "player"
     player.collision = onCollision
     player.isFixedRotation = false --true
+    -- player:insert( sceneGroup )
     -- player:addEventListener( "collision", onCollision )
 
     -------------------------------------------------------------------------------
@@ -201,71 +205,46 @@ function scene:create( event )
     borders:insert( borderright )
 
     -------------------------------------------------------------------------------
-    -- Collisions
+    -- Timer
     -------------------------------------------------------------------------------
+    -- Contar o tempo em segundos
+    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+ 
+    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
+    clockText:setFillColor( 1, 1, 1 )
 
-    function onCollision(event)
+    -- Dar um update no timer a cada segundo passado
+    local function updateTime()
+        -- Incrementar o número de segundos
+        secondsLeft = secondsLeft - 1
+    
+        -- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
+        local minutes = math.floor( secondsLeft / 60 )
+        local seconds = secondsLeft % 60
 
-        print(event.phase)
-        print(self.type)
-        print(event.other.type)
-        for k,v in pairs(event) do
-            print(k,v)
-        end
-        print("____________________________")
-        for k,v in pairs(event.target) do
-            print(k,v)
-        end
-        print("____________________________")
-        for k,v in pairs(event.other) do
-            print(k,v)
-        end
+        -- Transformar o resultado em uma string usando string.format
+        timeDisplay = string.format( "%02d:%02d", minutes, seconds)
+        clockText.text = timeDisplay
+        clockText.alpha = 1
 
-        if ( event.phase == "began" ) then
-            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
-                -- print( self.type .. ": collision began with " .. event.other.type )
-                audio.play( winSound, {channel = 10} )
-                print("Fim da fase")
-                composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
-                -- timer.cancel(Timer)
-            end
-                
-            -- elseif event.target.type == "player" and event.other.type == "spike" then
-            --     timer.cancel(Timer)
-            --     audio.play(deathsound)
-            --     audio.stop(deathsound)
-            --     function blink()
-            --         if(clockText.alpha < 1) then
-            --             transition.to( clockText, {time=50, alpha=1})
-            --         else
-            --             transition.to( clockText, {time=50, alpha=0})
-            --         end
-            --     end
-            --     local tmr = timer.performWithDelay( 300, blink, 0 )
-            --     player:removeSelf()
-            --     player = nil
-            --     print("oh no")
-            -- end
-            -- elseif ( event.phase == "ended" ) then
-            --     if ( event.target.type == "player" and event.other.type == "end" ) then
-            --         -- Options table for the overlay scene "endofphase.lua"
-            --         local options = {
-            --             isModal = true,
-            --             effect = "fade",
-            --             time = 333,
-            --             params = {
-            --                 sampleVar = "my sample variable"
-            --             }
-            --         }
-
-            --         composer.showOverlay( "endofphase", options )
-            --     end
-        elseif ( event.phase == "ended" ) then
-        end
-        return true
+        map.setDamping(0.3)
+        map.setCameraFocus(player)
+        -- map.updateView()
     end
-
-    ending:addEventListener("collision", onCollision)
+    
+    -- Rodar timer
+    local Timer = timer.performWithDelay( 1, updateTime, secondsLeft )
+    
+    if (Timer == 0) then
+        function blink()
+            if(clockText.alpha < 1) then
+                transition.to( clockText, {time=50, alpha=1})
+            else
+                transition.to( clockText, {time=50, alpha=0})
+            end
+        end
+        local tmr = timer.performWithDelay( 300, blink, 0 )
+    end
 
     -------------------------------------------------------------------------------
     -- Movement Buttons
@@ -412,6 +391,76 @@ function scene:create( event )
     Runtime:addEventListener( "key", onKeyEvent )
 
     -------------------------------------------------------------------------------
+    -- Collisions
+    -------------------------------------------------------------------------------
+
+    function onCollision(event)
+
+        print(event.phase)
+        print("____________________________")
+        print(self.type)
+        print("____________________________")
+        print(event.other.type)
+        print("____________________________")
+        for k,v in pairs(event) do
+            print(k,v)
+        end
+        print("____________________________")
+        for k,v in pairs(event.target) do
+            print(k,v)
+        end
+        print("____________________________")
+        for k,v in pairs(event.other) do
+            print(k,v)
+        end
+
+        if ( event.phase == "began" ) then
+            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
+                -- print( self.type .. ": collision began with " .. event.other.type )
+                audio.play( winSound, {channel = 10} )
+                print("Fim da fase")
+                composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
+                timer.cancel(Timer)
+            end
+                
+            -- elseif event.target.type == "player" and event.other.type == "spike" then
+            --     timer.cancel(Timer)
+            --     audio.play(deathsound)
+            --     audio.stop(deathsound)
+            --     function blink()
+            --         if(clockText.alpha < 1) then
+            --             transition.to( clockText, {time=50, alpha=1})
+            --         else
+            --             transition.to( clockText, {time=50, alpha=0})
+            --         end
+            --     end
+            --     local tmr = timer.performWithDelay( 300, blink, 0 )
+            --     player:removeSelf()
+            --     player = nil
+            --     print("oh no")
+            -- end
+            -- elseif ( event.phase == "ended" ) then
+            --     if ( event.target.type == "player" and event.other.type == "end" ) then
+            --         -- Options table for the overlay scene "endofphase.lua"
+            --         local options = {
+            --             isModal = true,
+            --             effect = "fade",
+            --             time = 333,
+            --             params = {
+            --                 sampleVar = "my sample variable"
+            --             }
+            --         }
+
+            --         composer.showOverlay( "endofphase", options )
+            --     end
+        elseif ( event.phase == "ended" ) then
+        end
+        return true
+    end
+
+    ending:addEventListener("collision", onCollision)
+
+    -------------------------------------------------------------------------------
     -- Debug Buttons and Functions
     -------------------------------------------------------------------------------
 
@@ -524,47 +573,6 @@ function scene:create( event )
         }
     )
 
-    -------------------------------------------------------------------------------
-    -- Timer
-    -------------------------------------------------------------------------------
-    -- Contar o tempo em segundos
-    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
- 
-    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
-    clockText:setFillColor( 1, 1, 1 )
-
-    -- Dar um update no timer a cada segundo passado
-    local function updateTime()
-        -- Incrementar o número de segundos
-        secondsLeft = secondsLeft - 1
-    
-        -- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
-        local minutes = math.floor( secondsLeft / 60 )
-        local seconds = secondsLeft % 60
-
-        -- Transformar o resultado em uma string usando string.format
-        timeDisplay = string.format( "%02d:%02d", minutes, seconds)
-        clockText.text = timeDisplay
-        clockText.alpha = 1
-
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
-        -- map.updateView()
-    end
-    
-    -- Rodar timer
-    local Timer = timer.performWithDelay( 1, updateTime, secondsLeft )
-    
-    if (Timer == 0) then
-        function blink()
-            if(clockText.alpha < 1) then
-                transition.to( clockText, {time=50, alpha=1})
-            else
-                transition.to( clockText, {time=50, alpha=0})
-            end
-        end
-        local tmr = timer.performWithDelay( 300, blink, 0 )
-    end
 end
 
 function scene:show( event )
