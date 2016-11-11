@@ -17,6 +17,6 @@ Você é apenas um viajante em um mundo desconhecido. Você precisa ir até o fi
 
 Criação do jogo: [Corona SDK](https://coronalabs.com);  
 Criação dos levels: [Tiled Map Editor](www.mapeditor.org);  
-Criação da arte do jogo e da user interface: [GraphicsGale](https://graphicsgale.com/us/);  
+Criação da arte do jogo, ícones e da user interface: [GraphicsGale](https://graphicsgale.com/us/);  
 Sons: criados por mim no [Bfxr](http://www.bfxr.net/);  
 Músicas: [Youtube Audio Library](https://www.youtube.com/audiolibrary/music).
