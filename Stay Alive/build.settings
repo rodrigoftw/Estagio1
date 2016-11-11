@@ -7,6 +7,17 @@ settings =
     },
     android =
     {
+        supportsScreens =
+        {
+            smallScreens  = true,
+            normalScreens = true,
+            largeScreens  = true,
+            xlargeScreens = false,
+        },
+
+        supportsTV = true,
+        isGame = true,
+
         usesPermissions =
         {
             "android.permission.INTERNET",
@@ -16,7 +27,7 @@ settings =
             "com.android.vending.CHECK_LICENSE",
         },
         googlePlayGamesAppId = "xxxxxxxxxxxx",
-        --largeHeap = true
+        largeHeap = true
     },
     plugins =
     {
@@ -49,10 +60,6 @@ settings =
             publisherId = "com.coronalabs",
             supportedPlatforms = { iphone=true, ["iphone-sim"]=true },
         },
-        ['plugin.cc'] = 
-        {
-            publisherId = 'com.roaminggamer'
-        },
     },
     iphone =
     {
@@ -60,15 +67,25 @@ settings =
         {
             CFBundleIconFiles =
             {
+                "Icon.png",
+                "Icon-60.png",
+                "Icon@2x.png",
                 "Icon-60.png",
                 "Icon-60@2x.png",
                 "Icon-60@3x.png",
+                "Icon-72.png",
+                "Icon-72@2x.png",
                 "Icon-76.png",
-                "Icon-76@2x.png", 
-                "Icon-Small@3x.png",
+                "Icon-76@2x.png",
+                "Icon-167.png",
                 "Icon-Small-40.png",
                 "Icon-Small-40@2x.png",
                 "Icon-Small-40@3x.png",
+                "Icon-Small-50.png",
+                "Icon-Small-50@2x.png",
+                "Icon-Small.png",
+                "Icon-Small@2x.png",
+                "Icon-Small@3x.png"
             },
             UILaunchImages = {
                 {  --iPhone 4 Portait
