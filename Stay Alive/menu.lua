@@ -254,7 +254,7 @@ function scene:create( event )
     end
 
 
-    local title = display.newText("Stay Alive!", 100, 32, native.systemFontBold, 56 )
+    local title = display.newText("Stay Alive!", 100, 32, "Roboto-Regular.ttf", 56 )
     title.x = display.contentCenterX
     title.y = 80
     title:setFillColor( 0 )
@@ -265,6 +265,7 @@ function scene:create( event )
     local playButton = widget.newButton({
         id = "button1",
         label = "Jogar",
+        font = "Roboto-Regular.ttf",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
         height = 32,
@@ -283,6 +284,7 @@ function scene:create( event )
     -- Create the widget
     local settingsButton = widget.newButton({
         id = "button2",
+        font = "Roboto-Regular.ttf",
         label = "Opções",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
@@ -302,6 +304,7 @@ function scene:create( event )
     -- Create the widget
     local helpButton = widget.newButton({
         id = "button3",
+        font = "Roboto-Regular.ttf",
         label = "Ajuda",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
@@ -321,6 +324,7 @@ function scene:create( event )
     -- Create the widget
     local creditsButton = widget.newButton({
         id = "button4",
+        font = "Roboto-Regular.ttf",
         label = "Créditos",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,
@@ -339,6 +343,7 @@ function scene:create( event )
 
     local quitButton = widget.newButton({
         id = "button5",
+        font = "Roboto-Regular.ttf",
         label = "Sair",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,

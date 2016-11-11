@@ -83,7 +83,7 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Title
     -------------------------------------------------------------------------------
-    local title = display.newText("Opções", 100, 32, native.systemFontBold, 32 )
+    local title = display.newText("Opções", 100, 32, "Roboto-Regular.ttf", 32 )
     title.x = display.contentCenterX 
     title.y = 40
     title:setFillColor( 0 )
@@ -96,7 +96,7 @@ function scene:create( event )
     local volumeMusicLabel
     local audioMusicVolume = 50 -- Variable to hold music states.
 
-    local musicLabel = display.newText("Músicas", 100, 32, native.systemFont, 18 )
+    local musicLabel = display.newText("Músicas", 100, 32, "Roboto-Regular.ttf", 18 )
     musicLabel.x = display.contentCenterX / 1.5 --/ 5.5
     musicLabel.y = display.contentCenterY * 0.65 --180
     musicLabel:setFillColor( 0 )
@@ -143,7 +143,7 @@ function scene:create( event )
     sceneGroup:insert( volumeMusicSlider )
 
     --Create our volume label to display the current volume on screen
-    volumeMusicLabel = display.newText( audioMusicVolume, (volumeMusicSlider.x + 120), musicLabel.y, native.systemFont, 18 )
+    volumeMusicLabel = display.newText( audioMusicVolume, (volumeMusicSlider.x + 120), musicLabel.y, "Roboto-Regular.ttf", 18 )
     volumeMusicLabel:setFillColor( 0 )
     volumeMusicLabel.alpha = 0
 
@@ -151,7 +151,7 @@ function scene:create( event )
     -- Button Sound Volume Controller
     -------------------------------------------------------------------------------
 
-    local soundLabel = display.newText("Botões", 100, 32, native.systemFont, 18 )
+    local soundLabel = display.newText("Botões", 100, 32, "Roboto-Regular.ttf", 18 )
     soundLabel.x = display.contentCenterX / 1.5 --/ 5.5 --- 75
     soundLabel.y = display.contentCenterY * 0.85 --130
     soundLabel:setFillColor( 0 )
@@ -200,7 +200,7 @@ function scene:create( event )
     sceneGroup:insert( volumeSoundSlider )
 
     --Create our volume label to display the current volume on screen
-    volumeSoundLabel = display.newText( audioSoundVolume, (volumeSoundSlider.x + 120), soundLabel.y, native.systemFont, 18 )
+    volumeSoundLabel = display.newText( audioSoundVolume, (volumeSoundSlider.x + 120), soundLabel.y, "Roboto-Regular.ttf", 18 )
     volumeSoundLabel:setFillColor( 0 )
     volumeSoundLabel.alpha = 0
 
@@ -208,7 +208,7 @@ function scene:create( event )
     -- Player Sound Volume Controller
     -------------------------------------------------------------------------------
 
-    local playerLabel = display.newText("Jogador", 100, 32, native.systemFont, 18 )
+    local playerLabel = display.newText("Jogador", 100, 32, "Roboto-Regular.ttf", 18 )
     playerLabel.x = display.contentCenterX / 1.5 --/ 5.5 --- 75
     playerLabel.y = display.contentCenterY * 1.05 --130
     playerLabel:setFillColor( 0 )
@@ -257,7 +257,7 @@ function scene:create( event )
     sceneGroup:insert( volumePlayerSlider )
 
     --Create our volume label to display the current volume on screen
-    volumePlayerLabel = display.newText( audioPlayerVolume, (volumePlayerSlider.x + 120), playerLabel.y, native.systemFont, 18 )
+    volumePlayerLabel = display.newText( audioPlayerVolume, (volumePlayerSlider.x + 120), playerLabel.y, "Roboto-Regular.ttf", 18 )
     volumePlayerLabel:setFillColor( 0 )
     volumePlayerLabel.alpha = 0
 
@@ -284,6 +284,7 @@ function scene:create( event )
     -- Create the widget
     local backButton = widget.newButton({
         id = "button1",
+        font = "Roboto-Regular.ttf",
         label = "Voltar",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,

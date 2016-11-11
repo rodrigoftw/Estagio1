@@ -31,7 +31,7 @@ function scene:create( event )
     -- background.y = display.contentCenterY
     -- sceneGroup:insert(background)
 
-    local selectLevelText = display.newText("Selecione um level", 125, 32, native.systemFontBold, 32)
+    local selectLevelText = display.newText("Selecione um level", 125, 32, "Roboto-Regular.ttf", 32)
     selectLevelText:setFillColor( 0 )
     selectLevelText.x = display.contentCenterX + 10
     selectLevelText.y = 50
@@ -121,7 +121,7 @@ function scene:create( event )
         else
             buttonGroups[i].alpha = 0.5
         end
-        buttons[i] = display.newText(tostring(i), 0, 0, native.systemFontBold, 28)
+        buttons[i] = display.newText(tostring(i), 0, 0, "Roboto-Regular.ttf", 28)
         buttons[i].x = x
         buttons[i].y = y
         buttonGroups[i]:insert(buttons[i])
@@ -141,6 +141,7 @@ function scene:create( event )
 
     local backButton = widget.newButton({
         id = "backButton",
+        font = "Roboto-Regular.ttf",
         label = "Voltar",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,

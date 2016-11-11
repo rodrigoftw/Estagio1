@@ -35,13 +35,13 @@ function scene:create( event )
     -- sceneGroup:insert( background )
     -- sceneGroup:insert( background2 )
 
-    local title = display.newText( "Créditos", 100, 32, native.systemFontBold, 32)
+    local title = display.newText( "Créditos", 100, 32, "Roboto-Regular.ttf", 32)
     title.x = display.contentCenterX
     title.y = 40
     title:setFillColor( 0 )
     sceneGroup:insert( title )
 
-    local creditText = display.newText( "Desenvolvimento: Rodrigo Andrade", 250, 250, native.systemFont, 16 )
+    local creditText = display.newText( "Desenvolvimento: Rodrigo Andrade", 250, 250, "Roboto-Regular.ttf", 16 )
     creditText:setFillColor( 0 )
     creditText.x = display.contentCenterX
     creditText.y = display.contentCenterY 
@@ -52,6 +52,7 @@ function scene:create( event )
 
     local backButton = widget.newButton({
         id = "button1",
+        font = "Roboto-Regular.ttf",
         label = "Voltar",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
         width = 100,

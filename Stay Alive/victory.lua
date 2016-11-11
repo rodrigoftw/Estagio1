@@ -22,7 +22,20 @@ function scene:create( event )
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc
 
     local background = display.newRect( centerX, centerY, 260, 250 )
-    background:setFillColor( 0 )
+    background:setFillColor( 1 )
+
+    local wintitle = display.newText("Fase concluída!", 100, 32, "Roboto-Regular.ttf", 26 )
+    wintitle.x = centerX
+    wintitle.y = centerY - 80--80
+    wintitle:setFillColor( 0 )
+    wintitle:toFront()
+
+    local endedTimeText = display.newText("Seu tempo foi de: ", 100, 32, "Roboto-Regular.ttf", 14 )
+    endedTimeText.x = centerX
+    endedTimeText.y = centerY - 50--80
+    endedTimeText:setFillColor( 0 )
+    endedTimeText:toFront()
+
 end
 
 function scene:show( event )
@@ -38,7 +51,7 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc
 
         local menuButton = display.newRect( centerX - 72, centerY + 72, 56, 56 )
-        menuButton.alpha = 0.5
+        menuButton:setFillColor( 0 )
 
         function toMenu(event)
             if (event.phase == "began") then
@@ -53,7 +66,7 @@ function scene:show( event )
         menuButton:addEventListener("touch", toMenu)
 
         local restartButton = display.newRect( centerX, centerY + 72, 56, 56 )
-        restartButton.alpha = 0.5
+        restartButton:setFillColor( 0 )
 
         function restartLevel(event)
             if (event.phase == "began") then
@@ -67,7 +80,7 @@ function scene:show( event )
         restartButton:addEventListener("touch", restartLevel)
 
         local nextButton = display.newRect( centerX + 72, centerY + 72, 56, 56 )
-        nextButton.alpha = 0.5
+        nextButton:setFillColor( 0 )
 
         function nextLevel(event)
             if (event.phase == "began") then

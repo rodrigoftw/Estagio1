@@ -210,7 +210,7 @@ function scene:create( event )
     -- Contar o tempo em segundos
     local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
+    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -396,23 +396,23 @@ function scene:create( event )
 
     function onCollision(event)
 
-        print(event.phase)
-        print("____________________________")
-        print(self.type)
-        print("____________________________")
-        print(event.other.type)
-        print("____________________________")
-        for k,v in pairs(event) do
-            print(k,v)
-        end
-        print("____________________________")
-        for k,v in pairs(event.target) do
-            print(k,v)
-        end
-        print("____________________________")
-        for k,v in pairs(event.other) do
-            print(k,v)
-        end
+        -- print(event.phase)
+        -- print("____________________________")
+        -- print(self.type)
+        -- print("____________________________")
+        -- print(event.other.type)
+        -- print("____________________________")
+        -- for k,v in pairs(event) do
+        --     print(k,v)
+        -- end
+        -- print("____________________________")
+        -- for k,v in pairs(event.target) do
+        --     print(k,v)
+        -- end
+        -- print("____________________________")
+        -- for k,v in pairs(event.other) do
+        --     print(k,v)
+        -- end
 
         if ( event.phase == "began" ) then
             if ( event.target.type == "end" ) and (event.other.type == "player" ) then
