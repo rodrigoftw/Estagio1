@@ -31,82 +31,39 @@ function scene:create( event )
 
     params = event.params
         
-    --
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
-    --
-    -- local background = display.newRect( 0, 0, 570, 360 )
+
+    -- --------------------------------------------------------------------------------
+    -- -- Background
+    -- --------------------------------------------------------------------------------
+
+    -- background = display.newImageRect( "maps/menu_grass.png", _W, _H )
     -- background.x = display.contentCenterX
     -- background.y = display.contentCenterY
     -- sceneGroup:insert( background )
 
-    -- set the background image
-    -- background = display.newImage( "images/background/07.png", _W, _H )
-    -- background:scale(0.5, 0.5)
-    -- background.x = centerX + 132
-    -- background.y = centerY - 15
-    -- sceneGroup:insert( background )
+    -- --------------------------------------------------------------------------------
+    -- -- Clouds
+    -- --------------------------------------------------------------------------------
 
-    -- background2 = display.newImage( "images/background/07.png", _W, _H )
-    -- background2:scale(0.5, 0.5)
-    -- background2.x = (background.width/2) + centerX + 132
-    -- background2.y = centerY - 15
-    -- sceneGroup:insert( background2 )
+    -- clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    -- clouds.x = display.contentCenterX
+    -- clouds.y = display.contentCenterY
+    -- clouds:toFront()
+    -- sceneGroup:insert( clouds )
 
     -- speed = 1
 
-    -- function movebg()
-    --   background.x = background.x - speed
-    --   background2.x = background2.x - speed
-    --     -- if(background.x == -360)then 
-    --     --     background.x = 840 - speed
-    --     -- elseif(background2.x == -360)then 
-    --     --     background2.x = 840 - speed
-    --     -- end
-    --     if (background.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
-    --         background:translate(display.contentWidth + display.contentWidth + 300, 0)
-    --     elseif (background2.x + centerX) < (display.contentWidth - display.contentWidth - 130) then
-    --         background2:translate(display.contentWidth + display.contentWidth + 300, 0)
+    -- function moveClouds()
+
+    --     clouds.x = clouds.x - speed
+    --     if (clouds.x < -(_W/2)) then
+    --         clouds.x = _W + (1.1 * _W)
     --     end
     -- end
-    -- Runtime:addEventListener( "enterFrame", movebg )
+    -- Runtime:addEventListener( "enterFrame", moveClouds )
 
-    -- local ground = display.newImageRect("images/background/ground.png", 580, 32)
-    -- ground.width = 580
-    -- ground.x = centerX
-    -- ground.y = centerY + 145
-    -- physics.addBody(ground, "static", {density=0, bounce=0.1, friction=.2, filter = groundCollisionFilter})
-    -- ground.type = "ground"
-    -- ground.collision = onCollision
-    -- sceneGroup:insert( ground )
-
-    -- local ground2 = display.newImageRect("images/background/ground.png", 580, 32)
-    -- ground2.width = 580
-    -- ground2.x = ground.width + 240
-    -- ground2.y = centerY + 145
-    -- physics.addBody(ground2, "static", {density=0, bounce=0.1, friction=.2, filter = groundCollisionFilter})
-    -- ground2.type = "ground"
-    -- ground2.collision = onCollision
-    -- sceneGroup:insert( ground2 )
-
-
-    -- local gspeed = 2
-
-    -- function moveg()
-    --   ground.x = ground.x - gspeed
-    --   ground2.x = ground2.x - gspeed
-    --     -- if(ground.x == -(1.4*centerX))then 
-    --     --     ground.x = (4*centerX) - 35*gspeed
-    --     -- elseif(ground2.x ==  -(1.4*centerX))then 
-    --     --     ground2.x = (4*centerX) - 35*gspeed
-    --     -- end
-    --     if (ground.x + centerX) < (display.contentWidth - display.contentWidth - 90) then
-    --         ground:translate(display.contentWidth + display.contentWidth + 384, 0)
-    --     elseif (ground2.x + centerX) < (display.contentWidth - display.contentWidth - 90) then
-    --         ground2:translate(display.contentWidth + display.contentWidth + 384, 0)
-    --     end
-    -- end
-    -- Runtime:addEventListener( "enterFrame", moveg )
 
     --------------------------------------------------------------------------------
     -- Mapa
@@ -190,12 +147,12 @@ function scene:create( event )
     map.layer["Floors"].xParallax = 1
     map.layer["Background"].xParallax = 1
 
-    -- speed = 0.5
+    -- speed = 1
 
     -- function moveClouds()
     --     for tile in map.layer["Clouds"].tilesInRect(0, 0, _W, _H) do
-    --         -- tile.x = tile.x - speed
-    --         tile.xParallax = 2
+    --         tile.x = tile.x - speed
+    --         -- tile.xParallax = 2
     --         -- repeat--081120167015806
     --         -- until tile.x < -20
             
@@ -249,10 +206,30 @@ function scene:create( event )
         if ( event.phase == "began" ) then
             audio.play(buttonToggle)
         elseif ( event.phase =="ended" ) then
-            native.requestExit()
+            -- Handler that gets notified when the alert closes
+            local function onComplete( event )
+                if ( event.action == "clicked" ) then
+                    local i = event.index
+                    if ( i == 1 ) then
+                        -- Do nothing; dialog will simply dismiss
+                    elseif ( i == 2 ) then
+                        -- Quit game
+                        native.requestExit()
+                    end
+                end
+            end     
+            -- Show alert with two buttons
+            local alert = native.showAlert( "Deseja realmente sair?", "Que tal jogar mais um pouco? :)", { "Cancelar", "Sair" }, onComplete )
+
+            -- Dismisses alert after 10 seconds
+            local function cancelAlert()
+                native.cancelAlert( alert )
+            end
+
+            timer.performWithDelay( 10000, cancelAlert )
+
         end
     end
-
 
     local title = display.newText("Stay Alive!", 100, 32, "Roboto-Regular.ttf", 56 )
     title.x = display.contentCenterX
@@ -364,6 +341,7 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
+    phase = event.phase
 
     params = event.params
     utility.print_r(event)
@@ -373,9 +351,14 @@ function scene:show( event )
     --     print(params.someKey)
     --     print(params.someOtherKey)
     -- end
-
-    if event.phase == "did" then
-        -- composer.removeScene( "game" )
+    if phase == "will" then
+        -- Called when the scene is off screen and is about to move on screen
+    elseif phase == "did" then
+        -- Called when the scene is now on screen
+        -- 
+        -- INSERT code here to make the scene come alive
+        -- e.g. start timers, begin animation, play audio, etc
+        
         -- audio.stop( 2 )
         -- audio.dispose( 2 )
     end
@@ -383,18 +366,33 @@ end
 
 function scene:hide( event )
     local sceneGroup = self.view
-    
-    if (event.phase == "will") then
+    local phase = event.phase
+
+    if phase == "will" then
+        -- Called when the scene is on screen and is about to move off screen
+        --
+        -- INSERT code here to pause the scene
+        -- e.g. stop timers, stop animation, unload sounds, etc.)
+
         physics.start()
         physics.stop()
+
         -- audio.stop( 2 )
         -- audio.dispose( 2 )
+    elseif phase == "did" then
+        -- Called when the scene is now off screen
     end
 
 end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+
+    -- Called prior to the removal of scene's "view" (sceneGroup)
+    -- 
+    -- INSERT code here to cleanup the scene
+    -- e.g. remove display objects, remove touch listeners, save state, etc
+
     -- audio.stop( 2 )
     -- audio.dispose( 2 )
 end

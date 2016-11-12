@@ -9,7 +9,6 @@ local params
 local scrollView
 local icons = {}
 
-
 local function handleButtonEvent( event )
 
     if ( event.phase == "began" ) then
@@ -58,7 +57,7 @@ function scene:create( event )
     --local title = display.newBitmapText( titleOptions )
     local title = display.newText("Ajuda", 125, 32, "Roboto-Regular.ttf", 32)
     title.x = display.contentCenterX
-    title.y = 40
+    title.y = display.contentCenterY - 120
     title:setFillColor( 0 )
     sceneGroup:insert( title )
 
