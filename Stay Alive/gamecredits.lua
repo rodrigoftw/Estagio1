@@ -41,84 +41,89 @@ function scene:create( event )
     title:setFillColor( 0 )
     sceneGroup:insert( title )
 
+    local background = display.newImageRect( "maps/background_ui.png", _W, _H )
+    background.x = centerX
+    background.y = centerY - 5
+    sceneGroup:insert( background )
+
     local coronasdk = display.newText( "Criação do jogo", 250, 250, "Roboto-Regular.ttf", 16 )
     coronasdk:setFillColor( 0 )
     coronasdk.x = centerX - 180
-    coronasdk.y = centerY - 60
+    coronasdk.y = centerY - 70
     sceneGroup:insert(coronasdk)
 
     local coronasdk2 = display.newText( "Corona SDK", 250, 250, "Roboto-Regular.ttf", 12 )
     coronasdk2:setFillColor( 0 )
     coronasdk2.x = centerX - 180
-    coronasdk2.y = centerY - 40
+    coronasdk2.y = centerY - 50
     sceneGroup:insert(coronasdk2)
 
     local devBy = display.newText( "Desenvolvimento", 250, 250, "Roboto-Regular.ttf", 16 )
     devBy:setFillColor( 0 )
     devBy.x = centerX
-    devBy.y = centerY - 60
+    devBy.y = centerY - 70
     sceneGroup:insert(devBy)
 
     local devBy2 = display.newText( "Rodrigo Andrade", 250, 250, "Roboto-Regular.ttf", 12 )
     devBy2:setFillColor( 0 )
     devBy2.x = centerX
-    devBy2.y = centerY - 40
+    devBy2.y = centerY - 50
     sceneGroup:insert(devBy2)
 
     local levelcreation = display.newText( "Criação dos levels", 250, 250, "Roboto-Regular.ttf", 16 )
     levelcreation:setFillColor( 0 )
-    levelcreation.x = centerX + 180
-    levelcreation.y = centerY - 60
+    levelcreation.x = centerX + 170
+    levelcreation.y = centerY - 70
     sceneGroup:insert(levelcreation)
 
     local tiled = display.newText( "Tiled Map Editor", 250, 250, "Roboto-Regular.ttf", 12 )
     tiled:setFillColor( 0 )
-    tiled.x = centerX + 180
-    tiled.y = centerY - 40
+    tiled.x = centerX + 170
+    tiled.y = centerY - 50
     sceneGroup:insert(tiled)
 
     local gameart = display.newText( "Criação da arte do jogo, ícones e interface", 250, 250, "Roboto-Regular.ttf", 16 )
     gameart:setFillColor( 0 )
     gameart.x = centerX
-    gameart.y = centerY
+    gameart.y = centerY - 10
     sceneGroup:insert(gameart)
 
     local graphics = display.newText( "GraphicsGale", 250, 250, "Roboto-Regular.ttf", 12 )
     graphics:setFillColor( 0 )
     graphics.x = centerX
-    graphics.y = centerY + 20
+    graphics.y = centerY + 10
     sceneGroup:insert(graphics)
 
     local sounds = display.newText( "Sons", 250, 250, "Roboto-Regular.ttf", 16 )
     sounds:setFillColor( 0 )
-    sounds.x = centerX - 80
-    sounds.y = centerY + 60
+    sounds.x = centerX - 60
+    sounds.y = centerY + 50
     sceneGroup:insert(sounds)
 
     local bfxr = display.newText( "Bfxr", 250, 250, "Roboto-Regular.ttf", 12 )
     bfxr:setFillColor( 0 )
-    bfxr.x = centerX - 80
-    bfxr.y = centerY + 80
+    bfxr.x = centerX - 60
+    bfxr.y = centerY + 70
     sceneGroup:insert(bfxr)
 
     local music = display.newText( "Músicas", 250, 250, "Roboto-Regular.ttf", 16 )
     music:setFillColor( 0 )
-    music.x = centerX + 80
-    music.y = centerY + 60
+    music.x = centerX + 60
+    music.y = centerY + 50
     sceneGroup:insert(music)
 
     local youtube = display.newText( "Youtube Audio Library", 250, 250, "Roboto-Regular.ttf", 12 )
     youtube:setFillColor( 0 )
-    youtube.x = centerX + 80
-    youtube.y = centerY + 80
+    youtube.x = centerX + 60
+    youtube.y = centerY + 70
     sceneGroup:insert(youtube)
 
     local function handleGithubButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
 
-            local url = "https://github.com/rodrigoftw/"
+            local url = "https://github.com/rodrigoftw/Estagio1/tree/master/Stay%20Alive"--https://github.com/rodrigoftw/"
 
             if ( system.canOpenURL( url ) ) then
                 system.openURL( url )
@@ -151,7 +156,7 @@ function scene:create( event )
         label = "Veja meu Github ;)",
         font = "Roboto-Regular.ttf",
         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
-        width = 150,
+        width = 170,
         height = 32,
         emboss = false,
         shape = "roundedRect",
@@ -160,7 +165,7 @@ function scene:create( event )
         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleGithubButtonEvent
     })
-    githubButton.x = centerX - 70
+    githubButton.x = centerX - 50
     githubButton.y = centerY + 110
     githubButton:toFront()
     sceneGroup:insert( githubButton )
@@ -182,7 +187,7 @@ function scene:create( event )
         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
         onEvent = handleButtonEvent
     })
-    backButton.x = centerX + 60
+    backButton.x = centerX + 90
     backButton.y = centerY + 110
     sceneGroup:insert( backButton )
 

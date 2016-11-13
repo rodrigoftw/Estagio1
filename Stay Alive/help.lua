@@ -56,10 +56,104 @@ function scene:create( event )
 
     --local title = display.newBitmapText( titleOptions )
     local title = display.newText("Ajuda", 125, 32, "Roboto-Regular.ttf", 32)
-    title.x = display.contentCenterX
-    title.y = display.contentCenterY - 120
+    title.x = centerX
+    title.y = centerY - 120
     title:setFillColor( 0 )
     sceneGroup:insert( title )
+
+    -- local background = display.newRect( centerX, centerY, (_W * 0.8), (_H * 0.575) )
+    -- background:setFillColor( 1 )
+    -- background.alpha = 0.7
+    -- sceneGroup:insert( background )
+
+    local background = display.newImageRect( "maps/background_ui.png", _W, _H )
+    background.x = centerX
+    background.y = centerY
+    sceneGroup:insert( background )
+
+    local controller1Text = display.newText("   Use os direcionais\npara se mover e pular.", 125, 32, "Roboto-Regular.ttf", 10)
+    controller1Text.x = centerX - 195
+    controller1Text.y = centerY + 70
+    controller1Text:setFillColor( 0 )
+    sceneGroup:insert( controller1Text )
+
+    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 40, 40 )
+    jumpButton.alpha = 1
+    jumpButton.x = centerX - 198
+    jumpButton.y = centerY - 50
+    sceneGroup:insert( jumpButton )
+
+    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 40, 40 )
+    leftButton.alpha = 1
+    leftButton.x = centerX - 220
+    leftButton.y = centerY
+    sceneGroup:insert( leftButton )
+
+    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 40, 40 )
+    rightButton.alpha = 1
+    rightButton.x = centerX - 175
+    rightButton.y = centerY
+    sceneGroup:insert( rightButton )
+
+    local playerText = display.newText("Você é este quadrado.", 125, 32, "Roboto-Regular.ttf", 10)
+    playerText.x = centerX - 70
+    playerText.y = centerY - 30
+    playerText:setFillColor( 0 )
+    sceneGroup:insert( playerText )
+
+    local player = display.newImageRect( "maps/Tiles/player_16.png", 16, 16 )
+    player.alpha = 1
+    player.x = centerX - 70
+    player.y = centerY - 50
+    sceneGroup:insert( player )
+
+    local startText = display.newText("Você vem deste portal.", 125, 32, "Roboto-Regular.ttf", 10)
+    startText.x = centerX - 70
+    startText.y = centerY + 20
+    startText:setFillColor( 0 )
+    sceneGroup:insert( startText )
+
+    local start = display.newImageRect( "maps/Tiles/start.png", 16, 16 )
+    start.alpha = 1
+    start.x = centerX - 70
+    start.y = centerY
+    sceneGroup:insert( start )
+
+    local endingText = display.newText("Você deve entrar\n     neste portal.", 125, 32, "Roboto-Regular.ttf", 10)
+    endingText.x = centerX - 70
+    endingText.y = centerY + 70
+    endingText:setFillColor( 0 )
+    sceneGroup:insert( endingText )
+
+    local ending = display.newImageRect( "maps/Tiles/ending.png", 16, 16 )
+    ending.alpha = 1
+    ending.x = centerX - 70
+    ending.y = centerY + 45
+    sceneGroup:insert( ending )
+
+    local gravityText = display.newText("Utilize a gravidade\n      a seu favor.", 125, 32, "Roboto-Regular.ttf", 10)
+    gravityText.x = centerX + 70
+    gravityText.y = centerY + 70
+    gravityText:setFillColor( 0 )
+    sceneGroup:insert( gravityText )
+
+    local gravity = display.newImageRect( "maps/Tiles/Gravity.png", 40, 40 )
+    gravity.alpha = 1
+    gravity.x = centerX + 70
+    gravity.y = centerY
+    sceneGroup:insert( gravity )
+
+    local spikesText = display.newText("        Cuidado com os\nobstácultos no caminho!", 125, 32, "Roboto-Regular.ttf", 10)
+    spikesText.x = centerX + 190
+    spikesText.y = centerY + 70
+    spikesText:setFillColor( 0 )
+    sceneGroup:insert( spikesText )
+
+    local spikes = display.newImageRect( "maps/Tiles/spikes_up.png", 40, 40 )
+    spikes.alpha = 1
+    spikes.x = centerX + 190
+    spikes.y = centerY
+    sceneGroup:insert( spikes )
 
     local backButton = widget.newButton({
         id = "button1",
@@ -76,7 +170,7 @@ function scene:create( event )
         onEvent = handleButtonEvent
     })
     backButton.x = display.contentCenterX
-    backButton.y = display.contentCenterY + 110
+    backButton.y = display.contentCenterY + 112
     sceneGroup:insert( backButton )
 
 end

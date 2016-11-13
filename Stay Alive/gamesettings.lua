@@ -52,7 +52,7 @@ end
 local function handleBackButtonEvent( event )
 
     if ( event.phase == "began" ) then
-        audio.play(buttonToggle)
+        audio.play(buttonToggle, { channel = 7 } )
     elseif ( event.phase == "ended" ) then
         composer.gotoScene("menu", { effect = "crossFade", time = 333 })
     end

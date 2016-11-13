@@ -5,7 +5,7 @@ local dusk = require("Dusk.Dusk")
 local widget = require( "widget" )
 local json = require( "json" )
 local utility = require( "utility" )
-local ads = require( "ads" )
+-- local ads = require( "ads" )
 
 local params
 
@@ -98,54 +98,78 @@ function scene:create( event )
     playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
     wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
-    local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
-    player.bodyType = "dynamic"
-    player.bounce = 0
-    player.friction = 10
-    player.collision = onCollision
-    player.isFixedRotation = true
+    -- local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
+    -- player.bodyType = "dynamic"
+    -- player.bounce = 0
+    -- player.friction = 10
+    -- player.collision = onCollision
+    -- player.isFixedRotation = true
 
-    local centerX, centerY = map.getViewpoint()
-    local top = centerY - display.contentCenterY
-    local bottom = centerY + display.contentCenterY
-    local left = centerX - display.contentCenterX
-    local right = centerX + display.contentCenterX
+    -------------------------------------------------------------------------------
+    -- Start
+    -------------------------------------------------------------------------------
 
-    map.setCameraBounds({
-        xMin = display.contentCenterX,
-        yMin = display.contentCenterY,
-        xMax = map.data.width - display.contentCenterX,
-        yMax = map.data.height - display.contentCenterY
-        -- Use map.data.width because that's the "real" width of the map - 
-        -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
-    })
+    local start = map.layer["Start"].tile(2, 7)
+    -- start.bodyType = "static"
+    -- start.bounce = 0
+    -- start.alpha = 0.75
+    -- start.type = "start"
+    -- start.collision = onCollision
+    -- start.isFixedRotation = true
 
-    local tile = {
-        map.layer["Clouds"].tile(3, 3),
-        map.layer["Clouds"].tile(3, 4),
-        map.layer["Clouds"].tile(4, 3),
-        map.layer["Clouds"].tile(3, 4),
-        map.layer["Clouds"].tile(5, 4),
+    -------------------------------------------------------------------------------
+    -- End
+    -------------------------------------------------------------------------------
 
-        map.layer["Clouds"].tile(8, 6),
-        map.layer["Clouds"].tile(8, 7),
+    local ending = map.layer["End"].tile(17, 7)
+    -- ending.bodyType = "static"
+    -- ending.bounce = 0
+    -- ending.alpha = 0.75
+    -- ending.type = "end"
+    -- ending.collision = onCollision
+    -- ending.isFixedRotation = true
 
-        map.layer["Clouds"].tile(10, 2),
-        map.layer["Clouds"].tile(11, 2),
-        map.layer["Clouds"].tile(10, 3),
-        map.layer["Clouds"].tile(11, 3),
-        map.layer["Clouds"].tile(12, 3),
+    -- local centerX, centerY = map.getViewpoint()
+    -- local top = centerY - display.contentCenterY
+    -- local bottom = centerY + display.contentCenterY
+    -- local left = centerX - display.contentCenterX
+    -- local right = centerX + display.contentCenterX
 
-        map.layer["Clouds"].tile(16, 3),
-        map.layer["Clouds"].tile(17, 3)
-    } 
+    -- map.setCameraBounds({
+    --     xMin = display.contentCenterX,
+    --     yMin = display.contentCenterY,
+    --     xMax = map.data.width - display.contentCenterX,
+    --     yMax = map.data.height - display.contentCenterY
+    --     -- Use map.data.width because that's the "real" width of the map - 
+    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    -- })
 
-    map.layer["Player"].xParallax = 1
-    map.layer["End"].xParallax = 1
-    map.layer["Start"].xParallax = 1
-    map.layer["Walls"].xParallax = 1
-    map.layer["Floors"].xParallax = 1
-    map.layer["Background"].xParallax = 1
+    -- local tile = {
+    --     map.layer["Clouds"].tile(3, 3),
+    --     map.layer["Clouds"].tile(3, 4),
+    --     map.layer["Clouds"].tile(4, 3),
+    --     map.layer["Clouds"].tile(3, 4),
+    --     map.layer["Clouds"].tile(5, 4),
+
+    --     map.layer["Clouds"].tile(8, 6),
+    --     map.layer["Clouds"].tile(8, 7),
+
+    --     map.layer["Clouds"].tile(10, 2),
+    --     map.layer["Clouds"].tile(11, 2),
+    --     map.layer["Clouds"].tile(10, 3),
+    --     map.layer["Clouds"].tile(11, 3),
+    --     map.layer["Clouds"].tile(12, 3),
+
+    --     map.layer["Clouds"].tile(16, 3),
+    --     map.layer["Clouds"].tile(17, 3)
+    -- } 
+
+    -- map.layer["Player"].xParallax = 1
+    -- map.layer["End"].xParallax = 1
+    -- map.layer["Start"].xParallax = 1
+    -- map.layer["Walls"].xParallax = 1
+    -- map.layer["Floors"].xParallax = 1
+    -- map.layer["Background"].xParallax = 1
 
     -- speed = 1
 
@@ -170,7 +194,7 @@ function scene:create( event )
 
     local function handlePlayButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
             --map.destroy()
             composer.removeScene( "levelselect", false )
@@ -180,7 +204,7 @@ function scene:create( event )
 
     local function handleHelpButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
             composer.gotoScene("help", { effect = "crossFade", time = 333, isModal = true })
         end
@@ -188,7 +212,7 @@ function scene:create( event )
 
     local function handleCreditsButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
             composer.gotoScene("gamecredits", { effect = "crossFade", time = 333 })
         end
@@ -196,7 +220,7 @@ function scene:create( event )
 
     local function handleSettingsButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
             composer.gotoScene("gamesettings", { effect = "crossFade", time = 333 })
         end
@@ -204,7 +228,7 @@ function scene:create( event )
 
     local function handleQuitButtonEvent( event )
         if ( event.phase == "began" ) then
-            audio.play(buttonToggle)
+            audio.play(buttonToggle, { channel = 7 } )
         elseif ( event.phase =="ended" ) then
             -- Handler that gets notified when the alert closes
             local function onComplete( event )
@@ -219,15 +243,13 @@ function scene:create( event )
                 end
             end     
             -- Show alert with two buttons
-            local alert = native.showAlert( "Deseja realmente sair?", "Que tal jogar mais um pouco? :)", { "Cancelar", "Sair" }, onComplete )
+            local alert = native.showAlert( "Deseja realmente sair?", "Que tal jogar mais um pouco? :)", { "Continuar Jogando", "Sair" }, onComplete )
 
             -- Dismisses alert after 10 seconds
             local function cancelAlert()
                 native.cancelAlert( alert )
             end
-
             timer.performWithDelay( 10000, cancelAlert )
-
         end
     end
 
