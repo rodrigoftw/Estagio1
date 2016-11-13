@@ -22,16 +22,10 @@ system.activate( "multitouch" )
 -- Local Screen Variables
 -------------------------------------------------------------------------------
 
-local centerX = display.contentCenterX
-local centerY = display.contentCenterY
-local _W = display.contentWidth
-local _H = display.contentHeight
-
-local TOP_REF = 0
-local BOTTOM_REF = 1
-local LEFT_REF = 0
-local RIGHT_REF = 1
-local CENTER_REF = 0.5
+-- local centerX = display.contentCenterX
+-- local centerY = display.contentCenterY
+-- local _W = display.contentWidth
+-- local _H = display.contentHeight
 
 -------------------------------------------------------------------------------
 -- Collision Filters
@@ -130,12 +124,47 @@ function scene:create( event )
     -- Player
     -------------------------------------------------------------------------------
 
-    local player = map.layer["Player"].tile(2, 9)
-    player.bodyType = "dynamic"
-    player.bounce = 0
-    player.friction = 10
+    -- local player = map.layer["Player"].tile(2, 9)
+    local player = display.newImageRect( "maps/Tiles/player_16.png", 16, 16 )
+    physics.addBody( player, "dynamic", { bounce = 0.2, friction = 10 } )
+    player.x = _W * 0.09
+    player.y = _H * 0.85
+    -- player.x = 55
+    -- player.y = centerY + 50
+    -- player.bodyType = "dynamic"
+    -- player.bounce = 0
+    -- player.friction = 10
+    player.type = "player"
     player.collision = onCollision
-    player.isFixedRotation = true
+    player.isFixedRotation = false --true
+    -- player:insert( sceneGroup )
+    -- player:addEventListener( "collision", onCollision )
+
+    -------------------------------------------------------------------------------
+    -- Start
+    -------------------------------------------------------------------------------
+
+    local start = map.layer["Start"].tile(2, 9)
+    start.bodyType = "static"
+    start.bounce = 0
+    start.alpha = 0.75
+    start.type = "start"
+    start.collision = onCollision
+    start.isFixedRotation = true
+
+    -------------------------------------------------------------------------------
+    -- End
+    -------------------------------------------------------------------------------
+
+    local ending = map.layer["End"].tile(17, 5)
+    ending.bodyType = "static"
+    ending.bounce = 0
+    ending.alpha = 0.75
+    ending.type = "end"
+    ending.isSensor = "true"
+    ending.collision = onCollision
+    ending.isFixedRotation = true
+    -- ending:addEventListener( "collision", onCollision )
 
     -------------------------------------------------------------------------------
     -- Screen Borders
@@ -170,6 +199,48 @@ function scene:create( event )
     borders:insert( borderup )
     borders:insert( borderleft )
     borders:insert( borderright )
+
+    -------------------------------------------------------------------------------
+    -- Timer
+    -------------------------------------------------------------------------------
+    -- Contar o tempo em segundos
+    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+ 
+    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
+    clockText:setFillColor( 1, 1, 1 )
+
+    -- Dar um update no timer a cada segundo passado
+    local function updateTime()
+        -- Incrementar o número de segundos
+        secondsLeft = secondsLeft - 1
+    
+        -- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
+        local minutes = math.floor( secondsLeft / 60 )
+        local seconds = secondsLeft % 60
+
+        -- Transformar o resultado em uma string usando string.format
+        timeDisplay = string.format( "%02d:%02d", minutes, seconds)
+        clockText.text = timeDisplay
+        clockText.alpha = 1
+
+        map.setDamping(0.3)
+        map.setCameraFocus(player)
+        -- map.updateView()
+    end
+    
+    -- Rodar timer
+    local Timer = timer.performWithDelay( 1, updateTime, secondsLeft )
+    
+    if (Timer == 0) then
+        function blink()
+            if(clockText.alpha < 1) then
+                transition.to( clockText, {time=50, alpha=1})
+            else
+                transition.to( clockText, {time=50, alpha=0})
+            end
+        end
+        local tmr = timer.performWithDelay( 300, blink, 0 )
+    end
 
     -------------------------------------------------------------------------------
     -- Movement Buttons
@@ -238,7 +309,7 @@ function scene:create( event )
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
-            audio.play( jumpSound )
+            audio.play( jumpSound, { channel = 11 } )
             player:setLinearVelocity(0, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5
@@ -272,23 +343,32 @@ function scene:create( event )
         local keyName = event.keyName
         local phase = event.phase
 
-        -- Handle movement keys events; update movement logic variables
-        -- if ( "left" == phase ) then
-        -- if (event.phase == "began" and jump_completed == false) then
-            if ( keyUp == keyName ) then
-                audio.play( jumpSound )
-                player:setLinearVelocity(0, -200)
-            end
-            jump_completed = true
-        -- elseif (event.phase == "ended") then
-            -- jump_completed = true
-        -- end
+        -- local vx,vy = player:getLinearVelocity()
+        -- player:setLinearVelocity( vx,0 )
+
+        vx = 0
+        vy = -200
+
+        if ( keyUp == keyName ) then
+            audio.play( jumpSound, { channel = 11} )
+            player:setLinearVelocity(vx, vy)
+            jumpButton.alpha = 1
+        end
+        jumpButton.alpha = 0.5
+        jump_completed = true
+        vy = 0
         if ( keyLeft == keyName ) then
-            player:setLinearVelocity(-100, 0)
+            vx = -100
+            player:setLinearVelocity(vx, vy)
+            leftButton.alpha = 1
         end
+        leftButton.alpha = 0.5
         if ( keyRight == keyName ) then
-            player:setLinearVelocity(100, 0)
+            vx = 100
+            player:setLinearVelocity(vx, vy)
+            rightButton.alpha = 1
         end
+        rightButton.alpha = 0.5
 
         -- end
         -- if ( "right" == phase ) then
@@ -307,121 +387,208 @@ function scene:create( event )
     Runtime:addEventListener( "key", onKeyEvent )
 
     -------------------------------------------------------------------------------
-    -- Debug Buttons and Functions
+    -- Collisions
     -------------------------------------------------------------------------------
 
-    local x = 1
-    physics.setDrawMode("normal")
-    -- Function to handle button events
-    local function handlePhysicsButtonEvent( event )
-        if ( "ended" == event.phase ) then          
-            if (x%2 == 0) then
-                physics.setDrawMode("normal")
-                x = x + 1
-            elseif (x%2 ~= 0) then
-                physics.setDrawMode("hybrid")
-                x = x + 1
+    function onCollision(event)
+
+        -- print(event.phase)
+        -- print("____________________________")
+        -- print(self.type)
+        -- print("____________________________")
+        -- print(event.other.type)
+        -- print("____________________________")
+        -- for k,v in pairs(event) do
+        --     print(k,v)
+        -- end
+        -- print("____________________________")
+        -- for k,v in pairs(event.target) do
+        --     print(k,v)
+        -- end
+        -- print("____________________________")
+        -- for k,v in pairs(event.other) do
+        --     print(k,v)
+        -- end
+
+        if ( event.phase == "began" ) then
+            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
+                -- print( self.type .. ": collision began with " .. event.other.type )
+                audio.play( winSound, {channel = 10} )
+                print("Fim da fase")
+                timer.cancel(Timer)
+                player:removeSelf()
+                composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
+                leftButton:removeEventListener( "touch", moveLeft )
+                rightButton:removeEventListener( "touch", moveRight )
+                jumpButton:removeEventListener( "touch", jump )
+                Runtime:removeEventListener( "key", onKeyEvent )
+                -- player.alpha = 1
+                -- function playerBlink()
+                --     -- for i=1 , 3 do
+                --         if(player.alpha > 0) then
+                --             transition.to( player, {time=50, alpha=0})
+                --         else
+                --             transition.to( player, {time=50, alpha=1})
+                --         end
+                --     -- end
+                -- end
+                -- local tmr = timer.performWithDelay( 300, playerBlink, 4 )
+
+                -- player.alpha = 0
+            end
+                
+            -- elseif event.target.type == "player" and event.other.type == "spike" then
+            --     timer.cancel(Timer)
+            --     audio.play(deathsound)
+            --     audio.stop(deathsound)
+            --     function blink()
+            --         if(clockText.alpha < 1) then
+            --             transition.to( clockText, {time=50, alpha=1})
+            --         else
+            --             transition.to( clockText, {time=50, alpha=0})
+            --         end
+            --     end
+            --     local tmr = timer.performWithDelay( 300, blink, 0 )
+            --     player:removeSelf()
+            --     player = nil
+            --     print("oh no")
+            -- end
+            -- elseif ( event.phase == "ended" ) then
+            --     if ( event.target.type == "player" and event.other.type == "end" ) then
+            --         -- Options table for the overlay scene "endofphase.lua"
+            --         local options = {
+            --             isModal = true,
+            --             effect = "fade",
+            --             time = 333,
+            --             params = {
+            --                 sampleVar = "my sample variable"
+            --             }
+            --         }
+
+            --         composer.showOverlay( "endofphase", options )
+            --     end
+        elseif ( event.phase == "ended" ) then
+            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
+                
             end
         end
+        return true
     end
 
-    local collisionButton = widget.newButton(
-        {
-            left = centerX - 80,
-            top = 0,
-            width = 90,
-            height = 35,
-            id = "collisionButton",
-            label = "Ver Colisões",
-            labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
-            onEvent = handlePhysicsButtonEvent
-        }
-    )
+    ending:addEventListener("collision", onCollision)
 
-    -- -- Function to quit game
-    -- local function handleQuitButtonEvent( event )
-    --     -- if ( "began" == event.phase ) then
-    --     --     audio.play(pressedButton)
-    --     if ( "ended" == event.phase ) then
-    --         native.requestExit()
+    -- -------------------------------------------------------------------------------
+    -- -- Debug Buttons and Functions
+    -- -------------------------------------------------------------------------------
+
+    -- local x = 1
+    -- physics.setDrawMode("normal")
+    -- -- Function to handle button events
+    -- local function handlePhysicsButtonEvent( event )
+    --     if (event.phase == "began") then
+    --         audio.play(buttonToggle, { channel = 7 } )
+    --     elseif ( event.phase == "ended") then          
+    --         if (x%2 == 0) then
+    --             physics.setDrawMode("normal")
+    --             x = x + 1
+    --         elseif (x%2 ~= 0) then
+    --             physics.setDrawMode("hybrid")
+    --             x = x + 1
+    --         end
     --     end
     -- end
 
-    -- local quitButton = widget.newButton(
+    -- local collisionButton = widget.newButton(
+    --     {
+    --         left = centerX - 95,
+    --         top = 0,
+    --         -- width = 90,
+    --         height = 35,
+    --         id = "collisionButton",
+    --         label = "Ver Colisões",
+    --         --labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
+    --         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+    --         width = 100,
+    --         -- height = 32,
+    --         emboss = false,
+    --         shape = "roundedRect",
+    --         cornerRadius = 2,
+    --         fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+    --         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+    --         onEvent = handlePhysicsButtonEvent
+    --     }
+    -- )
+
+    -- -- Function to quit game
+    -- local function handleMenuButtonEvent( event )
+    --     if ( event.phase == "began" ) then
+    --         timer.cancel(Timer)
+    --         audio.play(buttonToggle, { channel = 7 } )
+    --     elseif ( event.phase == "ended" ) then
+    --         map:destroy()
+    --         composer.removeScene( "menu", false )
+    --         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
+    --         composer.removeScene( "level1", false )
+    --     end
+    -- end
+
+    -- local menuButton = widget.newButton(
     --      {
     --         left = centerX + 10,
     --         top = 0,
     --         width = 60,
     --         height = 35,
-    --         id = "quitButton",
-    --         label = "Sair",
-    --         labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
-    --         onEvent = handleQuitButtonEvent
+    --         id = "menuButton",
+    --         label = "Menu",
+    --         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+    --         -- width = 100,
+    --         -- height = 32,
+    --         emboss = false,
+    --         shape = "roundedRect",
+    --         cornerRadius = 2,
+    --         fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+    --         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+    --         onEvent = handleMenuButtonEvent
     --     }
     -- )
 
-    local y = 1
-    -- Function to toggle debug options on/off
-    local function handleToggleButtonEvent( event )
-        -- if ( "began" == event.phase ) then
-        --     audio.play(pressedButton)
-         if ( "ended" == event.phase ) then          
-            if (y%2 == 0) then
-                collisionButton.alpha = 1
-                -- quitButton.alpha = 1
-                y = y + 1
-            elseif (y%2 ~= 0) then
-                collisionButton.alpha = 0
-                -- quitButton.alpha = 0
-                y = y + 1
-            end
-        end
-    end
+    -- local y = 1
+    -- -- Function to toggle debug options on/off
+    -- local function handleToggleButtonEvent( event )
+    --     if ( "began" == event.phase ) then
+    --         audio.play(buttonToggle, { channel = 7 } )
+    --     elseif ( "ended" == event.phase ) then
+    --         if (y%2 == 0) then
+    --             collisionButton.alpha = 1
+    --             menuButton.alpha = 1
+    --             y = y + 1
+    --         elseif (y%2 ~= 0) then
+    --             collisionButton.alpha = 0
+    --             menuButton.alpha = 0
+    --             y = y + 1
+    --         end
+    --     end
+    -- end
 
-    local toggleButton = widget.newButton(
-         {
-            left = centerX - 40,
-            top = _H - 35,
-            width = 60,
-            height = 35,
-            id = "toggleButton",
-            label = "On/Off",
-            labelColor = { default = { 0, 0, 0 }, over = { 1, 1, 1, 0.5 } },
-            onEvent = handleToggleButtonEvent
-        }
-    )
-
-    -------------------------------------------------------------------------------
-    -- Timer
-    -------------------------------------------------------------------------------
-    -- Contar o tempo em segundos
-    local secondsPassed = 00 * 00-- * 00  -- Exemplo: 2 minutos * 30 segundos
- 
-    local clockText = display.newText("00:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, native.systemFontBold, 20) -- display.contentCenterX + 170
-    clockText:setFillColor( 1, 1, 1 )
-
-    -- Dar um update no timer a cada segundo passado
-    local function updateTime()
-        -- Incrementar o número de segundos
-        secondsPassed = secondsPassed + 1
-    
-        -- O tempo é contado em segundos.  Converter o tempo para minutos e segundos
-        local seconds = secondsPassed % 60
-        local minutes = math.floor( secondsPassed / 60 )
-        local hours   = math.floor( minutes / 60 )
-
-        -- Transformar o resultado em uma string usando string.format
-        timeDisplay = string.format( "%02d:%02d", minutes, seconds )
-        clockText.text = timeDisplay
-        clockText.alpha = 1
-
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
-        map.updateView()
-    end
-    
-    -- Rodar timer
-    local Timer = timer.performWithDelay( 1, updateTime, secondsPassed )
+    -- local toggleButton = widget.newButton(
+    --      {
+    --         left = centerX - 40,
+    --         top = _H - 35,
+    --         width = 60,
+    --         height = 35,
+    --         id = "toggleButton",
+    --         label = "On/Off",
+    --         labelColor = { default={13/255,87/255,136/255,1}, over={13/255,87/255,136/255,1} },
+    --         -- width = 100,
+    --         -- height = 32,
+    --         emboss = false,
+    --         shape = "roundedRect",
+    --         cornerRadius = 2,
+    --         fillColor = { default={255/255,127/255,39/255,0.5}, over={72/255,183/255,177/255,0.5} },
+    --         strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+    --         onEvent = handleToggleButtonEvent
+    --     }
+    -- )
 
 end
 
@@ -439,6 +606,7 @@ function scene:show( event )
 
         physics.start()
         physics.setGravity( 0, 9.8 )
+        map.updateView()
 
     end 
 end
@@ -466,6 +634,16 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
+    leftButton:removeSelf()
+    rightButton:removeSelf()
+    jumpButton:removeSelf()
+    clockText:removeSelf()
+
+    leftButton = nil
+    rightButton = nil
+    jumpButton = nil
+    player = nil
+    clockText = nil
     map.destroy()
     
 end
