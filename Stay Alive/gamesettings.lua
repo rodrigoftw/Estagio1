@@ -70,15 +70,25 @@ function scene:create( event )
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
     --
-    -- local background = display.newRect( 0, 0, 570, 360 )
-    -- background.x = display.contentCenterX
-    -- background.y = display.contentCenterY
-    -- sceneGroup:insert(background)
-    
-    -- sceneGroup:insert( background )
-    -- sceneGroup:insert( background2 )
 
-    --local title = display.newBitmapText( titleOptions )
+    --------------------------------------------------------------------------------
+    -- Background
+    --------------------------------------------------------------------------------
+
+    background = display.newImageRect( "maps/menu_grass.png", _W, _H )
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
+    sceneGroup:insert( background )
+
+    --------------------------------------------------------------------------------
+    -- Clouds
+    --------------------------------------------------------------------------------
+
+    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    clouds.x = display.contentCenterX
+    clouds.y = display.contentCenterY
+    clouds:toFront()
+    sceneGroup:insert( clouds )
 
     -------------------------------------------------------------------------------
     -- Title
@@ -308,6 +318,9 @@ function scene:show( event )
     params = event.params
 
     if event.phase == "did" then
+        print("_________________________")
+        print("         Opções")
+        print("_________________________")
     end
 end
 
