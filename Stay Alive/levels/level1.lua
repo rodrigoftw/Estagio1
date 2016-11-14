@@ -46,7 +46,8 @@ function scene:create( event )
      physics.start()
      physics.pause()
 
-    local thisLevel = myData.settings.currentLevel
+    local thisLevel = 1
+    thisLevel = myData.settings.currentLevel
 
     -------------------------------------------------------------------------------
     -- Map
@@ -205,9 +206,9 @@ function scene:create( event )
     -- Timer
     -------------------------------------------------------------------------------
     -- Contar o tempo em segundos
-    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+    local secondsLeft = 30 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
+    local clockText = display.newText("30:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -283,10 +284,12 @@ function scene:create( event )
 
     local jump_completed = true
 
+    local direction = 0
+
     function moveLeft(event)
         if (event.phase == "began") then
             leftButton.alpha = 1
-            player:setLinearVelocity(-100, 0)
+            player:setLinearVelocity((direction-100), 0)
         elseif (event.phase == "ended") then
             leftButton.alpha = 0.5
             player:setLinearVelocity(0, 0)
@@ -298,7 +301,7 @@ function scene:create( event )
     function moveRight(event)
         if (event.phase == "began") then
             rightButton.alpha = 1
-            player:setLinearVelocity(100, 0)
+            player:setLinearVelocity(direction+100, 0)
         elseif (event.phase == "ended") then
             rightButton.alpha = 0.5
             player:setLinearVelocity(0, 0)
@@ -307,11 +310,36 @@ function scene:create( event )
     end
     rightButton:addEventListener("touch", moveRight)
 
+    -- local grav = 0.2
+    -- player.groundLevel = player.y
+
+    -- local function movePlayer( event )
+    --     player.jumpSpeed = player.jumpSpeed - grav
+    --     player.y = player.y - player.jumpSpeed
+
+    --     if player.y >= player.groundLevel then
+    --         Runtime:removeEventListener("enterFrame", movePlayer)
+    --         player.y = player.groundLevel
+    --     end
+    -- end
+
+    -- local function startJump( event )
+    --     if event.phase == "began" and jump_completed == true then
+    --         audio.play( jumpSound, { channel = 11 } )
+    --         player.jumpSpeed = 7
+    --         jump_completed = false
+    --         Runtime:addEventListener("enterFrame", movePlayer)
+    --     elseif event.phase == "ended" then
+    --         jump_completed = true
+    --     end
+    -- end
+    -- jumpButton:addEventListener("touch", startJump)
+
     function jump(event)
         if (event.phase == "began" and jump_completed == false) then
             jumpButton.alpha = 1
             audio.play( jumpSound, { channel = 11 } )
-            player:setLinearVelocity(0, -200)
+            player:setLinearVelocity(direction, -200)
         elseif (event.phase == "ended") then
             jumpButton.alpha = 0.5
             -- player:setLinearVelocity(0, 0)
@@ -348,8 +376,23 @@ function scene:create( event )
         -- player:setLinearVelocity( vx,0 )
 
         vx = 0
-        vy = -200
+        vy = 0
 
+        if ( keyLeft == keyName ) then
+            vx = -100
+            player:setLinearVelocity(vx-100, vy)
+            leftButton.alpha = 1
+        end
+        leftButton.alpha = 0.5
+        
+        if ( keyRight == keyName ) then
+            vx = 100
+            player:setLinearVelocity(vx+100, vy)
+            rightButton.alpha = 1
+        end
+        rightButton.alpha = 0.5
+        
+        vy = -200
         if ( keyUp == keyName ) then
             audio.play( jumpSound, { channel = 11} )
             player:setLinearVelocity(vx, vy)
@@ -357,19 +400,6 @@ function scene:create( event )
         end
         jumpButton.alpha = 0.5
         jump_completed = true
-        vy = 0
-        if ( keyLeft == keyName ) then
-            vx = -100
-            player:setLinearVelocity(vx, vy)
-            leftButton.alpha = 1
-        end
-        leftButton.alpha = 0.5
-        if ( keyRight == keyName ) then
-            vx = 100
-            player:setLinearVelocity(vx, vy)
-            rightButton.alpha = 1
-        end
-        rightButton.alpha = 0.5
 
         -- end
         -- if ( "right" == phase ) then
@@ -418,10 +448,12 @@ function scene:create( event )
                 print("Fim da fase")
                 timer.cancel(Timer)
                 player:removeSelf()
+                map.destroy()
                 composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
                 leftButton:removeEventListener( "touch", moveLeft )
                 rightButton:removeEventListener( "touch", moveRight )
-                jumpButton:removeEventListener( "touch", jump )
+                -- jumpButton:removeEventListener( "touch", jump )
+                jumpButton:removeEventListener( "touch", startJump )
                 Runtime:removeEventListener( "key", onKeyEvent )
                 -- player.alpha = 1
                 -- function playerBlink()
@@ -605,8 +637,12 @@ function scene:show( event )
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc
 
+        print("_________________________")
+        print("          Level 1")
+        print("_________________________")
+
         physics.start()
-        physics.setGravity( 0, 9.8 )
+        -- physics.setGravity( 0, 9.8 )
         audio.play( levels1_10, { channel = 2, loops = -1 } )
         map.updateView()
 
@@ -642,10 +678,10 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
-    leftButton:removeSelf()
-    rightButton:removeSelf()
-    jumpButton:removeSelf()
-    clockText:removeSelf()
+    -- leftButton:removeSelf()
+    -- rightButton:removeSelf()
+    -- jumpButton:removeSelf()
+    -- clockText:removeSelf()
 
     leftButton = nil
     rightButton = nil
@@ -653,7 +689,7 @@ function scene:destroy( event )
     player = nil
     clockText = nil
 
-    map.destroy()
+    -- map.destroy()
     audio.stop( 2 )
     audio.dispose( 2 )
 

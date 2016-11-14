@@ -45,7 +45,8 @@ function scene:create( event )
      physics.start()
      physics.pause()
 
-    local thisLevel = myData.settings.currentLevel
+    local thisLevel = 1
+    thisLevel = myData.settings.currentLevel
 
     -------------------------------------------------------------------------------
     -- Map
@@ -603,6 +604,10 @@ function scene:show( event )
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc
+
+        print("_________________________")
+        print("          Level 2")
+        print("_________________________")
 
         physics.start()
         physics.setGravity( 0, 9.8 )
