@@ -3,9 +3,11 @@
 -- victory.lua
 --
 -------------------------------------------------------------------------------
-
 local composer = require( "composer" )
 local scene = composer.newScene()
+
+local dusk = require("Dusk.Dusk")
+local myData = require( "mydata" )
 
 local params
 
@@ -31,15 +33,25 @@ function scene:create( event )
 
     local wintitle = display.newText("Fase concluída!", 100, 32, "Roboto-Regular.ttf", 26 )
     wintitle.x = centerX
-    wintitle.y = centerY - 80--80
+    wintitle.y = centerY - 50--80
     wintitle:setFillColor( 0 )
+    wintitle.alpha = 1
     wintitle:toFront()
     
-    local endedTimeText = display.newText("Seu tempo foi de: ", 100, 32, "Roboto-Regular.ttf", 14 )
-    endedTimeText.x = centerX
-    endedTimeText.y = centerY - 50--80
-    endedTimeText:setFillColor( 0 )
-    endedTimeText:toFront()
+    -- local endedTimeText = display.newText("Seu tempo foi de: ", 100, 32, "Roboto-Regular.ttf", 14 )
+    -- endedTimeText.x = centerX
+    -- endedTimeText.y = centerY - 50--80
+    -- endedTimeText:setFillColor( 0 )
+    -- endedTimeText:toFront()
+
+    function blink()
+        if(wintitle.alpha > 0) then
+            transition.to( wintitle, {time=50, alpha=0})
+        else
+            transition.to( wintitle, {time=50, alpha=1})
+        end
+    end
+    local tmr = timer.performWithDelay( 300, blink, 0 )
 
     -------------------------------------------------------------------------------
     -- Buttons
@@ -84,7 +96,6 @@ function scene:create( event )
             nextButton:removeSelf()
             endedTimeText:removeSelf()
         elseif (event.phase == "ended") then
-            
             map.destroy()
             composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
         end
