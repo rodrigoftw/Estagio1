@@ -9,7 +9,7 @@ local params
 
 local function handleBackButtonEvent( event )
     if ( event.phase == "began" ) then
-        audio.play(buttonToggle)
+        audio.play(buttonToggle, { channel = 7 } )
     elseif ( event.phase == "ended" ) then
         composer.removeScene( "menu", false )
         composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
@@ -30,6 +30,25 @@ function scene:create( event )
     -- background.x = display.contentCenterX
     -- background.y = display.contentCenterY
     -- sceneGroup:insert(background)
+
+    --------------------------------------------------------------------------------
+    -- Background
+    --------------------------------------------------------------------------------
+
+    background = display.newImageRect( "maps/menu_grass.png", _W, _H )
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
+    sceneGroup:insert( background )
+
+    --------------------------------------------------------------------------------
+    -- Clouds
+    --------------------------------------------------------------------------------
+
+    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    clouds.x = display.contentCenterX
+    clouds.y = display.contentCenterY
+    clouds:toFront()
+    sceneGroup:insert( clouds )
 
     local selectLevelText = display.newText("Selecione um level", 125, 32, "Roboto-Regular.ttf", 32)
     selectLevelText:setFillColor( 0 )
@@ -64,6 +83,7 @@ function scene:create( event )
                 buttonBackgrounds[i]:setFillColor(72/255,183/255,177/255,0.5)
             elseif ( event.phase == "ended" ) then
                 audio.fadeOut( { channel=1, time=1500 } )
+                -- map.destroy()
                 -- audio.stop( 1 )
                 -- audio.dispose( 1 )
                 -- set the current level to the ID of the selected level
@@ -170,6 +190,10 @@ function scene:show( event )
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc
+
+        print("_________________________")
+        print("    Seleção de Levels")
+        print("_________________________")
     end
 end
 
@@ -193,10 +217,7 @@ function scene:destroy( event )
     -- Called prior to the removal of scene's "view" (sceneGroup)
     -- 
     -- INSERT code here to cleanup the scene
-    -- e.g. remove display objects, remove touch listeners, save state, etc
-
-
-    
+    -- e.g. remove display objects, remove touch listeners, save state, etc    
 end
 
 ---------------------------------------------------------------------------------
