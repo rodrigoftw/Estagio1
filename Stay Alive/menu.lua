@@ -34,24 +34,24 @@ function scene:create( event )
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
 
-    -- --------------------------------------------------------------------------------
-    -- -- Background
-    -- --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    -- Background
+    --------------------------------------------------------------------------------
 
-    -- background = display.newImageRect( "maps/menu_grass.png", _W, _H )
-    -- background.x = display.contentCenterX
-    -- background.y = display.contentCenterY
-    -- sceneGroup:insert( background )
+    background = display.newImageRect( "maps/menu_grass.png", _W, _H )
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
+    sceneGroup:insert( background )
 
-    -- --------------------------------------------------------------------------------
-    -- -- Clouds
-    -- --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    -- Clouds
+    --------------------------------------------------------------------------------
 
-    -- clouds = display.newImageRect( "maps/clouds.png", _W, _H )
-    -- clouds.x = display.contentCenterX
-    -- clouds.y = display.contentCenterY
-    -- clouds:toFront()
-    -- sceneGroup:insert( clouds )
+    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    clouds.x = display.contentCenterX
+    clouds.y = display.contentCenterY
+    clouds:toFront()
+    sceneGroup:insert( clouds )
 
     -- speed = 1
 
@@ -65,63 +65,63 @@ function scene:create( event )
     -- Runtime:addEventListener( "enterFrame", moveClouds )
 
 
-    --------------------------------------------------------------------------------
-    -- Mapa
-    --------------------------------------------------------------------------------
+    -- --------------------------------------------------------------------------------
+    -- -- Mapa
+    -- --------------------------------------------------------------------------------
 
-    local currMap = "menu_grass.json"
-    map = dusk.buildMap("maps/"..currMap)
-    map:toBack()
+    -- local currMap = "menu_grass.json"
+    -- map = dusk.buildMap("maps/"..currMap)
+    -- map:toBack()
 
-    -- dusk.setPreference("virtualObjectsVisible", true)
-    dusk.setPreference("enableTileCulling", false)
-    dusk.setPreference("scaleCameraBoundsToScreen", true)
-    dusk.setPreference("enableCamera", true)
-    dusk.setPreference("detectMapPath", true)
+    -- -- dusk.setPreference("virtualObjectsVisible", true)
+    -- dusk.setPreference("enableTileCulling", false)
+    -- dusk.setPreference("scaleCameraBoundsToScreen", true)
+    -- dusk.setPreference("enableCamera", true)
+    -- dusk.setPreference("detectMapPath", true)
 
-    --------------------------------------------------------------------------------
-    -- Set Map
-    --------------------------------------------------------------------------------
-    local function setMap(mapName)
-        mapX, mapY = map.getViewpoint()
-        Runtime:removeEventListener("enterFrame", map.updateView)
-        map.destroy()
-        map = dusk.buildMap("maps/" .. mapName)
-        currMap = mapName
-        map.setViewpoint(mapX, mapY)
-        map.snapCamera()
-        map.setTrackingLevel(0.3)
-        map:addEventListener("touch", mapTouch)
-        Runtime:addEventListener("enterFrame", map.updateView)
-    end
+    -- --------------------------------------------------------------------------------
+    -- -- Set Map
+    -- --------------------------------------------------------------------------------
+    -- local function setMap(mapName)
+    --     mapX, mapY = map.getViewpoint()
+    --     Runtime:removeEventListener("enterFrame", map.updateView)
+    --     map.destroy()
+    --     map = dusk.buildMap("maps/" .. mapName)
+    --     currMap = mapName
+    --     map.setViewpoint(mapX, mapY)
+    --     map.snapCamera()
+    --     map.setTrackingLevel(0.3)
+    --     map:addEventListener("touch", mapTouch)
+    --     Runtime:addEventListener("enterFrame", map.updateView)
+    -- end
 
-    playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
-    wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
+    -- playerCollisionFilter = { categoryBits = 1, maskBits = 2 }
+    -- wallCollisionFilter = { categoryBits = 2, maskBits = 1 }
 
-    -- local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
-    -- player.bodyType = "dynamic"
-    -- player.bounce = 0
-    -- player.friction = 10
-    -- player.collision = onCollision
-    -- player.isFixedRotation = true
+    -- -- local player = map.layer["Player"].tile(2, 9)--11, 7) -- Level 2: (2, 4) -- Level 3: (2, 4) -- Level 4: (2, 7)
+    -- -- player.bodyType = "dynamic"
+    -- -- player.bounce = 0
+    -- -- player.friction = 10
+    -- -- player.collision = onCollision
+    -- -- player.isFixedRotation = true
 
-    -------------------------------------------------------------------------------
-    -- Start
-    -------------------------------------------------------------------------------
+    -- -------------------------------------------------------------------------------
+    -- -- Start
+    -- -------------------------------------------------------------------------------
 
-    local start = map.layer["Start"].tile(2, 7)
-    -- start.bodyType = "static"
-    -- start.bounce = 0
-    -- start.alpha = 0.75
-    -- start.type = "start"
-    -- start.collision = onCollision
-    -- start.isFixedRotation = true
+    -- local start = map.layer["Start"].tile(2, 7)
+    -- -- start.bodyType = "static"
+    -- -- start.bounce = 0
+    -- -- start.alpha = 0.75
+    -- -- start.type = "start"
+    -- -- start.collision = onCollision
+    -- -- start.isFixedRotation = true
 
-    -------------------------------------------------------------------------------
-    -- End
-    -------------------------------------------------------------------------------
+    -- -------------------------------------------------------------------------------
+    -- -- End
+    -- -------------------------------------------------------------------------------
 
-    local ending = map.layer["End"].tile(17, 7)
+    -- local ending = map.layer["End"].tile(17, 7)
     -- ending.bodyType = "static"
     -- ending.bounce = 0
     -- ending.alpha = 0.75
@@ -380,6 +380,10 @@ function scene:show( event )
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc
+
+        print("_________________________")
+        print("          Menu")
+        print("_________________________")
         
         -- audio.stop( 2 )
         -- audio.dispose( 2 )
@@ -404,7 +408,6 @@ function scene:hide( event )
     elseif phase == "did" then
         -- Called when the scene is now off screen
     end
-
 end
 
 function scene:destroy( event )
