@@ -27,13 +27,25 @@ function scene:create( event )
     -- setup a page background, really not that important though composer
     -- crashes out if there isn't a display object in the view.
     --
-    -- local background = display.newRect( 0, 0, 570, 360)
-    -- background.x = display.contentCenterX
-    -- background.y = display.contentCenterY
-    -- sceneGroup:insert(background)
+    
+    --------------------------------------------------------------------------------
+    -- Background
+    --------------------------------------------------------------------------------
 
-    -- sceneGroup:insert( background )
-    -- sceneGroup:insert( background2 )
+    background = display.newImageRect( "maps/menu_grass.png", _W, _H )
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
+    sceneGroup:insert( background )
+
+    --------------------------------------------------------------------------------
+    -- Clouds
+    --------------------------------------------------------------------------------
+
+    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    clouds.x = display.contentCenterX
+    clouds.y = display.contentCenterY
+    clouds:toFront()
+    sceneGroup:insert( clouds )
 
     local title = display.newText( "Créditos", 100, 32, "Roboto-Regular.ttf", 32)
     title.x = display.contentCenterX
@@ -96,25 +108,37 @@ function scene:create( event )
 
     local sounds = display.newText( "Sons", 250, 250, "Roboto-Regular.ttf", 16 )
     sounds:setFillColor( 0 )
-    sounds.x = centerX - 60
+    sounds.x = centerX
     sounds.y = centerY + 50
     sceneGroup:insert(sounds)
 
+    local dusk = display.newText( "Motor do jogo", 250, 250, "Roboto-Regular.ttf", 16 )
+    dusk:setFillColor( 0 )
+    dusk.x = centerX - 170
+    dusk.y = centerY + 50
+    sceneGroup:insert(dusk)
+
+    local engine = display.newText( "Dusk Engine", 250, 250, "Roboto-Regular.ttf", 12 )
+    engine:setFillColor( 0 )
+    engine.x = centerX - 170
+    engine.y = centerY + 70
+    sceneGroup:insert(engine)
+
     local bfxr = display.newText( "Bfxr", 250, 250, "Roboto-Regular.ttf", 12 )
     bfxr:setFillColor( 0 )
-    bfxr.x = centerX - 60
+    bfxr.x = centerX
     bfxr.y = centerY + 70
     sceneGroup:insert(bfxr)
 
     local music = display.newText( "Músicas", 250, 250, "Roboto-Regular.ttf", 16 )
     music:setFillColor( 0 )
-    music.x = centerX + 60
+    music.x = centerX + 170
     music.y = centerY + 50
     sceneGroup:insert(music)
 
     local youtube = display.newText( "Youtube Audio Library", 250, 250, "Roboto-Regular.ttf", 12 )
     youtube:setFillColor( 0 )
-    youtube.x = centerX + 60
+    youtube.x = centerX + 170
     youtube.y = centerY + 70
     sceneGroup:insert(youtube)
 
@@ -199,6 +223,9 @@ function scene:show( event )
     params = event.params
 
     if event.phase == "did" then
+        print("_________________________")
+        print("        Créditos")
+        print("_________________________")
     end
 end
 
