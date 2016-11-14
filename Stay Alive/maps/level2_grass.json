@@ -12,7 +12,7 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 970, 0, 946, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 946, 960, 975, 960, 961, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 946, 960, 961, 952, 952, 952, 952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 946, 960, 961, 952, 952, 952, 952, 952, 952, 947, 0, 970, 0, 0, 0, 0, 946, 960, 961, 952, 952, 952, 952, 952, 952, 952, 952, 959, 960, 975, 960, 960, 960, 960, 961, 952, 952, 952, 952, 952, 952, 952, 952, 952, 952],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 24, 39, 24, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 24, 25, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 24, 25, 16, 16, 16, 16, 16, 16, 11, 0, 34, 0, 0, 0, 0, 10, 24, 25, 16, 16, 16, 16, 16, 16, 16, 16, 23, 24, 39, 24, 24, 24, 24, 25, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16],
          "height":10,
          "name":"Floors",
          "opacity":1,
@@ -87,8 +87,8 @@
          "opacity":0.25,
          "properties":
             {
-             "physics:enabled":"false",
-             "physics:isSensor":"true",
+             "myName":"ending",
+             "physics:enabled":"true",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"static",
@@ -97,8 +97,8 @@
             },
          "propertytypes":
             {
+             "myName":"string",
              "physics:enabled":"string",
-             "physics:isSensor":"string",
              "tiles.collision":"string",
              "tiles:addEventListener( \"collision\" )":"string",
              "tiles:bodyType":"string",
@@ -118,7 +118,7 @@
          "opacity":1,
          "properties":
             {
-             "physics:enabled":"true",
+             "physics:enabled":"false",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"dynamic",
@@ -135,7 +135,7 @@
              "type":"string"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":18,
          "x":0,
          "y":0
@@ -160,22 +160,8 @@
          "transparentcolor":"#ffffff"
         }, 
         {
-         "columns":52,
-         "firstgid":7,
-         "image":"..\/images\/background\/07.png",
-         "imageheight":590,
-         "imagewidth":1666,
-         "margin":0,
-         "name":"07",
-         "spacing":0,
-         "tilecount":936,
-         "tileheight":32,
-         "tilewidth":32,
-         "transparentcolor":"#ffffff"
-        }, 
-        {
          "columns":8,
-         "firstgid":943,
+         "firstgid":7,
          "image":"Tiles\/ground.png",
          "imageheight":256,
          "imagewidth":256,

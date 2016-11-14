@@ -101,7 +101,7 @@
          "properties":
             {
              "myName":"player",
-             "physics:enabled":"true",
+             "physics:enabled":"false",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"dynamic",
@@ -119,7 +119,7 @@
              "type":"string"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":18,
          "x":0,
          "y":0
