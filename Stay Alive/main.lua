@@ -7,6 +7,7 @@ local utility = require( "utility" )
 local ads = require( "ads" )
 local widget = require( "widget" )
 
+io.output():setvbuf("no") -- Don't use buffer for console messages
 display.setStatusBar( display.HiddenStatusBar )
 
 math.randomseed( os.time() )
@@ -87,6 +88,7 @@ _H = display.contentHeight
 -- Death Sound - Channel 9
 -- Winning Sound - Channel 10
 -- Jump Sound - Channel 11
+-- Gravity Sound - Channel 12
 
 -------------------------------------------------------------------------------
 -- Sounds
