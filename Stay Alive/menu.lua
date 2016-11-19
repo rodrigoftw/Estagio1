@@ -384,7 +384,6 @@ function scene:show( event )
         print("_________________________")
         print("          Menu")
         print("_________________________")
-        
         -- audio.stop( 2 )
         -- audio.dispose( 2 )
     end
@@ -420,6 +419,9 @@ function scene:destroy( event )
 
     -- audio.stop( 2 )
     -- audio.dispose( 2 )
+
+    background:removeSelf()
+    background = nil
 end
 
 ---------------------------------------------------------------------------------

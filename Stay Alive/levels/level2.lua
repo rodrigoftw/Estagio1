@@ -59,6 +59,10 @@ function scene:create( event )
     dusk.setPreference("scaleCameraBoundsToScreen", true)
     dusk.setPreference("enableCamera", false)
     dusk.setPreference("detectMapPath", true)
+    local v = dusk.getPreference("mathVariables")
+    local mapWidth = v["mapWidth"] * v["tileWidth"]
+
+    self.view:insert(map)
 
     --------------------------------------------------------------------------------
     -- Set Map
@@ -112,13 +116,20 @@ function scene:create( event )
     -- local left = centerX - display.contentCenterX
     -- local right = centerX + display.contentCenterX
 
+    -- map.setCameraBounds({
+    --     xMin = display.contentCenterX,
+    --     yMin = display.contentCenterY,
+    --     xMax = map.data.width - display.contentCenterX,
+    --     yMax = map.data.height - display.contentCenterY
+    --     -- Use map.data.width because that's the "real" width of the map - 
+    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    -- })
+
     map.setCameraBounds({
-        xMin = display.contentCenterX,
-        yMin = display.contentCenterY,
-        xMax = map.data.width - display.contentCenterX,
-        yMax = map.data.height - display.contentCenterY
-        -- Use map.data.width because that's the "real" width of the map - 
-        -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+        xMin = map.data.width - map.data.width * 0.5, 
+        xMax = map.data.width - map.data.width * 0.5, 
+        yMin = display.contentHeight * 0.5, 
+        yMax = map.data.height - display.contentHeight * 0.5
     })
 
     -------------------------------------------------------------------------------
@@ -205,9 +216,9 @@ function scene:create( event )
     -- Timer
     -------------------------------------------------------------------------------
     -- Contar o tempo em segundos
-    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+    local secondsLeft = 30 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
+    clockText = display.newText("30:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -262,17 +273,17 @@ function scene:create( event )
     -- jumpButton.x = _W - 27
     -- jumpButton.y = _H - 27
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
+    leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
     leftButton.x = 35
     leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
+    rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
     rightButton.x = 98
     rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
+    jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
     jumpButton.x = _W - 35
     jumpButton.y = _H - 35

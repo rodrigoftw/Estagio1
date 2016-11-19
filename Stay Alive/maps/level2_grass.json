@@ -93,6 +93,7 @@
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"static",
              "tiles:isFixedRotation":"true",
+             "tiles:isSensor":"true",
              "type":"end"
             },
          "propertytypes":
@@ -103,6 +104,7 @@
              "tiles:addEventListener( \"collision\" )":"string",
              "tiles:bodyType":"string",
              "tiles:isFixedRotation":"string",
+             "tiles:isSensor":"string",
              "type":"string"
             },
          "type":"tilelayer",

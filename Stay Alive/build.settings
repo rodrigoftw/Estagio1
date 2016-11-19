@@ -60,6 +60,11 @@ settings =
             publisherId = "com.coronalabs",
             supportedPlatforms = { iphone=true, ["iphone-sim"]=true },
         },
+        -- Dusk Engine Plugin
+        ["plugin.bit"] =
+        {
+            publisherId = "com.coronalabs"
+        },
     },
     iphone =
     {

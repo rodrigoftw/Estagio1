@@ -30,6 +30,7 @@ function scene:create( event )
     background.x = centerX
     background.y = centerY + 5
     background:toFront()
+    sceneGroup:insert( background )
 
     local wintitle = display.newText("Fase concluída!", 100, 32, "Roboto-Regular.ttf", 26 )
     wintitle.x = centerX
@@ -37,6 +38,7 @@ function scene:create( event )
     wintitle:setFillColor( 0 )
     wintitle.alpha = 1
     wintitle:toFront()
+    sceneGroup:insert( wintitle )
     
     -- local endedTimeText = display.newText("Seu tempo foi de: ", 100, 32, "Roboto-Regular.ttf", 14 )
     -- endedTimeText.x = centerX
@@ -61,16 +63,19 @@ function scene:create( event )
     menuButton.x = centerX - 72
     menuButton.y = centerY + 72
     menuButton:toFront()
+    sceneGroup:insert( menuButton )
 
     local restartButton = display.newImageRect( "images/ui/RestartButton.png", 56, 56 )
     restartButton.x = centerX
     restartButton.y = centerY + 72
     restartButton:toFront()
+    sceneGroup:insert( restartButton )
 
     local nextButton = display.newImageRect( "images/ui/NextButton.png", 56, 56 )
     nextButton.x = centerX + 72
     nextButton.y = centerY + 72
     nextButton:toFront()
+    sceneGroup:insert( nextButton )
 
     -------------------------------------------------------------------------------
     -- Functions
@@ -82,21 +87,21 @@ function scene:create( event )
             audio.play(buttonToggle, { channel = 7 } )
             audio.stop( 2 )
             audio.dispose( 2 )
-            background:toBack()
-            wintitle:toBack()
-            endedTimeText:toBack()
-            menuButton:toBack()
-            restartButton:toBack()
-            nextButton:toBack()
-            background:removeSelf()
-            wintitle:removeSelf()
-            endedTimeText:removeSelf()
-            menuButton:removeSelf()
-            restartButton:removeSelf()
-            nextButton:removeSelf()
-            endedTimeText:removeSelf()
+            -- background:toBack()
+            -- wintitle:toBack()
+            -- endedTimeText:toBack()
+            -- menuButton:toBack()
+            -- restartButton:toBack()
+            -- nextButton:toBack()
+            -- background:removeSelf()
+            -- wintitle:removeSelf()
+            -- endedTimeText:removeSelf()
+            -- menuButton:removeSelf()
+            -- restartButton:removeSelf()
+            -- nextButton:removeSelf()
+            -- endedTimeText:removeSelf()
         elseif (event.phase == "ended") then
-            map.destroy()
+            -- map.destroy()
             composer.gotoScene( "menu", { effect = "crossFade", time = 333 } )
         end
     end
