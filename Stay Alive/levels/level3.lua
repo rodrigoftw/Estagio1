@@ -59,6 +59,10 @@ function scene:create( event )
     dusk.setPreference("scaleCameraBoundsToScreen", true)
     dusk.setPreference("enableCamera", false)
     dusk.setPreference("detectMapPath", true)
+    local v = dusk.getPreference("mathVariables")
+    local mapWidth = v["mapWidth"] * v["tileWidth"]
+
+    self.view:insert(map)
 
     --------------------------------------------------------------------------------
     -- Set Map
@@ -69,7 +73,7 @@ function scene:create( event )
         map.destroy()
         map = dusk.buildMap("maps/" .. mapName)
         currMap = mapName
-        map.setViewpoint(mapX, mapY)
+        -- map.setViewpoint(mapX, mapY)
         map.snapCamera()
         map.setTrackingLevel(0.3)
         map:addEventListener("touch", mapTouch)
@@ -112,14 +116,14 @@ function scene:create( event )
     -- local left = centerX - display.contentCenterX
     -- local right = centerX + display.contentCenterX
 
-    map.setCameraBounds({
-        xMin = centerX,
-        yMin = centerY,
-        xMax = map.data.width - display.contentCenterX,
-        yMax = map.data.height - display.contentCenterY
-        -- Use map.data.width because that's the "real" width of the map - 
-        -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
-    })
+    -- map.setCameraBounds({
+    --     xMin = centerX,
+    --     yMin = centerY,
+    --     xMax = map.data.width - display.contentCenterX,
+    --     yMax = map.data.height - display.contentCenterY
+    --     -- Use map.data.width because that's the "real" width of the map - 
+    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    -- })
 
     -------------------------------------------------------------------------------
     -- Player
@@ -175,7 +179,7 @@ function scene:create( event )
 
     local borderdown = display.newImageRect("images/ui/borderdown.png", 548, 10 )
     borderdown.x = centerX
-    borderdown.y = _H+16--(_H+37)
+    borderdown.y = _H+37--(_H+16)
     physics.addBody(borderdown, "static", { filter = borderCollisionFilter })
     borderdown.type = "border"
     borderdown:toBack()
@@ -186,9 +190,9 @@ function scene:create( event )
     -- Timer
     -------------------------------------------------------------------------------
     -- Contar o tempo em segundos
-    local secondsLeft = 60 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+    local secondsLeft = 30 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("60:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
+    clockText = display.newText("30:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -205,8 +209,8 @@ function scene:create( event )
         clockText.text = timeDisplay
         clockText.alpha = 1
 
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
+        -- map.setDamping(0.3)
+        -- map.setCameraFocus(player)
         -- map.updateView()
     end
     
@@ -243,17 +247,17 @@ function scene:create( event )
     -- jumpButton.x = _W - 27
     -- jumpButton.y = _H - 27
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
+    leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
     leftButton.x = 35
     leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
+    rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
     rightButton.x = 98
     rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
+    jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
     jumpButton.x = _W - 35
     jumpButton.y = _H - 35
@@ -398,6 +402,15 @@ function scene:create( event )
                 audio.play( winSound, {channel = 10} )
                 print("Fim da fase")
                 timer.cancel(Timer)
+                -- function blink()
+                --     if(clockText.alpha < 1) then
+                --         transition.to( clockText, {time=50, alpha=1})
+                --     else
+                --         transition.to( clockText, {time=50, alpha=0})
+                --     end
+                -- end
+                -- local tmr = timer.performWithDelay( 300, blink, 0 )
+                map.destroy()
                 player:removeSelf()
                 composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
                 leftButton:removeEventListener( "touch", moveLeft )
@@ -421,44 +434,27 @@ function scene:create( event )
                 -- print( event.target.type .. ": collision began with " .. event.other.type )
                 audio.play(deathSound, {channel = 9} )
                 print("E Morreu")
-                -- player:removeSelf()
-                composer.gotoScene( "levelselect", { effect = "crossFade", time = 333 } )
+                timer.cancel(Timer)
+                -- function blink()
+                --     if(clockText.alpha < 1) then
+                --         transition.to( clockText, {time=50, alpha=1})
+                --     else
+                --         transition.to( clockText, {time=50, alpha=0})
+                --     end
+                -- end
+                -- local tmr = timer.performWithDelay( 300, blink, 0 )
+                player:removeSelf()
+                map.destroy()
+                composer.gotoScene( "defeat", { effect = "crossFade", time = 333 } )
+                leftButton:removeEventListener( "touch", moveLeft )
+                rightButton:removeEventListener( "touch", moveRight )
+                jumpButton:removeEventListener( "touch", jump )
+                Runtime:removeEventListener( "key", onKeyEvent )
             end
+        -- elseif ( event.phase == "ended" ) then
+        --     if ( event.target.type == "end" ) and (event.other.type == "player" ) then
                 
-            -- elseif event.target.type == "player" and event.other.type == "spike" then
-            --     timer.cancel(Timer)
-            --     audio.play(deathsound)
-            --     audio.stop(deathsound)
-            --     function blink()
-            --         if(clockText.alpha < 1) then
-            --             transition.to( clockText, {time=50, alpha=1})
-            --         else
-            --             transition.to( clockText, {time=50, alpha=0})
-            --         end
-            --     end
-            --     local tmr = timer.performWithDelay( 300, blink, 0 )
-            --     player:removeSelf()
-            --     player = nil
-            --     print("oh no")
-            -- end
-            -- elseif ( event.phase == "ended" ) then
-            --     if ( event.target.type == "player" and event.other.type == "end" ) then
-            --         -- Options table for the overlay scene "endofphase.lua"
-            --         local options = {
-            --             isModal = true,
-            --             effect = "fade",
-            --             time = 333,
-            --             params = {
-            --                 sampleVar = "my sample variable"
-            --             }
-            --         }
-
-            --         composer.showOverlay( "endofphase", options )
-            --     end
-        elseif ( event.phase == "ended" ) then
-            if ( event.target.type == "end" ) and (event.other.type == "player" ) then
-                
-            end
+        --     end
         end
         return true
     end
@@ -600,7 +596,6 @@ function scene:show( event )
         physics.start()
         physics.setGravity( 0, 9.8 )
         map.updateView()
-
     end 
 end
 
@@ -615,6 +610,11 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
     elseif phase == "did" then
         -- Called when the scene is now off screen
+
+        leftButton:removeSelf()
+        rightButton:removeSelf()
+        jumpButton:removeSelf()
+        clockText:removeSelf()
     end 
 end
 
@@ -627,17 +627,17 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
-    leftButton:removeSelf()
-    rightButton:removeSelf()
-    jumpButton:removeSelf()
-    clockText:removeSelf()
+    -- leftButton:removeSelf()
+    -- rightButton:removeSelf()
+    -- jumpButton:removeSelf()
+    -- clockText:removeSelf()
 
     leftButton = nil
     rightButton = nil
     jumpButton = nil
     player = nil
     clockText = nil
-    map.destroy()
+    -- map.destroy()
     
 end
 

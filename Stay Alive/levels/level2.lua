@@ -45,8 +45,9 @@ function scene:create( event )
      physics.start()
      physics.pause()
 
-    local thisLevel = 1
+    local thisLevel = 2
     thisLevel = myData.settings.currentLevel
+    nextScene = thisLevel + 1
 
     -------------------------------------------------------------------------------
     -- Map
@@ -73,7 +74,7 @@ function scene:create( event )
         map.destroy()
         map = dusk.buildMap("maps/" .. mapName)
         currMap = mapName
-        map.setViewpoint(mapX, mapY)
+        -- map.setViewpoint(mapX, mapY)
         map.snapCamera()
         map.setTrackingLevel(0.3)
         map:addEventListener("touch", mapTouch)
@@ -125,12 +126,12 @@ function scene:create( event )
     --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
     -- })
 
-    map.setCameraBounds({
-        xMin = map.data.width - map.data.width * 0.5, 
-        xMax = map.data.width - map.data.width * 0.5, 
-        yMin = display.contentHeight * 0.5, 
-        yMax = map.data.height - display.contentHeight * 0.5
-    })
+    -- map.setCameraBounds({
+    --     xMin = map.data.width - map.data.width * 0.5, 
+    --     xMax = map.data.width - map.data.width * 0.5, 
+    --     yMin = display.contentHeight * 0.5, 
+    --     yMax = map.data.height - display.contentHeight * 0.5
+    -- })
 
     -------------------------------------------------------------------------------
     -- Player
@@ -235,8 +236,8 @@ function scene:create( event )
         clockText.text = timeDisplay
         clockText.alpha = 1
 
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
+        -- map.setDamping(0.3)
+        -- map.setCameraFocus(player)
         -- map.updateView()
     end
     
@@ -429,6 +430,7 @@ function scene:create( event )
                 print("Fim da fase")
                 timer.cancel(Timer)
                 player:removeSelf()
+                -- map.destroy()
                 composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
                 leftButton:removeEventListener( "touch", moveLeft )
                 rightButton:removeEventListener( "touch", moveRight )
@@ -623,7 +625,6 @@ function scene:show( event )
         physics.start()
         physics.setGravity( 0, 9.8 )
         map.updateView()
-
     end 
 end
 
@@ -638,6 +639,11 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
     elseif phase == "did" then
         -- Called when the scene is now off screen
+
+        leftButton:removeSelf()
+        rightButton:removeSelf()
+        jumpButton:removeSelf()
+        clockText:removeSelf()
     end 
 end
 
@@ -650,10 +656,10 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
-    leftButton:removeSelf()
-    rightButton:removeSelf()
-    jumpButton:removeSelf()
-    clockText:removeSelf()
+    -- leftButton:removeSelf()
+    -- rightButton:removeSelf()
+    -- jumpButton:removeSelf()
+    -- clockText:removeSelf()
 
     leftButton = nil
     rightButton = nil

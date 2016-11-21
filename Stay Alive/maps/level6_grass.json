@@ -85,6 +85,28 @@
          "height":10,
          "name":"End",
          "opacity":0.25,
+         "properties":
+            {
+             "myName":"ending",
+             "physics:enabled":"true",
+             "tiles.collision":"onCollision",
+             "tiles:addEventListener( \"collision\" )":"true",
+             "tiles:bodyType":"static",
+             "tiles:isFixedRotation":"true",
+             "tiles:isSensor":"true",
+             "type":"end"
+            },
+         "propertytypes":
+            {
+             "myName":"string",
+             "physics:enabled":"string",
+             "tiles.collision":"string",
+             "tiles:addEventListener( \"collision\" )":"string",
+             "tiles:bodyType":"string",
+             "tiles:isFixedRotation":"string",
+             "tiles:isSensor":"string",
+             "type":"string"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":18,
@@ -98,7 +120,7 @@
          "opacity":1,
          "properties":
             {
-             "physics:enabled":"true",
+             "physics:enabled":"false",
              "tiles.collision":"onCollision",
              "tiles:addEventListener( \"collision\" )":"true",
              "tiles:bodyType":"dynamic",
@@ -115,7 +137,7 @@
              "type":"string"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":18,
          "x":0,
          "y":0

@@ -48,6 +48,7 @@ function scene:create( event )
 
     local thisLevel = 1
     thisLevel = myData.settings.currentLevel
+    nextScene = thisLevel + 1
 
     -------------------------------------------------------------------------------
     -- Map
@@ -60,9 +61,10 @@ function scene:create( event )
     dusk.setPreference("scaleCameraBoundsToScreen", true)
     dusk.setPreference("enableCamera", false)
     dusk.setPreference("detectMapPath", true)
+    -- dusk.setPreference("autoGenerateObjectShapes", true)
     local v = dusk.getPreference("mathVariables")
     local mapWidth = v["mapWidth"] * v["tileWidth"]
-
+    
     self.view:insert(map)
 
     --------------------------------------------------------------------------------
@@ -74,7 +76,7 @@ function scene:create( event )
         map.destroy()
         map = dusk.buildMap("maps/" .. mapName)
         currMap = mapName
-        map.setViewpoint(mapX, mapY)
+        -- map.setViewpoint(mapX, mapY)
         map.snapCamera()
         map.setTrackingLevel(0.3)
         map:addEventListener("touch", mapTouch)
@@ -126,12 +128,12 @@ function scene:create( event )
     --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
     -- })
 
-    map.setCameraBounds({
-        xMin = map.data.width - map.data.width * 0.5, 
-        xMax = map.data.width - map.data.width * 0.5, 
-        yMin = display.contentHeight * 0.5, 
-        yMax = map.data.height - display.contentHeight * 0.5
-    })
+    -- map.setCameraBounds({
+    --     xMin = map.data.width - map.data.width * 0.5, 
+    --     xMax = map.data.width - map.data.width * 0.5, 
+    --     yMin = display.contentHeight * 0.5, 
+    --     yMax = map.data.height - display.contentHeight * 0.5
+    -- })
 
     -------------------------------------------------------------------------------
     -- Player
@@ -236,8 +238,8 @@ function scene:create( event )
         clockText.text = timeDisplay
         clockText.alpha = 1
 
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
+        -- map.setDamping(0.3)
+        -- map.setCameraFocus(player)
         -- map.updateView()
     end
     
@@ -396,14 +398,14 @@ function scene:create( event )
 
         if ( keyLeft == keyName ) then
             vx = -100
-            player:setLinearVelocity(vx-100, vy)
+            player:setLinearVelocity(vx-10, vy)
             leftButton.alpha = 1
         end
         leftButton.alpha = 0.5
         
         if ( keyRight == keyName ) then
             vx = 100
-            player:setLinearVelocity(vx+100, vy)
+            player:setLinearVelocity(vx+10, vy)
             rightButton.alpha = 1
         end
         rightButton.alpha = 0.5
@@ -464,7 +466,7 @@ function scene:create( event )
                 print("Fim da fase")
                 timer.cancel(Timer)
                 player:removeSelf()
-                map.destroy()
+                -- map.destroy()
                 composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
                 -- leftButton:removeEventListener( "touch", moveLeft )
                 -- rightButton:removeEventListener( "touch", moveRight )

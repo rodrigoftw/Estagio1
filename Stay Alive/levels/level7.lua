@@ -58,14 +58,19 @@ function scene:create( event )
     -------------------------------------------------------------------------------
     -- Map
     -------------------------------------------------------------------------------
-    local currMap = "level7_grass.json"
+    local currMap = "level9_grass.json"
     map = dusk.buildMap("maps/"..currMap)
 
     -- dusk.setPreference("virtualObjectsVisible", true)
     dusk.setPreference("enableTileCulling", true)
+    dusk.setPreference("enableRotatedMapCulling", true)
     dusk.setPreference("scaleCameraBoundsToScreen", true)
     dusk.setPreference("enableCamera", false)
     dusk.setPreference("detectMapPath", true)
+    local v = dusk.getPreference("mathVariables")
+    local mapWidth = v["mapWidth"] * v["tileWidth"]
+
+    self.view:insert(map)
 
     --------------------------------------------------------------------------------
     -- Set Map
@@ -76,7 +81,7 @@ function scene:create( event )
         map.destroy()
         map = dusk.buildMap("maps/" .. mapName)
         currMap = mapName
-        map.setViewpoint(mapX, mapY)
+        -- map.setViewpoint(mapX, mapY)
         map.snapCamera()
         map.setTrackingLevel(0.3)
         map:addEventListener("touch", mapTouch)
@@ -119,14 +124,14 @@ function scene:create( event )
     -- local left = centerX - display.contentCenterX
     -- local right = centerX + display.contentCenterX
 
-    map.setCameraBounds({
-        xMin = display.contentCenterX,
-        yMin = display.contentCenterY,
-        xMax = map.data.width - display.contentCenterX,
-        yMax = map.data.height - display.contentCenterY
-        -- Use map.data.width because that's the "real" width of the map - 
-        -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
-    })
+    -- map.setCameraBounds({
+    --     xMin = display.contentCenterX,
+    --     yMin = display.contentCenterY,
+    --     xMax = map.data.width - display.contentCenterX,
+    --     yMax = map.data.height - display.contentCenterY
+    --     -- Use map.data.width because that's the "real" width of the map - 
+    --     -- map.width changes when culling kicks in yMax = map.data.height - display.contentCenterY -- Same here
+    -- })
 
     -------------------------------------------------------------------------------
     -- Player
@@ -164,7 +169,7 @@ function scene:create( event )
     -- End
     -------------------------------------------------------------------------------
 
-    local ending = map.layer["End"].tile(17, 3)
+    local ending = map.layer["End"].tile(2, 9)--17, 3)
     ending.bodyType = "static"
     ending.bounce = 0
     ending.alpha = 0.75
@@ -180,35 +185,55 @@ function scene:create( event )
 
     local gravityChanger = -1 -- Muda o sentido da gravidade
 
-    local gravityItem = display.newImageRect( "maps/Tiles/Gravity.png", 28, 28 )
-    physics.addBody( gravityItem, "static", { bounce = 0.2, friction = 10 } )
-    gravityItem.x = _W * 0.82--0.38
-    gravityItem.y = _H * 0.7
+    -- local gravityItem = display.newImageRect( "maps/Tiles/Gravity.png", 28, 28 )
+    -- physics.addBody( gravityItem, "static", { bounce = 0.2, friction = 10 } )
+    -- gravityItem.x = _W * 0.38
+    -- gravityItem.y = _H * 0.7
 
-    gravityItem.type = "gravityItem"
-    gravityItem.collision = onCollision
-    gravityItem.isFixedRotation = false --true
-    -- player:insert( sceneGroup )
-    -- player:addEventListener( "collision", onCollision )
+    -- gravityItem.type = "gravityItem"
+    -- gravityItem.collision = onCollision
+    -- gravityItem.isFixedRotation = false --true
+    -- -- player:insert( sceneGroup )
+    -- -- player:addEventListener( "collision", onCollision )
 
-    local gravityItem2 = display.newImageRect( "maps/Tiles/Gravity.png", 28, 28 )
-    physics.addBody( gravityItem2, "static", { bounce = 0.2, friction = 10 } )
-    gravityItem2.x = _W * 0.57
-    gravityItem2.y = _H * 0.3
+    -- local gravityItem2 = display.newImageRect( "maps/Tiles/Gravity.png", 28, 28 )
+    -- physics.addBody( gravityItem2, "static", { bounce = 0.2, friction = 10 } )
+    -- gravityItem2.x = _W * 0.57
+    -- gravityItem2.y = _H * 0.3
 
-    gravityItem2.type = "gravityItem"
-    gravityItem2.collision = onCollision
-    gravityItem2.isFixedRotation = false --true
-    -- player:insert( sceneGroup )
-    -- player:addEventListener( "collision", onCollision )
+    -- gravityItem2.type = "gravityItem"
+    -- gravityItem2.collision = onCollision
+    -- gravityItem2.isFixedRotation = false --true
+    -- -- player:insert( sceneGroup )
+    -- -- player:addEventListener( "collision", onCollision )
+
+    -- local gravityItem3 = display.newImageRect( "maps/Tiles/Gravity.png", 28, 28 )
+    -- physics.addBody( gravityItem3, "static", { bounce = 0.2, friction = 10 } )
+    -- gravityItem3.x = _W * 0.82--0.38
+    -- gravityItem3.y = _H * 0.7
+
+    -- gravityItem3.type = "gravityItem"
+    -- gravityItem3.collision = onCollision
+    -- gravityItem3.isFixedRotation = false --true
+    -- -- player:insert( sceneGroup )
+    -- -- player:addEventListener( "collision", onCollision )
+
+    -- function gravityItensFloating()
+    --         if(gravityItem.y == _H * 0.7) then
+    --             transition.to( gravityItem.y - 20, { time=750 })
+    --         else
+    --             transition.to( gravityItem.y + 20, { time=750 })
+    --         end
+    --     end
+    -- local tmr = timer.performWithDelay( 1500, gravityItensFloating, 0 )
 
     -------------------------------------------------------------------------------
     -- Timer
     -------------------------------------------------------------------------------
     -- Contar o tempo em segundos
-    local secondsLeft = 40 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
+    local secondsLeft = 30 * 60 --* 60  -- Exemplo: 2 minutos * 30 segundos
  
-    local clockText = display.newText("40:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
+    clockText = display.newText("30:00", ((display.contentCenterX*2) - (display.contentCenterX*0.12)), 15, "Roboto-Regular.ttf", 20) -- display.contentCenterX + 170
     clockText:setFillColor( 1, 1, 1 )
 
     -- Dar um update no timer a cada segundo passado
@@ -225,8 +250,8 @@ function scene:create( event )
         clockText.text = timeDisplay
         clockText.alpha = 1
 
-        map.setDamping(0.3)
-        map.setCameraFocus(player)
+        -- map.setDamping(0.3)
+        -- map.setCameraFocus(player)
         -- map.updateView()
     end
     
@@ -263,17 +288,17 @@ function scene:create( event )
     -- jumpButton.x = _W - 27
     -- jumpButton.y = _H - 27
 
-    local leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
+    leftButton = display.newImageRect( "images/ui/LeftButtonNew.png", 56, 56 )
     leftButton.alpha = 0.5
     leftButton.x = 35
     leftButton.y = _H - 35
 
-    local rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
+    rightButton = display.newImageRect( "images/ui/RightButtonNew.png", 56, 56 )
     rightButton.alpha = 0.5
     rightButton.x = 98
     rightButton.y = _H - 35
 
-    local jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
+    jumpButton = display.newImageRect( "images/ui/JumpButtonNew.png", 56, 56 )
     jumpButton.alpha = 0.5
     jumpButton.x = _W - 35
     jumpButton.y = _H - 35
@@ -308,48 +333,48 @@ function scene:create( event )
     end
     rightButton:addEventListener("touch", moveRight)
 
-    local grav = 0.2
-    player.groundLevel = player.y
+    -- local grav = 0.2
+    -- player.groundLevel = player.y
 
-    local function movePlayer( event )
-        player.jumpSpeed = player.jumpSpeed - grav
-        player.y = player.y - player.jumpSpeed
+    -- local function movePlayer( event )
+    --     player.jumpSpeed = player.jumpSpeed - grav
+    --     player.y = player.y - player.jumpSpeed
 
-        if player.y >= player.groundLevel then
-            Runtime:removeEventListener("enterFrame", movePlayer)
-            player.y = player.groundLevel
+    --     if player.y >= player.groundLevel then
+    --         Runtime:removeEventListener("enterFrame", movePlayer)
+    --         player.y = player.groundLevel
+    --     end
+    -- end
+
+    -- local function startJump( event )
+    --     audio.play( jumpSound, { channel = 11 } )
+    --     player.jumpSpeed = 7
+    --     Runtime:addEventListener("enterFrame", movePlayer)
+    -- end
+    -- jumpButton:addEventListener("touch", startJump)
+
+    function jump(event)
+        if (event.phase == "began" and jump_completed == false) then
+            jumpButton.alpha = 1
+            audio.play( jumpSound, { channel = 11 } )
+            player:setLinearVelocity(0, -200)
+        elseif (event.phase == "ended") then
+            jumpButton.alpha = 0.5
+            -- player:setLinearVelocity(0, 0)
+            jump_completed = true
+        end
+    end
+    jumpButton:addEventListener("touch", jump)
+
+    local function on_hit(event)
+        if(event.phase == "began") then
+            jump_completed = false
+        elseif(event.phase == "ended") then
+            player.isFixedRotation = false
         end
     end
 
-    local function startJump( event )
-        audio.play( jumpSound, { channel = 11 } )
-        player.jumpSpeed = 7
-        Runtime:addEventListener("enterFrame", movePlayer)
-    end
-    jumpButton:addEventListener("touch", startJump)
-
-    -- function jump(event)
-    --     if (event.phase == "began" and jump_completed == false) then
-    --         jumpButton.alpha = 1
-    --         audio.play( jumpSound, { channel = 11 } )
-    --         player:setLinearVelocity(0, -200)
-    --     elseif (event.phase == "ended") then
-    --         jumpButton.alpha = 0.5
-    --         -- player:setLinearVelocity(0, 0)
-    --         jump_completed = true
-    --     end
-    -- end
-    -- jumpButton:addEventListener("touch", jump)
-
-    -- local function on_hit(event)
-    --     if(event.phase == "began") then
-    --         jump_completed = false
-    --     elseif(event.phase == "ended") then
-    --         player.isFixedRotation = false
-    --     end
-    -- end
-
-    -- player:addEventListener("collision", on_hit)
+    player:addEventListener("collision", on_hit)
 
     -------------------------------------------------------------------------------
     -- Keyboard Buttons
@@ -440,11 +465,11 @@ function scene:create( event )
                 timer.cancel(Timer)
                 player:removeSelf()
                 map.destroy()
-                composer.gotoScene( "victory", { effect = "crossFade", time = 333 } )
+                composer.gotoScene( "levels.ending", { effect = "crossFade", time = 333 } )
                 leftButton:removeEventListener( "touch", moveLeft )
                 rightButton:removeEventListener( "touch", moveRight )
-                -- jumpButton:removeEventListener( "touch", jump )
-                jumpButton:removeEventListener( "touch", startJump )
+                jumpButton:removeEventListener( "touch", jump )
+                -- jumpButton:removeEventListener( "touch", startJump )
                 Runtime:removeEventListener( "key", onKeyEvent )
                 -- player.alpha = 1
                 -- function playerBlink()
@@ -459,27 +484,33 @@ function scene:create( event )
                 -- local tmr = timer.performWithDelay( 300, playerBlink, 4 )
 
                 -- player.alpha = 0
-            elseif ( event.target.type == "gravity" ) and (event.other.type == "player" ) then
+            elseif ( event.target.type == "gravityItem" ) and (event.other.type == "player" ) then
                 -- print( self.type .. ": collision began with " .. event.other.type )
                 audio.play( gravitySound, {channel = 12} )
                 print("Fly, little man!")
                 gravityItem:removeSelf()
-                physics.setGravity( 0, 9.8*gravityChanger )
+                -- layer.lockTileErased(7, 8)
             elseif event.target.type == "spike" and event.other.type == "player" then
+                physics.setGravity( 0, (9.8*gravityChanger) )
                 -- print( self.type .. ": collision began with " .. event.other.type )
                 audio.play( deathSound, {channel = 9} )
                 print("Oh, shit!")
                 timer.cancel(Timer)
                 player:removeSelf()
-                -- map.destroy()
+                map.destroy()
+                composer.gotoScene( "defeat", { effect = "crossFade", time = 333 } )
+                leftButton:removeEventListener( "touch", moveLeft )
+                rightButton:removeEventListener( "touch", moveRight )
+                jumpButton:removeEventListener( "touch", jump )
+                Runtime:removeEventListener( "key", onKeyEvent )
             end
         end
         return true
     end
 
     ending:addEventListener("collision", onCollision)
-    -- spike::addEventListener("collision", onCollision)
-    gravityItem:addEventListener("collision", onCollision)
+    -- spike:addEventListener("collision", onCollision)
+    -- gravityItem:addEventListener("collision", onCollision)
 
     -- -------------------------------------------------------------------------------
     -- -- Debug Buttons and Functions
@@ -614,7 +645,7 @@ function scene:show( event )
 
         physics.start()
         physics.setGravity( 0, 9.8 )
-
+        -- map.getViewpoint()
     end 
 end
 
@@ -629,6 +660,11 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
     elseif phase == "did" then
         -- Called when the scene is now off screen
+
+        leftButton:removeSelf()
+        rightButton:removeSelf()
+        jumpButton:removeSelf()
+        clockText:removeSelf()
     end 
 end
 
@@ -641,7 +677,17 @@ function scene:destroy( event )
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
 
-    map.destroy()
+    -- leftButton:removeSelf()
+    -- rightButton:removeSelf()
+    -- jumpButton:removeSelf()
+    -- clockText:removeSelf()
+
+    leftButton = nil
+    rightButton = nil
+    jumpButton = nil
+    player = nil
+    clockText = nil
+    -- map.destroy()
     
 end
 
