@@ -1,10 +1,13 @@
-M = {}
+M = {
+	-- thisLevel = 0,
+	-- nextLevel = thisLevel + 1
+}
 M.maxLevels = 7
 --M.levelScore = 0
 M.products = {}
 M.settings = {}
-M.settings.currentLevel = 1
-M.settings.unlockedLevels = 1
+M.settings.currentLevel = thisLevel
+M.settings.unlockedLevels = 7
 --M.settings.bestScore = 0
 M.settings.soundOn = true
 M.settings.musicOn = true

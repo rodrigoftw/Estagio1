@@ -53,17 +53,16 @@ function scene:create( event )
     clouds:toFront()
     sceneGroup:insert( clouds )
 
-    -- speed = 1
+    speed = 1
 
-    -- function moveClouds()
+    function moveClouds()
 
-    --     clouds.x = clouds.x - speed
-    --     if (clouds.x < -(_W/2)) then
-    --         clouds.x = _W + (1.1 * _W)
-    --     end
-    -- end
-    -- Runtime:addEventListener( "enterFrame", moveClouds )
-
+        clouds.x = clouds.x - speed
+        if (clouds.x < -(_W/2)) then
+            clouds.x = _W + (1.1 * _W)
+        end
+    end
+    Runtime:addEventListener( "enterFrame", moveClouds )
 
     -- --------------------------------------------------------------------------------
     -- -- Mapa
@@ -261,7 +260,7 @@ function scene:create( event )
     sceneGroup:insert( title )
 
     -- Create the widget
-    local playButton = widget.newButton({
+    playButton = widget.newButton({
         id = "button1",
         label = "Jogar",
         font = "Roboto-Regular.ttf",
@@ -420,6 +419,19 @@ function scene:destroy( event )
     -- audio.stop( 2 )
     -- audio.dispose( 2 )
 
+    playButton:removeSelf()
+    playButton = nil
+    -- optionsButton:removeSelf()
+    -- optionsButton = nil
+    -- helpButton:removeSelf()
+    -- helpButton = nil
+    -- creditsButton:removeSelf()
+    -- creditsButton = nil
+    -- quitButton:removeSelf()
+    -- quitButton = nil
+
+    clouds:removeSelf()
+    clouds = nil
     background:removeSelf()
     background = nil
 end

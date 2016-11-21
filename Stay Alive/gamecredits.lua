@@ -41,11 +41,11 @@ function scene:create( event )
     -- Clouds
     --------------------------------------------------------------------------------
 
-    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
-    clouds.x = display.contentCenterX
-    clouds.y = display.contentCenterY
-    clouds:toFront()
-    sceneGroup:insert( clouds )
+    -- clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    -- clouds.x = display.contentCenterX
+    -- clouds.y = display.contentCenterY
+    -- clouds:toFront()
+    -- sceneGroup:insert( clouds )
 
     local title = display.newText( "Créditos", 100, 32, "Roboto-Regular.ttf", 32)
     title.x = display.contentCenterX

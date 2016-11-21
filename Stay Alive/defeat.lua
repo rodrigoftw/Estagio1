@@ -32,13 +32,13 @@ function scene:create( event )
     background:toFront()
     sceneGroup:insert( background )
 
-    local wintitle = display.newText("Fase concluída!", 100, 32, "Roboto-Regular.ttf", 26 )
-    wintitle.x = centerX
-    wintitle.y = centerY - 50--80
-    wintitle:setFillColor( 0 )
-    wintitle.alpha = 1
-    wintitle:toFront()
-    sceneGroup:insert( wintitle )
+    local losetitle = display.newText("Você perdeu!", 100, 32, "Roboto-Regular.ttf", 26 )
+    losetitle.x = centerX
+    losetitle.y = centerY - 50--80
+    losetitle:setFillColor( 0 )
+    losetitle.alpha = 1
+    losetitle:toFront()
+    sceneGroup:insert( losetitle )
     
     -- local endedTimeText = display.newText("Seu tempo foi de: ", 100, 32, "Roboto-Regular.ttf", 14 )
     -- endedTimeText.x = centerX
@@ -46,21 +46,21 @@ function scene:create( event )
     -- endedTimeText:setFillColor( 0 )
     -- endedTimeText:toFront()
 
-    -- function blink()
-    --     if(wintitle.alpha > 0) then
-    --         transition.to( wintitle, {time=50, alpha=0})
-    --     else
-    --         transition.to( wintitle, {time=50, alpha=1})
-    --     end
-    -- end
-    -- local tmr = timer.performWithDelay( 300, blink, 0 )
+    function blink()
+        if(losetitle.alpha > 0) then
+            transition.to( losetitle, {time=50, alpha=0})
+        else
+            transition.to( losetitle, {time=50, alpha=1})
+        end
+    end
+    local tmr = timer.performWithDelay( 300, blink, 0 )
 
     -------------------------------------------------------------------------------
     -- Buttons
     -------------------------------------------------------------------------------
 
     local menuButton = display.newImageRect( "images/ui/MenuButton.png", 56, 56 )
-    menuButton.x = centerX - 72
+    menuButton.x = centerX
     menuButton.y = centerY + 72
     menuButton:toFront()
     sceneGroup:insert( menuButton )
@@ -71,14 +71,11 @@ function scene:create( event )
     -- restartButton:toFront()
     -- sceneGroup:insert( restartButton )
 
-    nextScene = "levels.level"..levNumber + 1
-    -- nextScene = mydata.nextLevel
-
-    local nextButton = display.newImageRect( "images/ui/NextButton.png", 56, 56 )
-    nextButton.x = centerX + 72
-    nextButton.y = centerY + 72
-    nextButton:toFront()
-    sceneGroup:insert( nextButton )
+    -- local nextButton = display.newImageRect( "images/ui/NextButton.png", 56, 56 )
+    -- nextButton.x = centerX + 72
+    -- nextButton.y = centerY + 72
+    -- nextButton:toFront()
+    -- sceneGroup:insert( nextButton )
 
     -------------------------------------------------------------------------------
     -- Functions
@@ -91,13 +88,13 @@ function scene:create( event )
             audio.stop( 2 )
             audio.dispose( 2 )
             -- background:toBack()
-            -- wintitle:toBack()
+            -- losetitle:toBack()
             -- endedTimeText:toBack()
             -- menuButton:toBack()
             -- restartButton:toBack()
             -- nextButton:toBack()
             -- background:removeSelf()
-            -- wintitle:removeSelf()
+            -- losetitle:removeSelf()
             -- endedTimeText:removeSelf()
             -- menuButton:removeSelf()
             -- restartButton:removeSelf()
@@ -121,7 +118,7 @@ function scene:create( event )
     --     composer.gotoScene( "levels.level1", { effect = "crossFade", time = 333 } )
 
     --         -- background:removeSelf()
-    --         -- wintitle:removeSelf()
+    --         -- losetitle:removeSelf()
     --         -- endedTimeText:removeSelf()
     --         -- menuButton:removeSelf()
     --         -- restartButton:removeSelf()
@@ -132,29 +129,25 @@ function scene:create( event )
     -- end
     -- restartButton:addEventListener("touch", restartLevel)
 
-    function nextLevel(event)
-        if (event.phase == "began") then
+    -- function nextLevel(event)
+    --     if (event.phase == "began") then
             
-            audio.play(buttonToggle, { channel = 7 } )
-            audio.stop( 2 )
-            audio.dispose( 2 )
-            map.destroy()
-            -- nextScene = myData.thisLevel + 1
-        elseif (event.phase == "ended") then
+    --         audio.play(buttonToggle, { channel = 7 } )
+    --         audio.stop( 2 )
+    --         audio.dispose( 2 )
+    --     elseif (event.phase == "ended") then
 
-            background:removeSelf()
-            wintitle:removeSelf()
-            -- endedTimeText:removeSelf()
-            menuButton:removeSelf()
-            -- restartButton:removeSelf()
-            nextButton:removeSelf()
-            composer.removeScene( nextScene, true )
-            -- map.destroy()
-            -- composer.gotoScene( "levels.level"..levNumber+1, { effect = "crossFade", time = 333 } )
-            composer.gotoScene( nextScene, { effect = "crossFade", time = 333 } )
-        end
-    end
-    nextButton:addEventListener("touch", nextLevel)
+    --         background:removeSelf()
+    --         losetitle:removeSelf()
+    --         endedTimeText:removeSelf()
+    --         menuButton:removeSelf()
+    --         restartButton:removeSelf()
+    --         nextButton:removeSelf()
+    --         map.destroy()
+    --         composer.gotoScene( "levels.level2", { effect = "crossFade", time = 333 } )
+    --     end
+    -- end
+    -- nextButton:addEventListener("touch", nextLevel)
 
 end
 
@@ -198,11 +191,11 @@ function scene:destroy( event )
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
-    -- background = nil
-    -- wintitle = nil
-    -- -- endedTimeText = nil
-    -- menuButton = nil
-    -- -- restartButton = nil
+    background = nil
+    losetitle = nil
+    endedTimeText = nil
+    menuButton = nil
+    -- restartButton = nil
     -- nextButton = nil
 end
 

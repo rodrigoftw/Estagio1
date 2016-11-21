@@ -90,6 +90,31 @@ _H = display.contentHeight
 -- Jump Sound - Channel 11
 -- Gravity Sound - Channel 12
 
+audio.reserveChannels( 1 )
+audio.setVolume( 1, { channel=1 } )
+audio.reserveChannels( 2 )
+audio.setVolume( 1, { channel=2 } )
+audio.reserveChannels( 3 )
+audio.setVolume( 1, { channel=3 } )
+audio.reserveChannels( 4 )
+audio.setVolume( 1, { channel=4 } )
+audio.reserveChannels( 5 )
+audio.setVolume( 1, { channel=5 } )
+audio.reserveChannels( 6 )
+audio.setVolume( 1, { channel=6 } )
+audio.reserveChannels( 7 )
+audio.setVolume( 1, { channel=7 } )
+audio.reserveChannels( 8 )
+audio.setVolume( 1, { channel=8 } )
+audio.reserveChannels( 9 )
+audio.setVolume( 1, { channel=9 } )
+audio.reserveChannels( 10 )
+audio.setVolume( 1, { channel=10 } )
+audio.reserveChannels( 11 )
+audio.setVolume( 1, { channel=11 } )
+audio.reserveChannels( 12 )
+audio.setVolume( 1, { channel=12 } )
+
 -------------------------------------------------------------------------------
 -- Sounds
 -------------------------------------------------------------------------------

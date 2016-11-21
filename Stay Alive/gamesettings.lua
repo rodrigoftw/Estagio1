@@ -84,11 +84,11 @@ function scene:create( event )
     -- Clouds
     --------------------------------------------------------------------------------
 
-    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
-    clouds.x = display.contentCenterX
-    clouds.y = display.contentCenterY
-    clouds:toFront()
-    sceneGroup:insert( clouds )
+    -- clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    -- clouds.x = display.contentCenterX
+    -- clouds.y = display.contentCenterY
+    -- clouds:toFront()
+    -- sceneGroup:insert( clouds )
 
     -------------------------------------------------------------------------------
     -- Title
@@ -186,6 +186,11 @@ function scene:create( event )
                     
         --Set the audio volume at the current level
         audio.setVolume( audioSoundVolume, { channel = 7 } )
+        audio.setVolume( audioSoundVolume, { channel = 8 } )
+        audio.setVolume( audioSoundVolume, { channel = 9 } )
+        audio.setVolume( audioSoundVolume, { channel = 10 } )
+        audio.setVolume( audioSoundVolume, { channel = 11 } )
+        audio.setVolume( audioSoundVolume, { channel = 12 } )
         if ( event.phase == "began" ) then
             audio.play(buttonToggle, { channel = 7 } )
             volumeSoundLabel.alpha = 1

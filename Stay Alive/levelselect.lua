@@ -44,11 +44,11 @@ function scene:create( event )
     -- Clouds
     --------------------------------------------------------------------------------
 
-    clouds = display.newImageRect( "maps/clouds.png", _W, _H )
-    clouds.x = display.contentCenterX
-    clouds.y = display.contentCenterY
-    clouds:toFront()
-    sceneGroup:insert( clouds )
+    -- clouds = display.newImageRect( "maps/clouds.png", _W, _H )
+    -- clouds.x = display.contentCenterX
+    -- clouds.y = display.contentCenterY
+    -- clouds:toFront()
+    -- sceneGroup:insert( clouds )
 
     local selectLevelText = display.newText("Selecione um level", 125, 32, "Roboto-Regular.ttf", 32)
     selectLevelText:setFillColor( 0 )
@@ -89,7 +89,8 @@ function scene:create( event )
                 -- set the current level to the ID of the selected level
                 myData.settings.currentLevel = event.target.id
 
-                local levNumber = tonumber(event.target.id)
+                --local 
+                levNumber = tonumber(event.target.id)
 
                 -- if (levNumber == 1) then
                 --     audio.stop(titleMusic)
@@ -126,6 +127,8 @@ function scene:create( event )
                 -- end
 
                 local scene = "levels.level"..levNumber
+                nextScene = "levels.level"..levNumber + 1
+                -- setMap("levels.level"..levNumber..".json")
          
                 composer.removeScene( scene, false )
                 composer.gotoScene( scene, { effect="crossFade", time=333 } )
